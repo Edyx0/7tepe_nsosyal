@@ -1,6 +1,13 @@
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
+import {
+  removeItem,
+  repliesForThread,
+  runExclusive,
+  toggleItem,
+  togglePinned,
+} from "../app/demo-state.mjs";
 
 async function render() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -27,11 +34,16 @@ test("server-renders the Yankı social shell", async () => {
 });
 
 test("keeps the context-summary and device-local demo behavior in product source", async () => {
-  const [page, layout, packageJson, css] = await Promise.all([
+  const [page, layout, packageJson, css, notices, license] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../THIRD_PARTY_NOTICES.md", import.meta.url), "utf8"),
+    readFile(
+      new URL("../licenses/ccrsxx-twitter-clone-MIT.txt", import.meta.url),
+      "utf8",
+    ),
   ]);
 
   assert.match(page, /Bağlam Özeti/);
@@ -47,5 +59,48 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /@media \(max-width: 680px\)/);
+  assert.match(page, /function deleteOwnPost/);
+  assert.match(page, /function resetDemo/);
+  assert.match(page, /function ProfileEditor/);
+  assert.match(page, /restoredLocalState/);
+  assert.doesNotMatch(page, /useState<Theme>\(\(\) => readStored/);
+  assert.match(page, /aria-pressed=\{following\.includes\(post\.handle\)\}/);
+  assert.match(page, /repliesForThread\(seedReplies, props\.post\)/);
+  assert.match(page, /runExclusive\(event, \(\) => onProfile\(post\)\)/);
+  assert.match(notices, /62a9588577ec6f5ce6d28b50d30bf46d2229453d/);
+  assert.match(license, /Copyright \(c\) 2022 ccrsxx/);
   await assert.rejects(access(new URL("../app/chatgpt-auth.ts", import.meta.url)));
+});
+
+test("local interaction reducers keep post actions deterministic", () => {
+  assert.deepEqual(toggleItem([], "post-1"), ["post-1"]);
+  assert.deepEqual(toggleItem(["post-1"], "post-1"), []);
+  assert.deepEqual(removeItem(["post-1"], "post-1"), ["post-1"]);
+  assert.deepEqual(removeItem([], "post-1"), ["post-1"]);
+  assert.equal(togglePinned(null, "post-1"), "post-1");
+  assert.equal(togglePinned("post-1", "post-1"), null);
+});
+
+test("thread replies never repeat the root post", () => {
+  const root = { id: "root", name: "İdil Aras" };
+  const candidates = [
+    root,
+    { id: "reply-1", name: "Selin Uçak", replyTo: "İdil Aras" },
+    { id: "reply-2", name: "Bora Ekin", replyTo: "İdil Aras" },
+    { id: "other", name: "Mert Soylu", replyTo: "Başka Biri" },
+  ];
+  assert.deepEqual(
+    repliesForThread(candidates, root).map((post) => post.id),
+    ["reply-1", "reply-2"],
+  );
+});
+
+test("nested post interactions stop propagation before their own action", () => {
+  let stopped = 0;
+  let actions = 0;
+  runExclusive({ stopPropagation: () => { stopped += 1; } }, () => {
+    actions += 1;
+  });
+  assert.equal(stopped, 1);
+  assert.equal(actions, 1);
 });
