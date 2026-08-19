@@ -1,38 +1,25 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  metadataBase: new URL("https://yanki.app"),
+  metadataBase: new URL("https://nsosyal.com"),
   title: {
-    default: "Yankı — Gündemi birlikte duy",
-    template: "%s · Yankı",
+    default: "NSosyal - Sosyal Ağ Platformu",
+    template: "%s · NSosyal",
   },
-  description: "Türkçe konuşmalar için yerel, bağlamı açık bir sosyal akış prototipi.",
+  description: "NSosyal - Sosyal Ağ Platformu",
   openGraph: {
-    title: "Yankı — Gündemi birlikte duy",
-    description: "Türkçe konuşmalar için yerel, bağlamı açık bir sosyal akış prototipi.",
-    images: ["/og.png"],
+    title: "NSosyal - Sosyal Ağ Platformu",
+    description: "NSosyal - Sosyal Ağ Platformu",
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Yankı — Gündemi birlikte duy",
-    description: "Türkçe konuşmalar için yerel, bağlamı açık bir sosyal akış prototipi.",
-    images: ["/og.png"],
+    card: "summary",
+    title: "NSosyal - Sosyal Ağ Platformu",
+    description: "NSosyal - Sosyal Ağ Platformu",
   },
   icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
+    icon: "/brand/nsosyal-favicon.svg",
+    shortcut: "/brand/nsosyal-favicon.svg",
   },
 };
 
@@ -43,11 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="tr">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

@@ -2,7 +2,7 @@
 
 ## ccrsxx/twitter-clone
 
-Parts of Yankı’s social interface were adapted from the layout and component
+Parts of NSosyal’s social interface were adapted from the layout and component
 anatomy of [ccrsxx/twitter-clone](https://github.com/ccrsxx/twitter-clone),
 pinned at commit `62a9588577ec6f5ce6d28b50d30bf46d2229453d`.
 

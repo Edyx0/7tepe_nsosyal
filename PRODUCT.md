@@ -1,8 +1,8 @@
-# Yankı
+# NSosyal
 
 ## Register
 
-Product UI. Yankı is a Turkish-first social conversation space for keeping up with the public conversation without losing the thread.
+Product UI. NSosyal is a Turkish-first social conversation space for keeping up with the public conversation without losing the thread.
 
 ## People and purpose
 
@@ -17,7 +17,7 @@ Direct, warm, current, and considered. The product gives a busy public square a 
 ## Strategic principles
 
 - Keep the main action—the stream of conversation—within one confident, readable column.
-- Preserve familiar social affordances, but use Yankı language and identity rather than any platform trademark or asset.
+- Preserve familiar social affordances, but use NSosyal language and identity rather than any platform trademark or asset.
 - Treat the optional context summary as a careful aid, never as authority. Its uncertainty must remain visible.
 - Let content density coexist with generous tap targets, keyboard access, and clear focus treatment.
 - Device-local memory is appropriate for this demo; it must not imply an account or network connection.

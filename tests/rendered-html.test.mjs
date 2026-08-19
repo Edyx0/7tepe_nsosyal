@@ -20,21 +20,21 @@ async function render() {
   );
 }
 
-test("server-renders the Yankı social shell", async () => {
+test("server-renders the NSosyal social shell", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
   assert.match(html, /<html lang="tr">/i);
-  assert.match(html, /Yankı/);
-  assert.match(html, /Neler yankılanıyor\?/);
+  assert.match(html, /NSosyal/);
+  assert.match(html, /Ne düşünüyorsun\?/);
   assert.match(html, /Şu an konuşulanlar/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton|Building your site/i);
 });
 
 test("keeps the context-summary and device-local demo behavior in product source", async () => {
-  const [page, layout, packageJson, css, notices, license] = await Promise.all([
+  const [page, layout, packageJson, css, notices, license, logoDark, logoLight, favicon] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
@@ -44,19 +44,38 @@ test("keeps the context-summary and device-local demo behavior in product source
       new URL("../licenses/ccrsxx-twitter-clone-MIT.txt", import.meta.url),
       "utf8",
     ),
+    readFile(new URL("../public/brand/nsosyal-logo-dark.svg", import.meta.url)),
+    readFile(new URL("../public/brand/nsosyal-logo-light.svg", import.meta.url)),
+    readFile(new URL("../public/brand/nsosyal-favicon.svg", import.meta.url)),
   ]);
 
   assert.match(page, /Bağlam Özeti/);
-  assert.match(page, /AI özeti.*hata içerebilir/);
-  assert.match(page, /yanki-actions/);
-  assert.match(page, /yanki-drafts/);
+  assert.match(page, /NSosyal yapay zekâ özeti.*Hata içerebilir/);
+  assert.match(page, /nsosyal-actions/);
+  assert.match(page, /nsosyal-drafts/);
   assert.match(page, /Yer İmleri/);
   assert.match(page, /Mesajlar/);
   assert.match(page, /useState<View>\("feed"\)/);
   assert.doesNotMatch(page, /sign[ -]?in|log[ -]?in|login/i);
-  assert.match(layout, /Yankı — Gündemi birlikte duy/);
-  assert.match(layout, /og\.png/);
+  assert.match(page, /Ne düşünüyorsun\?/);
+  assert.match(page, /Sana Özel/);
+  assert.match(page, /Takip Ettiklerin/);
+  assert.match(page, /Takip Ediliyor/);
+  assert.match(page, /Daha Fazla/);
+  assert.match(page, /Gönderinin ayrıntılarını aç/);
+  assert.doesNotMatch(page, /Gönderinın|Takip Ettiklerinsin/);
+  assert.match(page, /nsosyal-logo-dark\.svg/);
+  assert.match(page, /nsosyal-favicon\.svg/);
+  assert.match(layout, /NSosyal - Sosyal Ağ Platformu/);
+  assert.match(layout, /nsosyal-favicon\.svg/);
+  assert.doesNotMatch(layout, /og\.png/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
+  assert.match(packageJson, /nsosyal-social-prototype/);
+  assert.match(css, /#1B1E26/);
+  assert.match(css, /#1890FF/);
+  assert.equal(logoDark.length > 0, true);
+  assert.equal(logoLight.length > 0, true);
+  assert.equal(favicon.length > 0, true);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /@media \(max-width: 680px\)/);
   assert.match(page, /function deleteOwnPost/);
