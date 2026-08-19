@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
 async function render() {
@@ -40,9 +40,12 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /yanki-drafts/);
   assert.match(page, /Yer İmleri/);
   assert.match(page, /Mesajlar/);
+  assert.match(page, /useState<View>\("feed"\)/);
+  assert.doesNotMatch(page, /sign[ -]?in|log[ -]?in|login/i);
   assert.match(layout, /Yankı — Gündemi birlikte duy/);
   assert.match(layout, /og\.png/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /@media \(max-width: 680px\)/);
+  await assert.rejects(access(new URL("../app/chatgpt-auth.ts", import.meta.url)));
 });
