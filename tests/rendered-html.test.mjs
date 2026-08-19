@@ -66,6 +66,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.doesNotMatch(page, /Gönderinın|Takip Ettiklerinsin/);
   assert.match(page, /nsosyal-logo-dark\.svg/);
   assert.match(page, /nsosyal-favicon\.svg/);
+  assert.match(page, /headerCompact/);
+  assert.match(page, /lastScrollY/);
+  assert.match(page, /ActionIcon/);
   assert.match(layout, /NSosyal - Sosyal Ağ Platformu/);
   assert.match(layout, /nsosyal-favicon\.svg/);
   assert.doesNotMatch(layout, /og\.png/);
@@ -73,6 +76,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(packageJson, /nsosyal-social-prototype/);
   assert.match(css, /#1B1E26/);
   assert.match(css, /#1890FF/);
+  assert.match(css, /\.topbar\.is-compact/);
+  assert.match(css, /\.post\.has-thread::before/);
+  assert.match(css, /aspect-ratio: 16 \/ 8\.7/);
   assert.equal(logoDark.length > 0, true);
   assert.equal(logoLight.length > 0, true);
   assert.equal(favicon.length > 0, true);
