@@ -15,3 +15,16 @@ Firebase, authentication, router, SWR, or network runtime code.
 
 The donor project is licensed under the MIT License. Its license text is
 preserved in `licenses/ccrsxx-twitter-clone-MIT.txt`.
+
+## Next Sosyal Beta source-era brand assets
+
+`public/brand/nsosyal-source-era-logo-dark.svg` and
+`public/brand/nsosyal-source-era-logo-light.svg` are copied verbatim from the
+user-provided Next Sosyal Beta source snapshot at
+`Next_Sosyal_Beta_2025_08_01/Next_Sosyal_Beta/app/javascript/images/`.
+They are used solely as NSosyal brand assets. No source application code,
+JavaScript, stylesheets, or backend components from that project were copied
+into this prototype; its component anatomy was independently reimplemented.
+
+The supplied source snapshot is licensed under GNU AGPL v3. Its license text
+is preserved in `licenses/Next_Sosyal_Beta_AGPL-3.0.txt`.

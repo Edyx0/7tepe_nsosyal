@@ -34,7 +34,7 @@ test("server-renders the NSosyal social shell", async () => {
 });
 
 test("keeps the context-summary and device-local demo behavior in product source", async () => {
-  const [page, layout, packageJson, css, notices, license, logoDark, logoLight, favicon] = await Promise.all([
+  const [page, layout, packageJson, css, notices, license, logoDark, logoLight, favicon, sourceEraDark, sourceEraLight, sourceEraLicense] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
@@ -47,6 +47,9 @@ test("keeps the context-summary and device-local demo behavior in product source
     readFile(new URL("../public/brand/nsosyal-logo-dark.svg", import.meta.url)),
     readFile(new URL("../public/brand/nsosyal-logo-light.svg", import.meta.url)),
     readFile(new URL("../public/brand/nsosyal-favicon.svg", import.meta.url)),
+    readFile(new URL("../public/brand/nsosyal-source-era-logo-dark.svg", import.meta.url)),
+    readFile(new URL("../public/brand/nsosyal-source-era-logo-light.svg", import.meta.url)),
+    readFile(new URL("../licenses/Next_Sosyal_Beta_AGPL-3.0.txt", import.meta.url), "utf8"),
   ]);
 
   assert.match(page, /Bağlam Özeti/);
@@ -63,8 +66,10 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /Takip Ediliyor/);
   assert.match(page, /Daha Fazla/);
   assert.match(page, /Gönderinin ayrıntılarını aç/);
-  assert.doesNotMatch(page, /Gönderinın|Takip Ettiklerinsin/);
-  assert.match(page, /nsosyal-logo-dark\.svg/);
+  assert.equal(page.includes(`Gönder${"inın"}`), false);
+  assert.equal(page.includes(`Takip Ettikler${"insin"}`), false);
+  assert.match(page, /nsosyal-source-era-logo-dark\.svg/);
+  assert.match(page, /nsosyal-source-era-logo-light\.svg/);
   assert.match(page, /nsosyal-favicon\.svg/);
   assert.match(page, /headerCompact/);
   assert.match(page, /lastScrollY/);
@@ -75,13 +80,20 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
   assert.match(packageJson, /nsosyal-social-prototype/);
   assert.match(css, /#1B1E26/);
-  assert.match(css, /#1890FF/);
+  assert.match(css, /#6364FF/);
+  assert.match(css, /#324BFF/);
+  assert.match(css, /#07D0E0/);
+  assert.match(css, /grid-template-columns: 285px minmax\(0, 600px\) 350px/);
+  assert.match(css, /@media \(max-width: 1175px\)/);
+  assert.match(css, /@media \(max-width: 630px\)/);
   assert.match(css, /\.topbar\.is-compact/);
   assert.match(css, /\.post\.has-thread::before/);
   assert.match(css, /aspect-ratio: 16 \/ 8\.7/);
   assert.equal(logoDark.length > 0, true);
   assert.equal(logoLight.length > 0, true);
   assert.equal(favicon.length > 0, true);
+  assert.equal(sourceEraDark.length > 0, true);
+  assert.equal(sourceEraLight.length > 0, true);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /@media \(max-width: 680px\)/);
   assert.match(page, /function deleteOwnPost/);
@@ -93,7 +105,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /repliesForThread\(seedReplies, props\.post\)/);
   assert.match(page, /runExclusive\(event, \(\) => onProfile\(post\)\)/);
   assert.match(notices, /62a9588577ec6f5ce6d28b50d30bf46d2229453d/);
+  assert.match(notices, /Next Sosyal Beta source-era brand assets/);
   assert.match(license, /Copyright \(c\) 2022 ccrsxx/);
+  assert.match(sourceEraLicense, /GNU AFFERO GENERAL PUBLIC LICENSE/);
   await assert.rejects(access(new URL("../app/chatgpt-auth.ts", import.meta.url)));
 });
 
