@@ -320,3 +320,59 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
   .post-actions { padding-top: 6px; }
   .action { min-height: 33px; padding: 4px 4px; }
 }
+
+/* Luna max interaction hardening: one icon language, safer contrast, and no
+   absolute controls competing with post metadata. */
+:root {
+  --brand-fill: #324BFF;
+  --brand-strong: #AEB8FF;
+  --brand-text: #AEB8FF;
+  --muted: #D2D6E0;
+  --secondary: #BEC4D0;
+  --faint: #8F98A8;
+  --teal: #72E6F0;
+  --violet: #AEB8FF;
+  --gold: #FACC15;
+}
+:root[data-theme="light"] {
+  --brand-fill: #324BFF;
+  --brand-strong: #4338CA;
+  --brand-text: #4338CA;
+  --muted: #52627A;
+  --secondary: #46556D;
+  --faint: #64748B;
+  --teal: #08768A;
+  --violet: #4338CA;
+  --gold: #8A6400;
+}
+.ui-icon { display: block; width: 1.15em; height: 1.15em; flex: 0 0 auto; }
+.nav-icon .ui-icon, .bottom-nav .ui-icon { width: 1.25em; height: 1.25em; }
+.primary-button:hover { background: var(--brand-fill); }
+.nav-item.is-active, .notice, .replying b, .limit.near, .more:hover, .action:hover, .action-wrap.active .action, .quote-mini:hover, .signal-card em, .note-card > span, .context-toggle i, .show-more, .editor-pick em, .spark, .empty-state > span, .post-follow:hover, .demo-reset, .signal-caption > span { color: var(--brand-text); }
+.post-meta > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.post-follow { position: static; display: block; width: max-content; max-width: min(100%, 180px); margin: 2px 0 1px auto; overflow: hidden; padding: 3px 8px; text-overflow: ellipsis; white-space: nowrap; }
+.post-actions, .compose-footer { flex-wrap: wrap; }
+.action-wrap { min-width: 0; }
+.action { min-width: 0; }
+.action small { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.avatar.teal { background: #08768A; color: #fff; }
+.avatar.violet { background: #5054A7; color: #fff; }
+.avatar.gold { background: #8A6400; color: #fff; }
+.modal-backdrop { overflow: auto; }
+.more-menu button, .mobile-more-menu button { display: flex; align-items: center; gap: 10px; }
+.mobile-more-menu { width: min(100%, 360px); }
+.profile-copy > div > span { display: inline-flex; align-items: center; gap: 5px; }
+.profile-copy > div .ui-icon { width: 14px; height: 14px; }
+.message-compose button { display: grid; place-items: center; }
+@media (max-width: 680px) {
+  .bottom-nav { grid-template-columns: repeat(6, 1fr); }
+  .quote-mini { display: grid; place-items: center; }
+  .post-actions { justify-content: space-between; row-gap: 3px; }
+  .action-wrap { flex: 0 1 auto; }
+  .action { padding-right: 4px; padding-left: 4px; }
+  .compose-footer { row-gap: 7px; }
+}
+@media (max-width: 390px) {
+  .post-actions { justify-content: flex-start; }
+  .action-wrap:last-child { margin-left: auto; }
+}

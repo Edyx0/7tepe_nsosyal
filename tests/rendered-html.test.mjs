@@ -73,6 +73,12 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /nsosyal-favicon\.svg/);
   assert.match(page, /headerCompact/);
   assert.match(page, /lastScrollY/);
+  assert.match(page, /function UiIcon/);
+  assert.match(page, /thread-reply-input/);
+  assert.match(page, /replyToId/);
+  assert.match(page, /MobileMoreMenu/);
+  assert.match(page, /useDialogFocus/);
+  assert.match(page, /nsosyal-messages/);
   assert.match(page, /ActionIcon/);
   assert.match(layout, /NSosyal - Sosyal Ağ Platformu/);
   assert.match(layout, /nsosyal-favicon\.svg/);
@@ -96,13 +102,19 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.equal(sourceEraLight.length > 0, true);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /@media \(max-width: 680px\)/);
+  assert.match(css, /grid-template-columns: repeat\(6, 1fr\)/);
+  assert.match(css, /--brand-fill: #324BFF/);
+  assert.match(css, /--brand-text: #AEB8FF/);
+  assert.match(css, /\.post-follow \{ position: static/);
+  assert.match(css, /\.ui-icon/);
   assert.match(page, /function deleteOwnPost/);
   assert.match(page, /function resetDemo/);
   assert.match(page, /function ProfileEditor/);
   assert.match(page, /restoredLocalState/);
   assert.doesNotMatch(page, /useState<Theme>\(\(\) => readStored/);
   assert.match(page, /aria-pressed=\{following\.includes\(post\.handle\)\}/);
-  assert.match(page, /repliesForThread\(seedReplies, props\.post\)/);
+  assert.match(page, /repliesForThread\(merged, props\.post\)/);
+  assert.match(page, /<PostCard key=\{post\.id\} \{\.\.\.props\} post=\{post\} \/>/);
   assert.match(page, /runExclusive\(event, \(\) => onProfile\(post\)\)/);
   assert.match(notices, /62a9588577ec6f5ce6d28b50d30bf46d2229453d/);
   assert.match(notices, /Next Sosyal Beta source-era brand assets/);
@@ -124,14 +136,22 @@ test("thread replies never repeat the root post", () => {
   const root = { id: "root", name: "İdil Aras" };
   const candidates = [
     root,
-    { id: "reply-1", name: "Selin Uçak", replyTo: "İdil Aras" },
-    { id: "reply-2", name: "Bora Ekin", replyTo: "İdil Aras" },
+    { id: "reply-1", name: "Selin Uçak", replyTo: "İdil Aras", replyToId: "root" },
+    { id: "reply-2", name: "Bora Ekin", replyTo: "İdil Aras", replyToId: "root" },
     { id: "other", name: "Mert Soylu", replyTo: "Başka Biri" },
+    { id: "same-name-root", name: "İdil Aras", replyTo: "Başka Biri", replyToId: "other-root" },
   ];
   assert.deepEqual(
     repliesForThread(candidates, root).map((post) => post.id),
     ["reply-1", "reply-2"],
   );
+});
+
+test("stable reply ids keep a published detail reply in its thread", () => {
+  const root = { id: "root", name: "İdil Aras" };
+  const published = { id: "local-reply", name: "Deniz Naz", replyTo: "İdil Aras", replyToId: "root" };
+  const reopened = repliesForThread([root, published, published], root);
+  assert.deepEqual(reopened.map((post) => post.id), ["local-reply"]);
 });
 
 test("nested post interactions stop propagation before their own action", () => {

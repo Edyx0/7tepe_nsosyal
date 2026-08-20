@@ -12,9 +12,14 @@ export function togglePinned(current, id) {
 }
 
 export function repliesForThread(posts, root) {
+  const seen = new Set();
   return posts.filter(
-    (post) => post.id !== root.id && post.replyTo === root.name,
-  );
+    (post) => post.id !== root.id && (post.replyToId === root.id || (!post.replyToId && post.replyTo === root.name)),
+  ).filter((post) => {
+    if (seen.has(post.id)) return false;
+    seen.add(post.id);
+    return true;
+  });
 }
 
 export function runExclusive(event, action) {
