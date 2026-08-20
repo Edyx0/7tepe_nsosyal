@@ -29,7 +29,7 @@ type Mods = { deleted: string[]; pinned: string | null };
 type Profile = { name: string; handle: string; initials: string; bio: string; location: string };
 type Message = { id: string; conversationId: "team" | "bora"; from: "me" | "them"; body: string };
 type ActionIconName = "reply" | "repost" | "like" | "bookmark" | "share";
-type UiIconName = "home" | "search" | "menu" | "plus" | "notifications" | "messages" | "bookmark" | "profile" | "settings" | "sun" | "moon" | "arrow-left" | "arrow-right" | "close" | "more" | "media" | "location" | "poll" | "mood" | "send" | "pin" | "quote" | "spark";
+type UiIconName = "home" | "search" | "menu" | "plus" | "check" | "notifications" | "messages" | "bookmark" | "profile" | "settings" | "sun" | "moon" | "arrow-left" | "arrow-right" | "close" | "more" | "media" | "location" | "poll" | "mood" | "send" | "pin" | "quote" | "spark";
 
 const demoProfile: Profile = { name: "Deniz Naz", handle: "@denizn", initials: "DN", bio: "Şehir, ekran ve insanlar hakkında küçük notlar.", location: "İstanbul" };
 const seedPosts: Post[] = [
@@ -88,6 +88,7 @@ function UiIcon({ name }: { name: UiIconName }) {
     {name === "search" && <><circle {...shared} cx="10.8" cy="10.8" r="6.4" /><path {...shared} d="m16 16 4.6 4.6" /></>}
     {name === "menu" && <path {...shared} d="M4 7h16M4 12h16M4 17h16" />}
     {name === "plus" && <path {...shared} d="M12 5v14M5 12h14" />}
+    {name === "check" && <path {...shared} d="m5 12.5 4.2 4.2L19.5 6.5" />}
     {name === "notifications" && <><path {...shared} d="M5.2 17.5h13.6l-1.5-2.2V10a5.3 5.3 0 0 0-10.6 0v5.3l-1.5 2.2Z" /><path {...shared} d="M9.5 20.1h5" /></>}
     {name === "messages" && <><rect {...shared} x="3.5" y="5" width="17" height="13.5" rx="2.2" /><path {...shared} d="m4.5 6.5 7.5 6 7.5-6" /></>}
     {name === "bookmark" && <path {...shared} d="M6.5 4.5h11v15l-5.5-3.2-5.5 3.2v-15Z" />}
@@ -328,8 +329,7 @@ function PostCard({ post, actions, pinned, following, onAction, onReply, onDetai
     <div className="post-content">
       {post.repostedByMe && <p className="repost-status" aria-label="Yeniden paylaştığın gönderi"><ActionIcon name="repost" /> Yeniden paylaştın</p>}
       {post.replyTo && <p className="reply-context">{post.replyTo} adlı kişiye yanıt olarak</p>}
-      <div className="post-meta"><button className="name" onClick={(event) => runExclusive(event, () => onProfile(post))}>{post.name}</button><span>{post.handle}</span><span>·</span><button className="time" onClick={() => onDetail(post)}>{post.time}</button><button className="more" aria-label="Gönderi seçeneklerini aç" onClick={(event) => runExclusive(event, () => onMore(post))}><UiIcon name="more" /></button></div>
-      {!post.own && <button className="post-follow" aria-pressed={following.includes(post.handle)} onClick={(event) => runExclusive(event, () => onFollow(post.handle))}>{following.includes(post.handle) ? "Takip Ediliyor" : "Takip et"}</button>}
+      <div className="post-meta"><button className="name" onClick={(event) => runExclusive(event, () => onProfile(post))}>{post.name}</button><span>{post.handle}</span><span>·</span><button className="time" onClick={() => onDetail(post)}>{post.time}</button>{!post.own && <button className="post-follow" aria-label={following.includes(post.handle) ? post.handle + " takibini bırak" : post.handle + " kişisini takip et"} aria-pressed={following.includes(post.handle)} onClick={(event) => runExclusive(event, () => onFollow(post.handle))}><UiIcon name={following.includes(post.handle) ? "check" : "plus"} /><span className="sr-only">{following.includes(post.handle) ? "Takip ediliyor" : "Takip et"}</span></button>}<button className="more" aria-label="Gönderi seçeneklerini aç" onClick={(event) => runExclusive(event, () => onMore(post))}><UiIcon name="more" /></button></div>
       <button className="post-body" onClick={() => onDetail(post)} aria-label="Gönderinin ayrıntılarını aç">{post.body}</button>
       {post.attachment === "signal" && <button className="signal-card media-card" onClick={(event) => runExclusive(event, () => onMedia(post))} aria-label="Şehir serinliği notları görselini aç"><span className="signal-art" aria-hidden="true"><i /><i /><i /></span><span className="signal-caption"><span>Kent notları</span><b>Şehir serinliği notları</b><small>Görsel önizlemeyi aç</small></span><em aria-hidden="true"><UiIcon name="arrow-right" /></em></button>}
       {post.attachment === "note" && <button className="note-card" onClick={(event) => runExclusive(event, () => onMedia(post))}><span>Okuma notu</span><b>Yerel veriyi ortak bir dilde buluşturmak</b><small>Önizlemeyi aç · 4 dk okuma</small></button>}

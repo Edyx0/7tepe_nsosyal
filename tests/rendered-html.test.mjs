@@ -84,6 +84,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /ActionIcon/);
   assert.match(page, /name === "menu"/);
   assert.match(page, /name === "plus"/);
+  assert.match(page, /name === "check"/);
   assert.match(page, /CompactDesktopMenu/);
   assert.match(page, /ComposeModal/);
   assert.match(page, /mobile-profile-button/);
@@ -95,6 +96,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /top-action-search/);
   assert.match(page, /repostedByMe/);
   assert.match(page, /icon-only/);
+  assert.match(page, /following\.includes\(post\.handle\) \? "check" : "plus"/);
   assert.match(page, /requestAnimationFrame/);
   assert.match(page, /atBottom/);
   assert.match(css, /post:not\(\.has-thread\) \.post-actions/);

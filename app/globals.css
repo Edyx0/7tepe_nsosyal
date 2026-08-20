@@ -891,6 +891,38 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
   }
 }
 
+/* Center the identity row and keep follow actions icon-only in the post header. */
+.post-meta { align-items: center; min-height: 46px; }
+.post-meta .post-follow {
+  position: relative;
+  top: auto;
+  right: auto;
+  display: grid;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  place-items: center;
+  margin: 0 4px 0 auto;
+  padding: 0;
+  border: 1px solid color-mix(in oklch, var(--line) 88%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--bg) 76%, transparent);
+  color: var(--secondary);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .08), 0 3px 10px rgb(0 0 0 / .14);
+  transition: transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease), color .18s var(--ease);
+}
+.post-meta .post-follow .ui-icon { width: 20px; height: 20px; stroke-width: 2.1; }
+.post-meta .post-follow:hover,
+.post-meta .post-follow[aria-pressed="true"] { border-color: color-mix(in oklch, var(--brand) 52%, var(--line)); background: color-mix(in oklch, var(--brand-soft) 72%, var(--bg)); color: var(--brand-text); }
+.post-meta .post-follow:active { transform: scale(.9); }
+.post-meta .more { margin-left: 0; }
+@media (max-width: 680px) {
+  .post-meta { min-height: 44px; }
+  .post-meta .post-follow { flex-basis: 40px; width: 40px; height: 40px; min-width: 40px; }
+  .post-meta .post-follow .ui-icon { width: 21px; height: 21px; }
+}
+
 /* Thread rail: the avatar spine turns into a soft footer elbow so the
    conversation line visually lands behind the post actions, as in NSosyal's
    native post treatment. The action controls sit above the rail to preserve
