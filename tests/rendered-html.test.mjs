@@ -174,9 +174,12 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /brand-mark\.small \{ width: 31px; height: 31px; \}/);
   assert.match(css, /\.post-actions \{ flex-wrap: nowrap !important/);
   assert.match(page, /detail-backbar/);
+  assert.match(page, /is-detail/);
   assert.match(css, /\.detail-backbar \{[\s\S]*position: sticky/);
   assert.match(css, /\.post-actions \.action-wrap:last-child \{[\s\S]*flex: 0 0 46px/);
   assert.match(css, /\.post-actions \.action-wrap:last-child \.action \{[\s\S]*place-items: center/);
+  assert.match(css, /\.thread-view > \.post \{[\s\S]*border-radius: 24px/);
+  assert.match(css, /\.topbar\.is-detail \{/);
   assert.match(css, /@media \(max-width: 430px\)/);
   assert.match(css, /@media \(min-width: 631px\) and \(max-width: 680px\)/);
   assert.match(css, /\.bottom-nav \{ display: none !important; \}/);
