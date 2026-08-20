@@ -107,7 +107,11 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /env\(safe-area-inset-bottom\)/);
   assert.match(css, /border-radius: 22px/);
   assert.match(css, /min-height: 44px/);
-  assert.match(css, /--apple-radius-nav: 28px/);
+  assert.match(css, /--apple-radius-nav: 40px/);
+  assert.match(css, /--apple-radius-card: 20px/);
+  assert.match(css, /--apple-radius-modal: 24px/);
+  assert.match(css, /flex-grow: 1\.28/);
+  assert.match(css, /--apple-status: #ff375f/);
   assert.match(css, /prefers-reduced-transparency/);
   assert.match(page, /Profil ve daha fazlası/);
   assert.match(page, /onBookmarks/);
