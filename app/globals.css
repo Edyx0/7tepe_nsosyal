@@ -566,3 +566,81 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
 @media (max-width: 340px) {
   .quote-mini { display: none; }
 }
+
+/* Thread rail: the avatar spine turns into a soft footer elbow so the
+   conversation line visually lands behind the post actions, as in NSosyal's
+   native post treatment. The action controls sit above the rail to preserve
+   clear tap targets and icon contrast. */
+.post.has-thread {
+  --thread-rail-x: 36px;
+  --thread-rail-color: color-mix(in oklch, var(--line) 88%, transparent);
+  --thread-elbow-height: 20px;
+  --thread-elbow-bottom: 29px;
+}
+.post.has-thread::before {
+  z-index: 0;
+  top: 57px;
+  bottom: calc(var(--thread-elbow-bottom) + var(--thread-elbow-height));
+  left: var(--thread-rail-x);
+  width: 1.5px;
+  background: var(--thread-rail-color);
+}
+.post.has-thread::after {
+  position: absolute;
+  z-index: 0;
+  right: 16px;
+  bottom: var(--thread-elbow-bottom);
+  left: var(--thread-rail-x);
+  height: var(--thread-elbow-height);
+  border-bottom: 1.5px solid var(--thread-rail-color);
+  border-left: 1.5px solid var(--thread-rail-color);
+  border-bottom-left-radius: 16px;
+  content: "";
+  pointer-events: none;
+}
+.post.has-thread .post-actions {
+  position: relative;
+  z-index: 1;
+}
+.post.has-thread .action {
+  position: relative;
+  z-index: 1;
+  border: 1px solid color-mix(in oklch, var(--line) 88%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--bg) 94%, var(--surface) 6%);
+}
+.post.has-thread .action:hover,
+.post.has-thread .action-wrap.active .action {
+  border-color: color-mix(in oklch, var(--brand) 48%, var(--line));
+  background: color-mix(in oklch, var(--brand-soft) 74%, var(--bg));
+}
+.post.has-thread .action-wrap.like.active .action {
+  border-color: color-mix(in oklch, oklch(.57 .2 10) 58%, var(--line));
+  background: color-mix(in oklch, oklch(.57 .2 10 / .14) 70%, var(--bg));
+}
+.post.has-thread .action-wrap:last-child .action {
+  border-radius: 50%;
+}
+
+@media (max-width: 680px) {
+  .post.has-thread {
+    --thread-rail-x: 32px;
+    --thread-elbow-height: 18px;
+    --thread-elbow-bottom: 27px;
+  }
+  .post.has-thread::after { right: 14px; border-bottom-left-radius: 14px; }
+}
+
+@media (max-width: 630px) {
+  .post.has-thread {
+    --thread-rail-x: 35px;
+    --thread-elbow-height: 18px;
+    --thread-elbow-bottom: 27px;
+  }
+}
+
+@media (max-width: 390px) {
+  .post.has-thread .action { border-color: transparent; background: var(--bg); }
+  .post.has-thread .action:hover,
+  .post.has-thread .action-wrap.active .action { border-color: color-mix(in oklch, var(--brand) 42%, transparent); }
+}

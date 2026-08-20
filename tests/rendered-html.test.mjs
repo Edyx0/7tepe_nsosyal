@@ -97,6 +97,10 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /@media \(max-width: 630px\)/);
   assert.match(css, /\.topbar\.is-compact/);
   assert.match(css, /\.post\.has-thread::before/);
+  assert.match(css, /\.post\.has-thread::after/);
+  assert.match(css, /border-bottom-left-radius: 16px/);
+  assert.match(css, /--thread-rail-x: 36px/);
+  assert.match(css, /\.post\.has-thread \.post-actions/);
   assert.match(css, /aspect-ratio: 16 \/ 8\.7/);
   assert.equal(logoDark.length > 0, true);
   assert.equal(logoLight.length > 0, true);
