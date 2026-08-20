@@ -75,6 +75,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /lastScrollY/);
   assert.match(page, /function UiIcon/);
   assert.match(page, /strokeWidth: 2\.05/);
+  assert.doesNotMatch(page, /className="quote-mini"/);
   assert.match(page, /thread-reply-input/);
   assert.match(page, /replyToId/);
   assert.match(page, /MobileMoreMenu/);
