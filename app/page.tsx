@@ -190,15 +190,28 @@ export default function Home() {
   useEffect(() => { if (restoredLocalState.current) window.localStorage.setItem("nsosyal-messages", JSON.stringify(messages)); }, [messages]);
   useEffect(() => { if (restoredLocalState.current) window.localStorage.setItem("nsosyal-read-notifications", JSON.stringify(readNotifications)); }, [readNotifications]);
   useEffect(() => {
-    let lastScrollY = window.scrollY;
+    let lastScrollY = Math.max(0, window.scrollY);
+    let compact = false;
+    let frame = 0;
     const syncHeader = () => {
-      const currentScrollY = window.scrollY;
-      setHeaderCompact(currentScrollY > 20 && currentScrollY > lastScrollY);
-      lastScrollY = currentScrollY;
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        const currentScrollY = Math.max(0, window.scrollY);
+        const delta = currentScrollY - lastScrollY;
+        const maxScrollY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        const atTop = currentScrollY <= 2;
+        const atBottom = maxScrollY > 0 && currentScrollY >= maxScrollY - 2;
+        if (atTop || atBottom) compact = false;
+        else if (delta > 6 && currentScrollY > 32) compact = true;
+        else if (delta < -10) compact = false;
+        setHeaderCompact(compact);
+        lastScrollY = currentScrollY;
+      });
     };
     syncHeader();
     window.addEventListener("scroll", syncHeader, { passive: true });
-    return () => window.removeEventListener("scroll", syncHeader);
+    return () => { window.removeEventListener("scroll", syncHeader); if (frame) window.cancelAnimationFrame(frame); };
   }, []);
 
   const posts = useMemo(() => [...draftPosts, ...seedPosts].filter((post) => !mods.deleted.includes(post.id)).sort((a, b) => Number(b.id === mods.pinned) - Number(a.id === mods.pinned)), [draftPosts, mods]);
@@ -333,7 +346,7 @@ function ActionIcon({ name }: { name: ActionIconName }) {
     {name === "share" && <><circle {...shared} cx="18" cy="5" r="2.3" /><circle {...shared} cx="6" cy="12" r="2.3" /><circle {...shared} cx="18" cy="19" r="2.3" /><path {...shared} d="m8.1 10.9 7.8-4.7M8.1 13.1l7.8 4.7" /></>}
   </svg>;
 }
-function ActionButton({ icon, label, count, active, kind, onClick }: { icon: ActionIconName; label: string; count?: number; active?: boolean; kind?: "like"; onClick: () => void }) { return <span className={"action-wrap " + (active ? "active " : "") + (kind || "")}><button className="action" aria-label={label} aria-pressed={typeof active === "boolean" ? active : undefined} onClick={(event) => runExclusive(event, onClick)}><i aria-hidden="true"><ActionIcon name={icon} /></i>{typeof count === "number" && <small>{formatNumber(count)}</small>}</button></span>; }
+function ActionButton({ icon, label, count, active, kind, onClick }: { icon: ActionIconName; label: string; count?: number; active?: boolean; kind?: "like"; onClick: () => void }) { return <span className={"action-wrap " + (active ? "active " : "") + (kind || "") + (typeof count !== "number" ? " icon-only" : "")}><button className="action" aria-label={label} aria-pressed={typeof active === "boolean" ? active : undefined} onClick={(event) => runExclusive(event, onClick)}><i aria-hidden="true"><ActionIcon name={icon} /></i>{typeof count === "number" && <small>{formatNumber(count)}</small>}</button></span>; }
 type ThreadDetailProps = Omit<FeedProps, "posts" | "morePost"> & { post: Post; morePost: Post | null; allPosts: Post[]; contextOpen: boolean; setContextOpen: (value: boolean) => void; composerText: string; setComposerText: (value: string) => void; composerMedia: boolean; onTool: (kind: "media" | "location" | "poll" | "mood") => void; replyingTo: Post | null; clearReply: () => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void };
 function ThreadDetail(props: ThreadDetailProps) {
   const merged = Array.from(new Map([...seedReplies, ...props.allPosts].map((post) => [post.id, post])).values());

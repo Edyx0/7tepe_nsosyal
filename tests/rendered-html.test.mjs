@@ -91,6 +91,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /MobileNav\(\{ view, setView, unread \}/);
   assert.match(page, /top-action-search/);
   assert.match(page, /repostedByMe/);
+  assert.match(page, /icon-only/);
+  assert.match(page, /requestAnimationFrame/);
+  assert.match(page, /atBottom/);
   assert.match(page, /Yeniden paylaştın/);
   assert.match(page, /actions\.reposts\.includes\(post\.id\)/);
   assert.match(page, /Repostlar/);

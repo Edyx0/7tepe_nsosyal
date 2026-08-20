@@ -633,6 +633,49 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
   .compose-modal .composer { max-height: calc(min(84dvh, 680px) - 58px); overflow: auto; }
 }
 
+/* Stable sticky geometry: visual compaction must not reflow the feed at scroll edges. */
+.topbar { min-height: 57px; transition: background .2s var(--ease), box-shadow .2s var(--ease); }
+.topbar.is-compact { min-height: 57px; }
+@media (min-width: 681px) and (max-width: 1000px) {
+  .topbar, .topbar.is-compact { min-height: 58px; }
+}
+@media (max-width: 680px) {
+  .topbar, .topbar.is-compact { min-height: calc(64px + env(safe-area-inset-top)); }
+}
+@media (max-width: 390px) {
+  .topbar, .topbar.is-compact { min-height: calc(56px + env(safe-area-inset-top)); }
+}
+
+/* Bookmark and share are icon controls; counts stay in the wider chips. */
+.post-actions .action-wrap.icon-only .action {
+  width: 46px;
+  min-width: 46px;
+  height: 46px;
+  min-height: 46px;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid color-mix(in oklch, var(--line) 88%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--bg) 76%, transparent);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .1), inset 0 -1px 0 rgb(0 0 0 / .16), 0 3px 10px rgb(0 0 0 / .16);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  backdrop-filter: blur(18px) saturate(1.25);
+}
+.post-actions .action-wrap.icon-only .action:hover,
+.post-actions .action-wrap.icon-only.active .action {
+  border-color: color-mix(in oklch, var(--brand) 48%, var(--line));
+  background: color-mix(in oklch, var(--brand-soft) 74%, var(--bg));
+}
+.post-actions .action-wrap.icon-only.active .action svg { stroke-width: 2.25; }
+.post-actions .action-wrap.icon-only.active:not(.like) .action svg path { fill: currentColor; }
+.post-actions .action-wrap:last-child { margin-left: auto; }
+@media (max-width: 680px) {
+  .post-actions .action-wrap.icon-only .action { width: 44px; min-width: 44px; height: 44px; min-height: 44px; }
+}
+@media (max-width: 390px) {
+  .post-actions .action-wrap.icon-only .action { width: 42px; min-width: 42px; height: 42px; min-height: 42px; }
+}
+
 /* Thread rail: the avatar spine turns into a soft footer elbow so the
    conversation line visually lands behind the post actions, as in NSosyal's
    native post treatment. The action controls sit above the rail to preserve
