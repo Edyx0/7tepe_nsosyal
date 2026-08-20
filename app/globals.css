@@ -967,6 +967,21 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
   .post.has-thread { --thread-elbow-bottom: 33px; }
 }
 
+/* Action rows are always one line; compact widths reduce content instead of wrapping. */
+.post-actions { flex-wrap: nowrap !important; min-width: 0; }
+@media (max-width: 680px) {
+  .post-actions { gap: 4px; }
+  .post-actions .action-wrap { min-width: 0; }
+}
+@media (max-width: 430px) {
+  .post-actions .action small { display: none; }
+  .post-actions .action { min-width: 42px; padding-right: 5px; padding-left: 5px; }
+  .post-actions .action i,
+  .post-actions .action i svg { width: 20px; height: 20px; }
+  .post-actions .action-wrap.icon-only .action,
+  .post-actions .action-wrap:last-child .action { width: 40px; min-width: 40px; height: 40px; min-height: 40px; }
+}
+
 /* Thread rail: the avatar spine turns into a soft footer elbow so the
    conversation line visually lands behind the post actions, as in NSosyal's
    native post treatment. The action controls sit above the rail to preserve

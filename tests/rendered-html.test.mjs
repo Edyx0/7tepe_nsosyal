@@ -161,6 +161,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /backdrop-filter: blur\(20px\) saturate\(1\.25\)/);
   assert.match(css, /mobile-profile-button \{ width: 46px; height: 46px; \}/);
   assert.match(css, /brand-mark\.small \{ width: 31px; height: 31px; \}/);
+  assert.match(css, /\.post-actions \{ flex-wrap: nowrap !important/);
+  assert.match(css, /@media \(max-width: 430px\)/);
   assert.match(css, /grid-template-columns: repeat\(4, 1fr\)/);
   assert.match(css, /\.top-action-theme, \.top-action-search/);
   assert.match(css, /prefers-reduced-transparency/);
