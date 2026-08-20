@@ -156,6 +156,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /\.bottom-nav\.is-compact/);
   assert.match(css, /\.bottom-compose\.is-hidden \{ display: none; \}/);
   assert.match(css, /flex-basis \.34s cubic-bezier\(\.22, 1, \.36, 1\)/);
+  assert.match(css, /--thread-elbow-bottom: 33px/);
   assert.match(css, /grid-template-columns: repeat\(4, 1fr\)/);
   assert.match(css, /\.top-action-theme, \.top-action-search/);
   assert.match(css, /prefers-reduced-transparency/);

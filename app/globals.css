@@ -953,6 +953,20 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
   .post-meta .post-follow .ui-icon { width: 21px; height: 21px; }
 }
 
+/* Align the thread elbow with the visual center of the action circles. */
+.post.has-thread { --thread-elbow-bottom: 35px; }
+.post-actions .action {
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.post-actions .action i { display: grid; place-items: center; line-height: 0; }
+.post-actions .action small { margin: 0; line-height: 1; }
+@media (max-width: 680px) {
+  .post.has-thread { --thread-elbow-bottom: 33px; }
+}
+
 /* Thread rail: the avatar spine turns into a soft footer elbow so the
    conversation line visually lands behind the post actions, as in NSosyal's
    native post treatment. The action controls sit above the rail to preserve
@@ -1049,4 +1063,13 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
   .post.has-thread .action-wrap:last-child .action { width: 42px; min-width: 42px; height: 42px; }
   .post.has-thread .action:hover,
   .post.has-thread .action-wrap.active .action { border-color: color-mix(in oklch, var(--brand) 42%, transparent); }
+}
+
+/* Final rail alignment overrides follow the responsive rail definitions above. */
+.post.has-thread { --thread-elbow-bottom: 35px; }
+.post-actions .action { box-sizing: border-box; align-items: center; justify-content: center; line-height: 1; }
+.post-actions .action i { display: grid; place-items: center; line-height: 0; }
+.post-actions .action small { margin: 0; line-height: 1; }
+@media (max-width: 680px) {
+  .post.has-thread { --thread-elbow-bottom: 33px; }
 }
