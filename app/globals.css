@@ -893,6 +893,34 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
   .bottom-nav.is-compact > button:not(.bottom-compose) { flex: 1 1 0; }
 }
 
+/* Motion pass: collapse the compose slot instead of removing it abruptly. */
+@media (max-width: 680px) {
+  .bottom-nav {
+    transition: height .34s cubic-bezier(.22, 1, .36, 1), padding .34s cubic-bezier(.22, 1, .36, 1), border-radius .34s cubic-bezier(.22, 1, .36, 1), transform .34s cubic-bezier(.22, 1, .36, 1), box-shadow .34s cubic-bezier(.22, 1, .36, 1);
+  }
+  .bottom-nav > button {
+    transition: flex .34s cubic-bezier(.22, 1, .36, 1), min-height .34s cubic-bezier(.22, 1, .36, 1), border-radius .34s cubic-bezier(.22, 1, .36, 1), background .22s var(--ease), color .22s var(--ease), transform .22s var(--ease);
+  }
+  .bottom-nav .bottom-compose {
+    transition: flex-basis .34s cubic-bezier(.22, 1, .36, 1), width .34s cubic-bezier(.22, 1, .36, 1), min-width .34s cubic-bezier(.22, 1, .36, 1), height .34s cubic-bezier(.22, 1, .36, 1), min-height .34s cubic-bezier(.22, 1, .36, 1), margin .34s cubic-bezier(.22, 1, .36, 1), padding .34s cubic-bezier(.22, 1, .36, 1), border-width .34s cubic-bezier(.22, 1, .36, 1), opacity .2s ease, transform .34s cubic-bezier(.22, 1, .36, 1);
+  }
+  .bottom-nav.is-compact .bottom-compose.is-hidden {
+    display: grid;
+    flex: 0 0 0;
+    width: 0;
+    min-width: 0;
+    height: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+    transform: scale(.55);
+  }
+}
+
 /* Center the identity row and keep follow actions icon-only in the post header. */
 .post-meta { align-items: center; min-height: 46px; }
 .post-meta .post-follow {
