@@ -28,7 +28,7 @@ test("server-renders the NSosyal social shell", async () => {
   const html = await response.text();
   assert.match(html, /<html lang="tr">/i);
   assert.match(html, /NSosyal/);
-  assert.match(html, /Ne düşünüyorsun\?/);
+  assert.doesNotMatch(html, /Ne düşünüyorsun\?/);
   assert.match(html, /Şu an konuşulanlar/);
   assert.doesNotMatch(html, /codex-preview|react-loading-skeleton|Building your site/i);
 });
@@ -60,7 +60,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /Mesajlar/);
   assert.match(page, /useState<View>\("feed"\)/);
   assert.doesNotMatch(page, /sign[ -]?in|log[ -]?in|login/i);
-  assert.match(page, /Ne düşünüyorsun\?/);
+  assert.match(page, /Ne paylaşmak istersin\?/);
   assert.match(page, /Sana Özel/);
   assert.match(page, /Takip Ettiklerin/);
   assert.match(page, /Takip Ediliyor/);
@@ -83,7 +83,12 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /nsosyal-messages/);
   assert.match(page, /ActionIcon/);
   assert.match(page, /name === "menu"/);
+  assert.match(page, /name === "plus"/);
   assert.match(page, /CompactDesktopMenu/);
+  assert.match(page, /ComposeModal/);
+  assert.match(page, /mobile-profile-button/);
+  assert.match(page, /mobile-compose-fab/);
+  assert.match(page, /MobileNav\(\{ view, setView, unread \}/);
   assert.match(page, /top-action-search/);
   assert.match(page, /repostedByMe/);
   assert.match(page, /Yeniden paylaştın/);
@@ -133,8 +138,11 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /\.bottom-nav \{ display: none !important; \}/);
   assert.match(css, /\.topbar-center-brand/);
   assert.match(css, /\.compact-menu/);
+  assert.match(css, /\.mobile-compose-fab/);
+  assert.match(css, /grid-template-columns: repeat\(4, 1fr\)/);
+  assert.match(css, /\.top-action-theme, \.top-action-search/);
   assert.match(css, /prefers-reduced-transparency/);
-  assert.match(page, /Profil ve daha fazlası/);
+  assert.match(page, /Profil menüsünü aç/);
   assert.match(page, /onBookmarks/);
   assert.match(css, /--brand-fill: #324BFF/);
   assert.match(css, /--brand-text: #AEB8FF/);
