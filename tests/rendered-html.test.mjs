@@ -93,6 +93,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /repostedByMe/);
   assert.match(page, /Yeniden paylaştın/);
   assert.match(page, /actions\.reposts\.includes\(post\.id\)/);
+  assert.match(page, /Repostlar/);
+  assert.match(page, /tab === "reposts"/);
   assert.doesNotMatch(page, /className="notice"/);
   assert.match(page, /const setNotice: \(message: string\) => void = \(\) => undefined/);
   assert.match(layout, /NSosyal - Sosyal Ağ Platformu/);
