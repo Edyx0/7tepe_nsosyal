@@ -889,6 +889,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
     height: 48px;
     min-height: 48px;
   }
+  .bottom-nav.is-compact .bottom-compose.is-hidden { display: none; }
+  .bottom-nav.is-compact > button:not(.bottom-compose) { flex: 1 1 0; }
 }
 
 /* Center the identity row and keep follow actions icon-only in the post header. */
