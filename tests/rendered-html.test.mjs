@@ -152,6 +152,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /\.sidebar \{[\s\S]*backdrop-filter: blur\(24px\) saturate\(1\.35\)/);
   assert.match(css, /@media \(min-width: 1001px\), \(min-width: 631px\) and \(max-width: 680px\)/);
   assert.match(css, /\.topbar \{ display: none !important; \}/);
+  assert.match(css, /height: calc\(100vh - 28px\)/);
+  assert.match(css, /margin: 14px 0 14px 12px/);
+  assert.match(css, /border-radius: 0 28px 28px 0/);
   assert.match(css, /\.topbar-center-brand/);
   assert.match(css, /\.compact-menu/);
   assert.match(css, /\.bottom-nav \.bottom-compose/);
