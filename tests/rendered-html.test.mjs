@@ -103,10 +103,14 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.equal(sourceEraLight.length > 0, true);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /@media \(max-width: 680px\)/);
-  assert.match(css, /grid-template-columns: repeat\(6, 1fr\)/);
+  assert.match(css, /grid-template-columns: repeat\(5, 1fr\)/);
   assert.match(css, /env\(safe-area-inset-bottom\)/);
   assert.match(css, /border-radius: 22px/);
   assert.match(css, /min-height: 44px/);
+  assert.match(css, /--apple-radius-nav: 28px/);
+  assert.match(css, /prefers-reduced-transparency/);
+  assert.match(page, /Profil ve daha fazlası/);
+  assert.match(page, /onBookmarks/);
   assert.match(css, /--brand-fill: #324BFF/);
   assert.match(css, /--brand-text: #AEB8FF/);
   assert.match(css, /\.post-follow \{ position: static/);
