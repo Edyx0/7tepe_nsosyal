@@ -22,7 +22,7 @@ type Attachment = "signal" | "note";
 type Post = {
   id: string; name: string; handle: string; time: string; body: string; initials: string;
   tone: string; replies: number; reposts: number; likes: number; audience: "all" | "following";
-  replyTo?: string; replyToId?: string; context?: boolean; attachment?: Attachment; own?: boolean;
+  replyTo?: string; replyToId?: string; context?: boolean; attachment?: Attachment; own?: boolean; repostedByMe?: boolean;
 };
 type Actions = { likes: string[]; reposts: string[]; bookmarks: string[] };
 type Mods = { deleted: string[]; pinned: string | null };
@@ -68,7 +68,7 @@ function isStringArray(value: unknown): value is string[] { return Array.isArray
 function isPost(value: unknown): value is Post {
   if (!value || typeof value !== "object") return false;
   const post = value as Record<string, unknown>;
-  return typeof post.id === "string" && typeof post.name === "string" && typeof post.handle === "string" && typeof post.time === "string" && typeof post.body === "string" && typeof post.initials === "string" && typeof post.tone === "string" && typeof post.replies === "number" && typeof post.reposts === "number" && typeof post.likes === "number" && (post.audience === "all" || post.audience === "following") && (post.replyTo === undefined || typeof post.replyTo === "string") && (post.replyToId === undefined || typeof post.replyToId === "string") && (post.attachment === undefined || post.attachment === "signal" || post.attachment === "note") && (post.own === undefined || typeof post.own === "boolean");
+  return typeof post.id === "string" && typeof post.name === "string" && typeof post.handle === "string" && typeof post.time === "string" && typeof post.body === "string" && typeof post.initials === "string" && typeof post.tone === "string" && typeof post.replies === "number" && typeof post.reposts === "number" && typeof post.likes === "number" && (post.audience === "all" || post.audience === "following") && (post.replyTo === undefined || typeof post.replyTo === "string") && (post.replyToId === undefined || typeof post.replyToId === "string") && (post.attachment === undefined || post.attachment === "signal" || post.attachment === "note") && (post.own === undefined || typeof post.own === "boolean") && (post.repostedByMe === undefined || typeof post.repostedByMe === "boolean");
 }
 function isValidStored(key: string, value: unknown): boolean {
   if (key === "nsosyal-theme") return value === "light" || value === "dark";
@@ -242,7 +242,10 @@ export default function Home() {
   const feedProps: Omit<FeedProps, "posts" | "morePost"> = { actions, pinned: mods.pinned, following, onAction: updateAction, onReply: startReply, onDetail: openDetail, onProfile: openProfile, onQuote: quotePost, onShare: sharePost, onMore: setMorePost, onMedia: setMediaPost, onDelete: deleteOwnPost, onPin: togglePin, onFollow: toggleFollow };
   const isOwnProfile = !profilePost || profilePost.own;
   const visibleProfile: Profile = profilePost && !profilePost.own ? { name: profilePost.name, handle: profilePost.handle, initials: profilePost.initials, bio: "NSosyal’daki açık konuşmalara katılıyor. Bu profil, çevrimdışı demo verisiyle gösteriliyor.", location: "Türkiye" } : profile;
-  const profilePosts = profilePost && !profilePost.own ? posts.filter((post) => post.handle === profilePost.handle) : posts.filter((post) => post.own);
+  const profilePosts = useMemo(() => {
+    if (profilePost && !profilePost.own) return posts.filter((post) => post.handle === profilePost.handle);
+    return posts.filter((post) => post.own || actions.reposts.includes(post.id)).map((post) => post.own ? post : { ...post, repostedByMe: true });
+  }, [actions.reposts, profilePost, posts]);
 
   return <main className="app-shell">
     <a className="skip-link" href="#main-content">Ana içeriğe geç</a>
@@ -285,6 +288,7 @@ function PostCard({ post, actions, pinned, following, onAction, onReply, onDetai
     {pinned === post.id && <p className="pin-status"><UiIcon name="pin" /> Profilde sabitlendi</p>}
     <button className="avatar-button" onClick={(event) => runExclusive(event, () => onProfile(post))} aria-label={post.name + " profilini aç"}><Avatar initials={post.initials} tone={post.tone} /></button>
     <div className="post-content">
+      {post.repostedByMe && <p className="repost-status" aria-label="Yeniden paylaştığın gönderi"><ActionIcon name="repost" /> Yeniden paylaştın</p>}
       {post.replyTo && <p className="reply-context">{post.replyTo} adlı kişiye yanıt olarak</p>}
       <div className="post-meta"><button className="name" onClick={(event) => runExclusive(event, () => onProfile(post))}>{post.name}</button><span>{post.handle}</span><span>·</span><button className="time" onClick={() => onDetail(post)}>{post.time}</button><button className="more" aria-label="Gönderi seçeneklerini aç" onClick={(event) => runExclusive(event, () => onMore(post))}><UiIcon name="more" /></button></div>
       {!post.own && <button className="post-follow" aria-pressed={following.includes(post.handle)} onClick={(event) => runExclusive(event, () => onFollow(post.handle))}>{following.includes(post.handle) ? "Takip Ediliyor" : "Takip et"}</button>}
