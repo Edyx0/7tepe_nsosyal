@@ -106,6 +106,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /border-bottom-left-radius: 16px/);
   assert.match(css, /--thread-rail-x: 36px/);
   assert.match(css, /\.post\.has-thread \.post-actions/);
+  assert.match(css, /justify-content: flex-start/);
+  assert.match(css, /\.post\.has-thread \.action-wrap:last-child \{ margin-left: auto; \}/);
+  assert.match(css, /backdrop-filter: blur\(18px\) saturate\(1\.25\)/);
   assert.match(css, /aspect-ratio: 16 \/ 8\.7/);
   assert.equal(logoDark.length > 0, true);
   assert.equal(logoLight.length > 0, true);
