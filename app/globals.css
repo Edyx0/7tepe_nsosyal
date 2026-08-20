@@ -548,3 +548,21 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
   .bottom-nav { right: 10px; bottom: max(8px, env(safe-area-inset-bottom)); left: 10px; height: 70px; border-radius: 35px; }
   .bottom-nav button { min-height: 58px; border-radius: 29px; }
 }
+
+/* Action icons use the same optical weight as the native-style bottom bar. */
+.action { gap: 7px; }
+.action i { width: 22px; }
+.action i svg { width: 22px; height: 22px; }
+.action small { font-size: 13px; }
+.quote-mini { width: 28px; height: 28px; }
+.action-wrap.like.active .action svg, .action-wrap.active .quote-mini svg { stroke-width: 2.15; }
+.action-wrap.like.active .action svg { fill: currentColor; }
+
+@media (max-width: 680px) {
+  .action i, .action i svg { width: 21px; height: 21px; }
+  .quote-mini { width: 28px; height: 28px; }
+}
+
+@media (max-width: 340px) {
+  .quote-mini { display: none; }
+}
