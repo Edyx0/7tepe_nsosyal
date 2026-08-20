@@ -82,6 +82,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /useDialogFocus/);
   assert.match(page, /nsosyal-messages/);
   assert.match(page, /ActionIcon/);
+  assert.match(page, /name === "menu"/);
+  assert.match(page, /CompactDesktopMenu/);
+  assert.match(page, /top-action-search/);
   assert.match(page, /repostedByMe/);
   assert.match(page, /Yeniden paylaştın/);
   assert.match(page, /actions\.reposts\.includes\(post\.id\)/);
@@ -126,6 +129,10 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /--apple-radius-modal: 24px/);
   assert.match(css, /flex-grow: 1\.28/);
   assert.match(css, /--apple-status: #ff375f/);
+  assert.match(css, /@media \(min-width: 681px\) and \(max-width: 1000px\)/);
+  assert.match(css, /\.bottom-nav \{ display: none !important; \}/);
+  assert.match(css, /\.topbar-center-brand/);
+  assert.match(css, /\.compact-menu/);
   assert.match(css, /prefers-reduced-transparency/);
   assert.match(page, /Profil ve daha fazlası/);
   assert.match(page, /onBookmarks/);
