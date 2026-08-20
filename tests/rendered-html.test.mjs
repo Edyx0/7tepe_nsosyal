@@ -91,6 +91,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /desktop-compose-fab/);
   assert.match(page, /MobileNav\(\{ view, setView, unread, onCompose, composeHidden \}/);
   assert.match(page, /setComposeHidden/);
+  assert.match(page, /composeHidden \? "is-compact"/);
   assert.match(page, /top-action-search/);
   assert.match(page, /repostedByMe/);
   assert.match(page, /icon-only/);
@@ -150,6 +151,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /\.compact-menu/);
   assert.match(css, /\.bottom-nav \.bottom-compose/);
   assert.match(css, /\.desktop-compose-fab/);
+  assert.match(css, /\.bottom-nav\.is-compact/);
   assert.match(css, /grid-template-columns: repeat\(4, 1fr\)/);
   assert.match(css, /\.top-action-theme, \.top-action-search/);
   assert.match(css, /prefers-reduced-transparency/);

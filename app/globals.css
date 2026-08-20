@@ -866,6 +866,31 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
   .desktop-compose-fab.is-hidden { opacity: 0; pointer-events: none; transform: translateY(18px) scale(.72); }
 }
 
+@media (max-width: 680px) {
+  .bottom-nav {
+    transition: height .22s var(--ease), padding .22s var(--ease), border-radius .22s var(--ease), transform .22s var(--ease), box-shadow .22s var(--ease);
+  }
+  .bottom-nav.is-compact {
+    height: 58px;
+    padding: 3px 5px;
+    border-radius: 29px;
+    transform: translateY(10px);
+    box-shadow: 0 10px 24px rgb(0 0 0 / .28), inset 0 1px 0 rgb(255 255 255 / .1);
+  }
+  .bottom-nav.is-compact button {
+    min-height: 50px;
+    border-radius: 25px;
+  }
+  .bottom-nav.is-compact .ui-icon { width: 26px; height: 26px; }
+  .bottom-nav.is-compact .bottom-compose {
+    flex-basis: 48px;
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+    min-height: 48px;
+  }
+}
+
 /* Thread rail: the avatar spine turns into a soft footer elbow so the
    conversation line visually lands behind the post actions, as in NSosyal's
    native post treatment. The action controls sit above the rail to preserve
