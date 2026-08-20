@@ -676,6 +676,45 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
   .post-actions .action-wrap.icon-only .action { width: 42px; min-width: 42px; height: 42px; min-height: 42px; }
 }
 
+/* Keep the same framed action language on standalone posts, not only threaded ones. */
+.post:not(.has-thread) .post-actions {
+  justify-content: flex-start;
+  gap: 8px;
+  max-width: none;
+}
+.post:not(.has-thread) .post-actions .action-wrap { flex: 0 0 auto; }
+.post:not(.has-thread) .post-actions .action {
+  position: relative;
+  z-index: 1;
+  min-width: 58px;
+  min-height: 46px;
+  padding: 5px 10px;
+  border: 1px solid color-mix(in oklch, var(--line) 88%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 76%, transparent);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .1), inset 0 -1px 0 rgb(0 0 0 / .16), 0 3px 10px rgb(0 0 0 / .16);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  backdrop-filter: blur(18px) saturate(1.25);
+}
+.post:not(.has-thread) .post-actions .action:hover,
+.post:not(.has-thread) .post-actions .action-wrap.active .action {
+  border-color: color-mix(in oklch, var(--brand) 48%, var(--line));
+  background: color-mix(in oklch, var(--brand-soft) 74%, var(--bg));
+}
+.post:not(.has-thread) .post-actions .action-wrap.like.active .action {
+  border-color: color-mix(in oklch, oklch(.57 .2 10) 58%, var(--line));
+  background: color-mix(in oklch, oklch(.57 .2 10 / .14) 70%, var(--bg));
+}
+.post:not(.has-thread) .post-actions .action-wrap:last-child { margin-left: auto; }
+@media (max-width: 680px) {
+  .post:not(.has-thread) .post-actions { gap: 6px; }
+  .post:not(.has-thread) .post-actions .action { min-width: 52px; min-height: 44px; padding: 4px 8px; }
+}
+@media (max-width: 390px) {
+  .post:not(.has-thread) .post-actions { gap: 4px; }
+  .post:not(.has-thread) .post-actions .action { min-width: 42px; min-height: 42px; padding: 4px 6px; }
+}
+
 /* Thread rail: the avatar spine turns into a soft footer elbow so the
    conversation line visually lands behind the post actions, as in NSosyal's
    native post treatment. The action controls sit above the rail to preserve

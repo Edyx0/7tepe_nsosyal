@@ -94,6 +94,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /icon-only/);
   assert.match(page, /requestAnimationFrame/);
   assert.match(page, /atBottom/);
+  assert.match(css, /post:not\(\.has-thread\) \.post-actions/);
   assert.match(page, /Yeniden paylaştın/);
   assert.match(page, /actions\.reposts\.includes\(post\.id\)/);
   assert.match(page, /Repostlar/);
