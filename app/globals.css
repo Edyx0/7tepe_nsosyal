@@ -967,6 +967,31 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
   .post.has-thread { --thread-elbow-bottom: 33px; }
 }
 
+/* Tablet side rail owns navigation when it is visible; never show a second nav. */
+@media (min-width: 631px) and (max-width: 680px) {
+  .sidebar {
+    z-index: 12;
+    overflow: hidden;
+    border-right: 1px solid color-mix(in srgb, var(--line) 92%, white 8%);
+    border-radius: 0 28px 28px 0;
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    box-shadow: 12px 0 30px rgb(0 0 0 / .2), inset -1px 0 0 rgb(255 255 255 / .08);
+    -webkit-backdrop-filter: blur(24px) saturate(1.35);
+    backdrop-filter: blur(24px) saturate(1.35);
+  }
+  .sidebar .nav-list { gap: 8px; }
+  .sidebar .nav-item {
+    border: 1px solid transparent;
+    border-radius: 999px;
+    transition: background .22s var(--ease), border-color .22s var(--ease), box-shadow .22s var(--ease), transform .22s var(--ease), color .22s var(--ease);
+  }
+  .sidebar .nav-item:hover { border-color: color-mix(in srgb, var(--line) 82%, white 18%); background: color-mix(in srgb, white 9%, transparent); transform: translateX(1px); }
+  .sidebar .nav-item.is-active { border-color: color-mix(in srgb, var(--brand) 34%, var(--line)); background: color-mix(in srgb, var(--brand) 20%, transparent); box-shadow: inset 0 1px 0 rgb(255 255 255 / .1), 0 4px 12px rgb(0 0 0 / .18); }
+  .sidebar .sidebar-compose { border: 1px solid color-mix(in srgb, var(--brand) 54%, var(--line)); border-radius: 50%; background: color-mix(in srgb, var(--surface) 78%, transparent); color: var(--brand-text); box-shadow: inset 0 1px 0 rgb(255 255 255 / .12), 0 6px 16px rgb(0 0 0 / .2); }
+  .sidebar .mini-profile { border: 1px solid color-mix(in srgb, var(--line) 82%, white 18%); border-radius: 999px; background: color-mix(in srgb, var(--surface) 70%, transparent); }
+  .bottom-nav { display: none !important; }
+}
+
 /* Action rows are always one line; compact widths reduce content instead of wrapping. */
 .post-actions { flex-wrap: nowrap !important; min-width: 0; }
 @media (max-width: 680px) {
@@ -1142,3 +1167,38 @@ button,
   .mobile-profile-button .avatar { width: 40px; height: 40px; border-width: 2px; font-size: 12px; }
   .topbar .mobile-brand .brand-mark.small { width: 31px; height: 31px; }
 }
+/* Final tablet navigation ownership override. */
+@media (min-width: 631px) and (max-width: 680px) {
+  .sidebar {
+    z-index: 12;
+    overflow: hidden;
+    border-right: 1px solid color-mix(in srgb, var(--line) 92%, white 8%);
+    border-radius: 0 28px 28px 0;
+    background: color-mix(in srgb, var(--bg) 72%, transparent);
+    box-shadow: 12px 0 30px rgb(0 0 0 / .2), inset -1px 0 0 rgb(255 255 255 / .08);
+    -webkit-backdrop-filter: blur(24px) saturate(1.35);
+    backdrop-filter: blur(24px) saturate(1.35);
+  }
+  .sidebar .nav-list { gap: 8px; }
+  .sidebar .nav-item { border: 1px solid transparent; border-radius: 999px; transition: background .22s var(--ease), border-color .22s var(--ease), box-shadow .22s var(--ease), transform .22s var(--ease), color .22s var(--ease); }
+  .sidebar .nav-item:hover { border-color: color-mix(in srgb, var(--line) 82%, white 18%); background: color-mix(in srgb, white 9%, transparent); transform: translateX(1px); }
+  .sidebar .nav-item.is-active { border-color: color-mix(in srgb, var(--brand) 34%, var(--line)); background: color-mix(in srgb, var(--brand) 20%, transparent); box-shadow: inset 0 1px 0 rgb(255 255 255 / .1), 0 4px 12px rgb(0 0 0 / .18); }
+  .sidebar .sidebar-compose { border: 1px solid color-mix(in srgb, var(--brand) 54%, var(--line)); border-radius: 50%; background: color-mix(in srgb, var(--surface) 78%, transparent); color: var(--brand-text); box-shadow: inset 0 1px 0 rgb(255 255 255 / .12), 0 6px 16px rgb(0 0 0 / .2); }
+  .sidebar .mini-profile { border: 1px solid color-mix(in srgb, var(--line) 82%, white 18%); border-radius: 999px; background: color-mix(in srgb, var(--surface) 70%, transparent); }
+  .bottom-nav { display: none !important; }
+}
+/* The persistent left rail uses the same glass navigation material at every desktop width. */
+.sidebar {
+  border-right: 1px solid color-mix(in srgb, var(--line) 92%, white 8%);
+  border-radius: 0 28px 28px 0;
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  box-shadow: 12px 0 30px rgb(0 0 0 / .18), inset -1px 0 0 rgb(255 255 255 / .08);
+  -webkit-backdrop-filter: blur(24px) saturate(1.35);
+  backdrop-filter: blur(24px) saturate(1.35);
+}
+.sidebar .nav-item { border: 1px solid transparent; border-radius: 999px; transition: background .22s var(--ease), border-color .22s var(--ease), box-shadow .22s var(--ease), transform .22s var(--ease), color .22s var(--ease); }
+.sidebar .nav-item:hover { border-color: color-mix(in srgb, var(--line) 82%, white 18%); background: color-mix(in srgb, white 9%, transparent); transform: translateX(1px); }
+.sidebar .nav-item.is-active { border-color: color-mix(in srgb, var(--brand) 34%, var(--line)); background: color-mix(in srgb, var(--brand) 20%, transparent); box-shadow: inset 0 1px 0 rgb(255 255 255 / .1), 0 4px 12px rgb(0 0 0 / .18); }
+.sidebar .sidebar-compose { border: 1px solid color-mix(in srgb, var(--brand) 54%, var(--line)); border-radius: 999px; background: color-mix(in srgb, var(--surface) 78%, transparent); color: var(--brand-text); box-shadow: inset 0 1px 0 rgb(255 255 255 / .12), 0 6px 16px rgb(0 0 0 / .2); transition: transform .22s var(--ease), background .22s var(--ease), box-shadow .22s var(--ease); }
+.sidebar .sidebar-compose:hover { background: color-mix(in srgb, var(--brand-soft) 60%, var(--surface)); transform: translateY(-1px); }
+.sidebar .mini-profile { border: 1px solid color-mix(in srgb, var(--line) 82%, white 18%); border-radius: 999px; background: color-mix(in srgb, var(--surface) 70%, transparent); }

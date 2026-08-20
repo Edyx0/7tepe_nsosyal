@@ -149,6 +149,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /--apple-status: #ff375f/);
   assert.match(css, /@media \(min-width: 681px\) and \(max-width: 1000px\)/);
   assert.match(css, /\.bottom-nav \{ display: none !important; \}/);
+  assert.match(css, /\.sidebar \{[\s\S]*backdrop-filter: blur\(24px\) saturate\(1\.35\)/);
   assert.match(css, /\.topbar-center-brand/);
   assert.match(css, /\.compact-menu/);
   assert.match(css, /\.bottom-nav \.bottom-compose/);
@@ -163,6 +164,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /brand-mark\.small \{ width: 31px; height: 31px; \}/);
   assert.match(css, /\.post-actions \{ flex-wrap: nowrap !important/);
   assert.match(css, /@media \(max-width: 430px\)/);
+  assert.match(css, /@media \(min-width: 631px\) and \(max-width: 680px\)/);
+  assert.match(css, /\.bottom-nav \{ display: none !important; \}/);
   assert.match(css, /grid-template-columns: repeat\(4, 1fr\)/);
   assert.match(css, /\.top-action-theme, \.top-action-search/);
   assert.match(css, /prefers-reduced-transparency/);
