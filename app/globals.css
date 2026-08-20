@@ -1187,6 +1187,11 @@ button,
   .sidebar .mini-profile { border: 1px solid color-mix(in srgb, var(--line) 82%, white 18%); border-radius: 999px; background: color-mix(in srgb, var(--surface) 70%, transparent); }
   .bottom-nav { display: none !important; }
 }
+
+/* When the persistent side rail owns navigation, the duplicate top bar is removed. */
+@media (min-width: 1001px), (min-width: 631px) and (max-width: 680px) {
+  .topbar { display: none !important; }
+}
 /* The persistent left rail uses the same glass navigation material at every desktop width. */
 .sidebar {
   border-right: 1px solid color-mix(in srgb, var(--line) 92%, white 8%);
