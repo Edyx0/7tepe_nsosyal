@@ -155,7 +155,9 @@ export default function Home() {
   const [editingProfile, setEditingProfile] = useState(false);
   const [contextOpen, setContextOpen] = useState(true);
   const [shareFeedback, setShareFeedback] = useState("");
-  const [notice, setNotice] = useState("");
+  // Action feedback stays silent in the feed; the state change itself is the
+  // confirmation and no banner should push content below the sticky top bar.
+  const setNotice: (message: string) => void = () => undefined;
   const [search, setSearch] = useState("");
   const [headerCompact, setHeaderCompact] = useState(false);
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
@@ -247,7 +249,6 @@ export default function Home() {
     <Sidebar view={view} setView={setView} profile={profile} unread={3 - readNotifications.length} onOwnProfile={openOwnProfile} onCompose={() => { setView("feed"); window.setTimeout(() => document.getElementById("compose-input")?.focus(), 80); }} />
     <section className="timeline" aria-label={title}>
       <header className={"topbar " + (headerCompact ? "is-compact" : "")}>{view === "detail" ? <button className="back-button" onClick={() => { setReplyingTo(null); setView("feed"); }} aria-label="Ana Sayfaya dön"><UiIcon name="arrow-left" /></button> : <span className="mobile-brand"><BrandMark small /><span className="sr-only">NSosyal</span></span>}<div className="topbar-heading"><span className="topbar-context">NSosyal</span><h1>{view === "detail" ? "NSosyal" : title}</h1></div><button className="top-action" onClick={() => setTheme((current) => current === "light" ? "dark" : "light")} aria-label="Temayı değiştir"><UiIcon name={theme === "light" ? "moon" : "sun"} /></button></header>
-      {notice && <div className="notice" role="status"><span>{notice}</span><button onClick={() => setNotice("")} aria-label="Bildirimi kapat"><UiIcon name="close" /></button></div>}
       <div id="main-content" className="content-area">
         {view === "feed" && <><div className="feed-tabs" role="tablist" aria-label="Ana Sayfa seçimi"><button role="tab" aria-selected={feedMode === "for-you"} className={feedMode === "for-you" ? "selected" : ""} onClick={() => setFeedMode("for-you")}>Sana Özel</button><button role="tab" aria-selected={feedMode === "following"} className={feedMode === "following" ? "selected" : ""} onClick={() => setFeedMode("following")}>Takip Ettiklerin</button></div><Composer text={composerText} setText={setComposerText} media={composerMedia} onTool={useComposerTool} replyingTo={replyingTo} clearReply={() => setReplyingTo(null)} onSubmit={createPost} /><Feed {...feedProps} posts={displayedPosts} morePost={morePost} /></>}
         {view === "detail" && selectedPost && <ThreadDetail {...feedProps} post={selectedPost} morePost={morePost} allPosts={posts} contextOpen={contextOpen} setContextOpen={setContextOpen} composerText={composerText} setComposerText={setComposerText} composerMedia={composerMedia} onTool={useComposerTool} replyingTo={replyingTo} clearReply={() => setReplyingTo(null)} onSubmit={createPost} />}

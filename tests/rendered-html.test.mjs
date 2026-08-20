@@ -82,6 +82,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /useDialogFocus/);
   assert.match(page, /nsosyal-messages/);
   assert.match(page, /ActionIcon/);
+  assert.doesNotMatch(page, /className="notice"/);
+  assert.match(page, /const setNotice: \(message: string\) => void = \(\) => undefined/);
   assert.match(layout, /NSosyal - Sosyal Ağ Platformu/);
   assert.match(layout, /nsosyal-favicon\.svg/);
   assert.match(layout, /viewportFit: "cover"/);
