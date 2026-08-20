@@ -1495,3 +1495,34 @@ button,
   .thread-view > .thread-reply .avatar,
   .thread-view > .composer .avatar { width: 40px; height: 40px; }
 }
+
+/* Post header alignment: every control shares the avatar's 46px center line. */
+.post-meta {
+  height: 46px;
+  min-height: 46px;
+  align-items: center;
+}
+.post > .avatar { align-self: center; }
+.post-meta .post-follow {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  margin: 0;
+  display: grid;
+  place-items: center;
+}
+.post-meta .post-follow .ui-icon { width: 22px; height: 22px; }
+.post-meta .more {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  margin: 0;
+  display: grid;
+  place-items: center;
+}
+.post-meta .more .ui-icon { width: 16px; height: 16px; }
+@media (max-width: 680px) {
+  .post > .avatar { margin-top: 2px; }
+  .post-meta .post-follow,
+  .post-meta .more { width: 40px; height: 40px; flex-basis: 40px; }
+}
