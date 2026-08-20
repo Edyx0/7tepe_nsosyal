@@ -607,7 +607,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
 
 /* Composer is intentionally opened from the floating action, keeping the
    feed focused on reading while preserving a full posting flow on demand. */
-.mobile-profile-button, .mobile-compose-fab { display: none; }
+.mobile-profile-button, .bottom-compose, .desktop-compose-fab { display: none; }
 .compose-modal { width: min(100%, 600px); overflow: hidden; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); color: var(--ink); box-shadow: 0 18px 48px rgb(0 0 0 / .3); }
 .compose-modal > header { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px 8px; border-bottom: 1px solid var(--line); }
 .compose-modal > header strong { font-size: 16px; }
@@ -625,9 +625,6 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
   .mobile-profile-button:active { transform: scale(.94); }
   .mobile-brand { display: inline-flex; margin-left: auto; }
   .bottom-nav { grid-template-columns: repeat(4, 1fr); }
-  .mobile-compose-fab { position: fixed; z-index: 22; right: 16px; bottom: calc(104px + env(safe-area-inset-bottom)); display: grid; width: 56px; height: 56px; place-items: center; border: 1px solid color-mix(in srgb, var(--brand) 62%, white 38%); border-radius: 50%; background: var(--brand); color: white; box-shadow: 0 12px 28px rgb(0 0 0 / .34), inset 0 1px 0 rgb(255 255 255 / .24); }
-  .mobile-compose-fab .ui-icon { width: 27px; height: 27px; stroke-width: 2.2; }
-  .mobile-compose-fab:active { transform: scale(.92); }
   .compose-backdrop { display: grid; align-items: end; padding: 0; }
   .compose-modal { width: 100%; max-height: min(84dvh, 680px); border-right: 0; border-bottom: 0; border-radius: 24px 24px 0 0; }
   .compose-modal .composer { max-height: calc(min(84dvh, 680px) - 58px); overflow: auto; }
@@ -787,6 +784,83 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
 @media (max-width: 680px) {
   .feed-tabs { margin: 8px 12px 10px; }
   .topbar { border-right: 0; border-left: 0; }
+}
+
+/* Standalone posts stay lightweight; the framed treatment belongs to the connected rail. */
+.post:not(.has-thread) .post-actions .action,
+.post:not(.has-thread) .post-actions .action:hover,
+.post:not(.has-thread) .post-actions .action-wrap.active .action {
+  min-width: 0;
+  min-height: 42px;
+  height: 42px;
+  padding: 4px 7px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.post:not(.has-thread) .post-actions .action-wrap.icon-only .action {
+  width: 42px;
+  min-width: 42px;
+  padding: 0;
+}
+.post:not(.has-thread) .post-actions .action-wrap.active .action { color: var(--brand-text); }
+.post:not(.has-thread) .post-actions .action-wrap.like.active .action { color: oklch(.68 .2 10); background: oklch(.57 .2 10 / .1); }
+
+/* The compose action lives in the mobile glass nav and floats only on wide desktop. */
+@media (max-width: 680px) {
+  .bottom-nav .bottom-compose {
+    display: grid;
+    flex: 0 0 62px;
+    width: 62px;
+    min-width: 62px;
+    height: 62px;
+    min-height: 62px;
+    margin-left: 2px;
+    border: 1px solid color-mix(in srgb, var(--brand) 62%, white 38%);
+    border-radius: 50%;
+    background: var(--brand);
+    color: white;
+    box-shadow: 0 10px 24px rgb(0 0 0 / .32), inset 0 1px 0 rgb(255 255 255 / .24);
+    transition: flex-basis .2s var(--ease), min-width .2s var(--ease), width .2s var(--ease), opacity .16s var(--ease), transform .16s var(--ease);
+  }
+  .bottom-nav .bottom-compose .ui-icon { width: 27px; height: 27px; stroke-width: 2.2; }
+  .bottom-nav .bottom-compose:active { transform: scale(.92); }
+  .bottom-nav .bottom-compose.is-hidden {
+    flex-basis: 0;
+    width: 0;
+    min-width: 0;
+    margin-left: 0;
+    padding: 0;
+    border-width: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(.65);
+  }
+}
+@media (min-width: 1001px) {
+  .desktop-compose-fab {
+    position: fixed;
+    z-index: 18;
+    right: max(24px, calc((100vw - 1280px) / 2));
+    bottom: 28px;
+    display: grid;
+    width: 62px;
+    height: 62px;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--brand) 62%, white 38%);
+    border-radius: 50%;
+    background: var(--brand);
+    color: white;
+    box-shadow: 0 14px 30px rgb(0 0 0 / .34), inset 0 1px 0 rgb(255 255 255 / .24);
+    transition: opacity .18s var(--ease), transform .2s var(--ease), box-shadow .18s var(--ease);
+  }
+  .desktop-compose-fab .ui-icon { width: 29px; height: 29px; stroke-width: 2.2; }
+  .desktop-compose-fab:hover { background: var(--brand-strong); box-shadow: 0 16px 34px rgb(0 0 0 / .4), inset 0 1px 0 rgb(255 255 255 / .28); }
+  .desktop-compose-fab:active { transform: scale(.92); }
+  .desktop-compose-fab.is-hidden { opacity: 0; pointer-events: none; transform: translateY(18px) scale(.72); }
 }
 
 /* Thread rail: the avatar spine turns into a soft footer elbow so the

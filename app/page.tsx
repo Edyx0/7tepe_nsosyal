@@ -162,6 +162,7 @@ export default function Home() {
   const setNotice: (message: string) => void = () => undefined;
   const [search, setSearch] = useState("");
   const [headerCompact, setHeaderCompact] = useState(false);
+  const [composeHidden, setComposeHidden] = useState(false);
   const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
   const [compactMenuOpen, setCompactMenuOpen] = useState(false);
   const [composerOpen, setComposerOpen] = useState(false);
@@ -202,9 +203,9 @@ export default function Home() {
         const maxScrollY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
         const atTop = currentScrollY <= 2;
         const atBottom = maxScrollY > 0 && currentScrollY >= maxScrollY - 2;
-        if (atTop || atBottom) compact = false;
-        else if (delta > 6 && currentScrollY > 32) compact = true;
-        else if (delta < -10) compact = false;
+        if (atTop) { compact = false; setComposeHidden(false); }
+        else if (delta > 6) { compact = !atBottom && currentScrollY > 32; setComposeHidden(true); }
+        else if (delta < -10) { compact = false; setComposeHidden(false); }
         setHeaderCompact(compact);
         lastScrollY = currentScrollY;
       });
@@ -283,8 +284,8 @@ export default function Home() {
       </div>
     </section>
     <aside className="right-rail" aria-label="Gündem ve öneriler"><div className="search-field"><span aria-hidden="true"><UiIcon name="search" /></span><input aria-label="NSosyal ara" placeholder="NSosyal ara" value={search} onChange={(event) => { setSearch(event.target.value); setView("explore"); }} /></div><TrendPanel onSelect={(topic) => { setSearch(topic); setView("explore"); }} /><WhoToFollow following={following} onFollow={toggleFollow} /><p className="legal">Koşullar · Gizlilik · Çerezler<br />NSosyal 2026</p></aside>
-    <MobileNav view={view} setView={setView} unread={3 - readNotifications.length} />
-    <button className="mobile-compose-fab" onClick={openComposer} aria-label="Yeni gönderi paylaş"><UiIcon name="plus" /></button>
+    <MobileNav view={view} setView={setView} unread={3 - readNotifications.length} onCompose={openComposer} composeHidden={composeHidden} />
+    <button className={"desktop-compose-fab " + (composeHidden ? "is-hidden" : "")} onClick={openComposer} aria-label="Yeni gönderi paylaş" tabIndex={composeHidden ? -1 : 0}><UiIcon name="plus" /></button>
     {shareFeedback && <div className="toast" role="status">{shareFeedback}</div>}
     {composerOpen && <ComposeModal text={composerText} setText={setComposerText} media={composerMedia} onTool={useComposerTool} replyingTo={replyingTo} clearReply={() => setReplyingTo(null)} onSubmit={createPost} onClose={() => setComposerOpen(false)} />}
     {compactMenuOpen && <CompactDesktopMenu view={view} setView={setView} theme={theme} setTheme={setTheme} profile={profile} onClose={() => setCompactMenuOpen(false)} onOwnProfile={openOwnProfile} onCompose={openComposer} />}
@@ -298,7 +299,7 @@ export default function Home() {
 function BrandMark({ small = false }: { small?: boolean }) { return <span className={"brand-mark " + (small ? "small" : "")} aria-hidden="true">{small ? <img src="/brand/nsosyal-favicon.svg" alt="" /> : <><img className="logo-for-dark" src="/brand/nsosyal-source-era-logo-dark.svg" alt="" /><img className="logo-for-light" src="/brand/nsosyal-source-era-logo-light.svg" alt="" /></>}</span>; }
 function Avatar({ initials, tone }: { initials: string; tone: string }) { return <span className={"avatar " + tone}>{initials}</span>; }
 function Sidebar({ view, setView, profile, unread, onCompose, onOwnProfile }: { view: View; setView: (view: View) => void; profile: Profile; unread: number; onCompose: () => void; onOwnProfile: () => void }) { return <aside className="sidebar" aria-label="Ana gezinme"><button className="brand" onClick={() => setView("feed")} aria-label="NSosyal ana sayfa"><BrandMark /><span className="sr-only">NSosyal</span></button><nav className="nav-list">{navigation.map((item) => <button key={item.id} className={"nav-item " + (view === item.id || (view === "detail" && item.id === "feed") ? "is-active" : "")} onClick={() => setView(item.id)} aria-label={item.label}><span className="nav-icon" aria-hidden="true"><UiIcon name={item.icon} /></span><span>{item.label}</span>{item.id === "notifications" && unread > 0 && <b className="nav-dot">{unread}</b>}</button>)}<button className={"nav-item " + (view === "settings" ? "is-active" : "")} onClick={() => setView("settings")} aria-label="Daha Fazla"><span className="nav-icon" aria-hidden="true"><UiIcon name="settings" /></span><span>Daha Fazla</span></button></nav><button className="primary-button sidebar-compose" onClick={onCompose} aria-label="Yeni gönderi paylaş"><span className="desktop-only">Paylaş</span><span className="mobile-only" aria-hidden="true"><UiIcon name="spark" /></span></button><button className="mini-profile" onClick={onOwnProfile} aria-label="Profilini aç"><Avatar initials={profile.initials} tone="ink" /><span><strong>{profile.name}</strong><small>{profile.handle}</small></span><b aria-hidden="true"><UiIcon name="more" /></b></button></aside>; }
-function MobileNav({ view, setView, unread }: { view: View; setView: (view: View) => void; unread: number }) { return <nav className="bottom-nav" aria-label="Mobil gezinme">{navigation.slice(0, 4).map((item) => <button key={item.id} className={view === item.id ? "is-active" : ""} onClick={() => setView(item.id)} aria-current={view === item.id ? "page" : undefined} aria-label={item.label}><UiIcon name={item.icon} />{item.id === "notifications" && unread > 0 && <b />}</button>)}</nav>; }
+function MobileNav({ view, setView, unread, onCompose, composeHidden }: { view: View; setView: (view: View) => void; unread: number; onCompose: () => void; composeHidden: boolean }) { return <nav className="bottom-nav" aria-label="Mobil gezinme">{navigation.slice(0, 4).map((item) => <button key={item.id} className={view === item.id ? "is-active" : ""} onClick={() => setView(item.id)} aria-current={view === item.id ? "page" : undefined} aria-label={item.label}><UiIcon name={item.icon} />{item.id === "notifications" && unread > 0 && <b />}</button>)}<button className={"bottom-compose " + (composeHidden ? "is-hidden" : "")} onClick={onCompose} aria-label="Yeni gönderi paylaş" aria-hidden={composeHidden} tabIndex={composeHidden ? -1 : 0}><UiIcon name="plus" /></button></nav>; }
 function MobileMoreMenu({ onClose, onProfile, onBookmarks, onSettings }: { onClose: () => void; onProfile: () => void; onBookmarks: () => void; onSettings: () => void }) { const dialogRef = useDialogFocus(onClose); return <div className="modal-backdrop"><section ref={dialogRef} className="more-menu mobile-more-menu" role="dialog" aria-modal="true" aria-label="Daha fazla gezinme" tabIndex={-1}><button onClick={onProfile}><UiIcon name="profile" /> Profil</button><button onClick={onBookmarks}><UiIcon name="bookmark" /> Yer İmleri</button><button onClick={onSettings}><UiIcon name="settings" /> Ayarlar</button><button onClick={onClose}><UiIcon name="close" /> Vazgeç</button></section></div>; }
 function CompactDesktopMenu({ view, setView, theme, setTheme, profile, onClose, onOwnProfile, onCompose }: { view: View; setView: (view: View) => void; theme: Theme; setTheme: (theme: Theme) => void; profile: Profile; onClose: () => void; onOwnProfile: () => void; onCompose: () => void }) {
   const dialogRef = useDialogFocus(onClose);

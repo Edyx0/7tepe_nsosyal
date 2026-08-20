@@ -87,8 +87,10 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /CompactDesktopMenu/);
   assert.match(page, /ComposeModal/);
   assert.match(page, /mobile-profile-button/);
-  assert.match(page, /mobile-compose-fab/);
-  assert.match(page, /MobileNav\(\{ view, setView, unread \}/);
+  assert.match(page, /bottom-compose/);
+  assert.match(page, /desktop-compose-fab/);
+  assert.match(page, /MobileNav\(\{ view, setView, unread, onCompose, composeHidden \}/);
+  assert.match(page, /setComposeHidden/);
   assert.match(page, /top-action-search/);
   assert.match(page, /repostedByMe/);
   assert.match(page, /icon-only/);
@@ -146,7 +148,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /\.bottom-nav \{ display: none !important; \}/);
   assert.match(css, /\.topbar-center-brand/);
   assert.match(css, /\.compact-menu/);
-  assert.match(css, /\.mobile-compose-fab/);
+  assert.match(css, /\.bottom-nav \.bottom-compose/);
+  assert.match(css, /\.desktop-compose-fab/);
   assert.match(css, /grid-template-columns: repeat\(4, 1fr\)/);
   assert.match(css, /\.top-action-theme, \.top-action-search/);
   assert.match(css, /prefers-reduced-transparency/);
