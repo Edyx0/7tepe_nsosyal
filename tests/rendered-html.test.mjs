@@ -155,6 +155,10 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /height: calc\(100vh - 28px\)/);
   assert.match(css, /margin: 14px 0 14px 12px/);
   assert.match(css, /border-radius: 0 28px 28px 0/);
+  assert.match(css, /backdrop-filter: blur\(30px\) saturate\(1\.5\)/);
+  assert.match(css, /\.sidebar \.nav-item \.nav-icon,[\s\S]*place-items: center/);
+  assert.match(css, /margin-left: 4px/);
+  assert.match(css, /height: 44px; min-height: 44px; padding: 0; justify-content: center; border-radius: 50%/);
   assert.match(css, /\.topbar-center-brand/);
   assert.match(css, /\.compact-menu/);
   assert.match(css, /\.bottom-nav \.bottom-compose/);
