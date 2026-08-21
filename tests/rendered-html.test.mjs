@@ -88,6 +88,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /CompactDesktopMenu/);
   assert.match(page, /ComposeModal/);
   assert.match(page, /mobile-profile-button/);
+  assert.match(page, /mobile-profile-button" onClick=\{openOwnProfile\}/);
+  assert.match(page, /profile-settings/);
+  assert.match(page, /tab === "bookmarks"/);
   assert.match(page, /bottom-compose/);
   assert.match(page, /desktop-compose-fab/);
   assert.match(page, /MobileNav\(\{ view, setView, unread, onCompose, composeHidden \}/);
@@ -201,7 +204,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /grid-template-columns: repeat\(4, 1fr\)/);
   assert.match(css, /\.top-action-theme, \.top-action-search/);
   assert.match(css, /prefers-reduced-transparency/);
-  assert.match(page, /Profil menüsünü aç/);
+  assert.match(page, /Profilini aç/);
   assert.match(page, /onBookmarks/);
   assert.match(css, /--brand-fill: #324BFF/);
   assert.match(css, /--brand-text: #AEB8FF/);
