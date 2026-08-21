@@ -22,6 +22,11 @@ export function repliesForThread(posts, root) {
   });
 }
 
+export function countNewRepliesForThread(posts, root, initialReplyIds = []) {
+  const initialReplies = new Set(initialReplyIds);
+  return repliesForThread(posts, root).filter((post) => !initialReplies.has(post.id)).length;
+}
+
 export function runExclusive(event, action) {
   event.stopPropagation();
   action();

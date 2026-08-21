@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 import {
+  countNewRepliesForThread,
   removeItem,
   repliesForThread,
   runExclusive,
@@ -156,7 +157,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /const scrollRef = useRef<HTMLDivElement>\(null\)/);
   assert.match(page, /role="log" aria-live="polite"/);
   assert.match(page, /profile-message/);
-assert.match(page, /if \(replyTarget\) \{ awardTask\("reply", 15\); setNotice\("Yanıtın konuşmaya eklendi\."\); setView\("detail"\); \}/);
+  assert.match(page, /if \(replyTarget\) \{ awardTask\("reply", 15\); setNotice\("Yanıtın konuşmaya eklendi\."\); setView\("detail"\); \}/);
+  assert.match(page, /const displayPost = withLocalReplyCount\(post, props\.allPosts\)/);
+  assert.match(page, /const displayPost = withLocalReplyCount\(props\.post, props\.allPosts\)/);
   assert.match(page, /const belongsToProfile = \(post: Post\) => props\.isOwn \? post\.own === true : post\.handle === props\.profile\.handle/);
   assert.doesNotMatch(page, /className="notice"/);
   assert.match(page, /const setNotice: \(message: string\) => void = \(\) => undefined/);
@@ -263,7 +266,7 @@ assert.match(page, /if \(replyTarget\) \{ awardTask\("reply", 15\); setNotice\("
   assert.doesNotMatch(page, /useState<Theme>\(\(\) => readStored/);
   assert.match(page, /aria-pressed=\{following\.includes\(post\.handle\)\}/);
   assert.match(page, /repliesForThread\(merged, props\.post\)/);
-  assert.match(page, /<PostCard key=\{post\.id\} \{\.\.\.props\} post=\{post\} \/>/);
+  assert.match(page, /<PostCard key=\{post\.id\} \{\.\.\.props\} post=\{displayPost\} \/>/);
   assert.match(page, /runExclusive\(event, \(\) => onProfile\(post\)\)/);
   assert.match(notices, /62a9588577ec6f5ce6d28b50d30bf46d2229453d/);
   assert.match(notices, /Next Sosyal Beta source-era brand assets/);
@@ -301,6 +304,16 @@ test("stable reply ids keep a published detail reply in its thread", () => {
   const published = { id: "local-reply", name: "Deniz Naz", replyTo: "İdil Aras", replyToId: "root" };
   const reopened = repliesForThread([root, published, published], root);
   assert.deepEqual(reopened.map((post) => post.id), ["local-reply"]);
+});
+
+test("reply totals include newly published comments outside the opened thread", () => {
+  const root = { id: "root", name: "İdil Aras" };
+  const posts = [
+    root,
+    { id: "seed-reply", name: "Selin Uçak", replyTo: "İdil Aras", replyToId: "root" },
+    { id: "new-reply", name: "Deniz Naz", replyTo: "İdil Aras", replyToId: "root" },
+  ];
+  assert.equal(countNewRepliesForThread(posts, root, ["seed-reply"]), 1);
 });
 
 test("nested post interactions stop propagation before their own action", () => {
