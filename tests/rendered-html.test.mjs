@@ -82,6 +82,10 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /useDialogFocus/);
   assert.match(page, /nsosyal-messages/);
   assert.match(page, /ActionIcon/);
+  assert.match(page, /className=\{"action-wrap " \+ icon/);
+  assert.match(css, /@keyframes social-action-pop/);
+  assert.match(css, /\.action-wrap\.repost\.active/);
+  assert.match(css, /@keyframes social-action-glow/);
   assert.match(page, /name === "menu"/);
   assert.match(page, /name === "plus"/);
   assert.match(page, /name === "check"/);

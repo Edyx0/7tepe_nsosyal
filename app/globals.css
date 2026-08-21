@@ -1526,3 +1526,29 @@ button,
   .post-meta .post-follow,
   .post-meta .more { width: 40px; height: 40px; flex-basis: 40px; }
 }
+
+/* Like/repost confirmation: a short tactile pop that does not move layout. */
+@keyframes social-action-pop {
+  0% { transform: scale(.72) rotate(-8deg); opacity: .72; }
+  55% { transform: scale(1.18) rotate(3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+@keyframes social-action-glow {
+  0% { box-shadow: inset 0 1px 0 rgb(255 255 255 / .08), 0 0 0 rgb(99 100 255 / 0); }
+  55% { box-shadow: inset 0 1px 0 rgb(255 255 255 / .12), 0 0 0 7px rgb(99 100 255 / .1); }
+  100% { box-shadow: inset 0 1px 0 rgb(255 255 255 / .08), 0 0 0 rgb(99 100 255 / 0); }
+}
+.post-actions .action-wrap.like.active .action i svg,
+.post-actions .action-wrap.repost.active .action i svg {
+  transform-origin: center;
+  animation: social-action-pop .42s cubic-bezier(.22, 1, .36, 1);
+}
+.post-actions .action-wrap.like.active .action,
+.post-actions .action-wrap.repost.active .action { animation: social-action-glow .48s cubic-bezier(.22, 1, .36, 1); }
+.post-actions .action-wrap.repost.active .action { color: var(--brand-text); }
+@media (prefers-reduced-motion: reduce) {
+  .post-actions .action-wrap.like.active .action i svg,
+  .post-actions .action-wrap.repost.active .action i svg,
+  .post-actions .action-wrap.like.active .action,
+  .post-actions .action-wrap.repost.active .action { animation: none; }
+}
