@@ -1597,22 +1597,33 @@ button,
 .daily-tasks .task.done .task-check { border-color: color-mix(in srgb, var(--brand) 58%, var(--line)); background: var(--brand-soft); color: var(--brand-text); }
 .daily-tasks .task.done b { color: var(--muted); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--muted) 55%, transparent); }
 
-/* Scroll-driven navigation uses compositor-friendly transforms instead of reflowing height every frame. */
+/* Compact navigation keeps every circular control at a 1:1 ratio. The former
+   scaleY treatment squashed SVGs and ring geometry into a wide/condensed form. */
 @media (max-width: 680px) {
   .bottom-nav {
     contain: layout paint style;
-    will-change: transform;
-    transition: transform .42s cubic-bezier(.22, 1, .36, 1), box-shadow .42s cubic-bezier(.22, 1, .36, 1), background .28s var(--ease);
+    will-change: transform, height;
+    transition: height .42s cubic-bezier(.22, 1, .36, 1), min-height .42s cubic-bezier(.22, 1, .36, 1), padding .42s cubic-bezier(.22, 1, .36, 1), border-radius .42s cubic-bezier(.22, 1, .36, 1), transform .42s cubic-bezier(.22, 1, .36, 1), box-shadow .42s cubic-bezier(.22, 1, .36, 1), background .28s var(--ease);
   }
   .bottom-nav.is-compact {
-    height: 82px;
-    min-height: 82px;
-    padding: 4px 5px;
-    border-radius: 41px;
-    transform: translateY(9px) scaleY(.84);
+    height: 64px;
+    min-height: 64px;
+    padding: 4px;
+    border-radius: 32px;
+    transform: translateY(8px);
     transform-origin: center bottom;
   }
-  .bottom-nav > button { will-change: transform, opacity; transition: transform .42s cubic-bezier(.22, 1, .36, 1), opacity .28s var(--ease), color .22s var(--ease), background .22s var(--ease); }
-  .bottom-nav.is-compact > button:not(.bottom-compose) { transform: scale(.96); }
+  .bottom-nav > button {
+    will-change: transform, opacity;
+    transition: flex .42s cubic-bezier(.22, 1, .36, 1), min-height .42s cubic-bezier(.22, 1, .36, 1), height .42s cubic-bezier(.22, 1, .36, 1), border-radius .42s cubic-bezier(.22, 1, .36, 1), transform .42s cubic-bezier(.22, 1, .36, 1), opacity .28s var(--ease), color .22s var(--ease), background .22s var(--ease);
+  }
+  .bottom-nav .ui-icon { display: block; aspect-ratio: 1; flex: none; }
+  .bottom-nav.is-compact > button:not(.bottom-compose) {
+    height: 56px;
+    min-height: 56px;
+    border-radius: 28px;
+    transform: none;
+  }
+  .bottom-nav.is-compact .ui-icon { width: 28px; height: 28px; }
   .bottom-nav.is-compact .bottom-compose.is-hidden { display: grid; flex: 0 0 0; width: 0; min-width: 0; height: 0; min-height: 0; margin: 0; padding: 0; border-width: 0; opacity: 0; visibility: hidden; overflow: hidden; transform: scale(.55); }
 }

@@ -90,8 +90,10 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /@keyframes social-action-pop/);
   assert.match(css, /\.action-wrap\.repost\.active/);
   assert.match(css, /@keyframes social-action-glow/);
-  assert.match(css, /will-change: transform/);
-  assert.match(css, /\.bottom-nav\.is-compact \{[\s\S]*transform: translateY\(9px\) scaleY\(\.84\)/);
+  assert.match(css, /will-change: transform, height/);
+  assert.match(css, /\.bottom-nav\.is-compact \{[\s\S]*height: 64px;[\s\S]*transform: translateY\(8px\)/);
+  assert.match(css, /\.bottom-nav\.is-compact > button:not\(\.bottom-compose\) \{[\s\S]*height: 56px;[\s\S]*border-radius: 28px/);
+  assert.doesNotMatch(css, /scaleY\(/);
   assert.match(page, /name === "menu"/);
   assert.match(page, /name === "plus"/);
   assert.match(page, /name === "check"/);
