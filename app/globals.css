@@ -1792,6 +1792,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 .points-summary:hover { border-color: color-mix(in srgb, var(--brand) 45%, var(--line)); background: color-mix(in srgb, var(--brand) 12%, var(--surface)); }
 .points-summary:active { transform: scale(.96); }
 .points-summary:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.points-summary.is-static { cursor: default; }
+.points-summary.is-static:hover { border-color: color-mix(in srgb, var(--line) 78%, transparent); background: color-mix(in srgb, var(--surface) 72%, transparent); }
 
 .milestone-backdrop { align-items: end; padding: 20px; }
 .milestone-sheet {

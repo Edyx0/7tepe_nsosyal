@@ -60,6 +60,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /authorBadge/);
   assert.match(page, /MilestoneSheet/);
   assert.match(page, /points-summary/);
+  assert.match(page, /const profilePoints = props\.isOwn \? props\.points : authorPointsByHandle\[props\.profile\.handle\] \?\? 0/);
+  assert.match(page, /points-summary is-static/);
   assert.match(page, /points-badge/);
   assert.match(page, /nsosyal-drafts/);
   assert.match(page, /Yer İmleri/);
