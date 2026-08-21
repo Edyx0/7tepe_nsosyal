@@ -1873,3 +1873,31 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   .message-bubble { max-width: 82%; }
   .message-compose { padding: 9px 12px calc(9px + env(safe-area-inset-bottom)); }
 }
+
+/* Follow state is intentionally quiet in the post metadata: the icon is a
+   compact affordance beside time, not another framed action control. */
+.post-meta .post-follow {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  margin: 0 2px 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--secondary);
+}
+.post-meta .post-follow .ui-icon { width: 15px; height: 15px; stroke-width: 2.2; }
+.post-meta .post-follow:hover,
+.post-meta .post-follow[aria-pressed="true"] {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  color: var(--brand-text);
+}
+.post-meta .post-follow:active { transform: scale(.92); }
+@media (max-width: 680px) {
+  .post-meta .post-follow { width: 28px; height: 28px; flex-basis: 28px; }
+  .post-meta .post-follow .ui-icon { width: 15px; height: 15px; }
+}

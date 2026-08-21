@@ -223,7 +223,7 @@ assert.match(page, /if \(replyTarget\) \{ awardTask\("reply", 15\); setNotice\("
   assert.match(css, /\.post-meta \{[\s\S]*height: 46px/);
   assert.match(css, /\.post > \.avatar \{ align-self: center; \}/);
   assert.match(css, /@media \(max-width: 680px\) \{[\s\S]*\.post > \.avatar \{ margin-top: 2px; \}/);
-  assert.match(css, /\.post-meta \.post-follow \{[\s\S]*width: 44px/);
+  assert.match(css, /\.post-meta \.post-follow \{[\s\S]*width: 28px[\s\S]*border: 0/);
   assert.match(css, /\.post-meta \.more \{[\s\S]*place-items: center/);
   assert.match(css, /@media \(max-width: 430px\)/);
   assert.match(css, /@media \(min-width: 631px\) and \(max-width: 680px\)/);
