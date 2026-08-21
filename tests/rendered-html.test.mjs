@@ -104,8 +104,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /\.topbar::before/);
   assert.match(page, /Yeniden paylaştın/);
   assert.match(page, /actions\.reposts\.includes\(post\.id\)/);
-  assert.match(page, /Repostlar/);
-  assert.match(page, /tab === "reposts"/);
+  assert.doesNotMatch(page, />Repostlar</);
+  assert.match(page, /props\.actions\.reposts\.includes\(post\.id\)/);
+  assert.match(page, /repostedByMe: true/);
   assert.match(page, /rootPosts = useMemo\(\(\) => posts\.filter\(\(post\) => !post\.replyToId\)/);
   assert.match(page, /rootPosts\.filter\(\(post\) => post\.own \|\| following\.includes\(post\.handle\)\)/);
   assert.match(page, /item\.id === "profile" \? onOwnProfile\(\) : setView\(item\.id\)/);
