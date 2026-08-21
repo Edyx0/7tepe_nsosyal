@@ -69,7 +69,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /Takip Ettiklerin/);
   assert.match(page, /Takip Ediliyor/);
   assert.match(page, /Daha Fazla/);
-  assert.match(page, /Gönderinin ayrıntılarını aç/);
+  assert.match(page, /gönderi ayrıntılarını aç/);
   assert.equal(page.includes(`Gönder${"inın"}`), false);
   assert.equal(page.includes(`Takip Ettikler${"insin"}`), false);
   assert.match(page, /nsosyal-source-era-logo-dark\.svg/);
@@ -112,6 +112,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /repostedByMe/);
   assert.match(page, /icon-only/);
   assert.match(page, /following\.includes\(post\.handle\) \? "check" : "plus"/);
+  assert.match(page, /post\.initials \+ ", " \+ post\.name \+ " profilini aç"/);
+  assert.match(page, /post\.body \+ " — gönderi ayrıntılarını aç"/);
   assert.match(page, /requestAnimationFrame/);
   assert.match(page, /directionTravel/);
   assert.match(page, /setComposeHidden\(nextCompact\)/);
@@ -148,6 +150,9 @@ assert.match(page, /if \(replyTarget\) \{ awardTask\("reply", 15\); setNotice\("
   assert.match(css, /@media \(max-width: 630px\)/);
   assert.match(css, /\.topbar\.is-compact/);
   assert.match(css, /\.post\.has-thread::before/);
+  assert.match(css, /--glass-nav-fill/);
+  assert.match(css, /touch-action: manipulation/);
+  assert.match(css, /@media \(min-width: 1001px\)[\s\S]*\.sidebar/);
   assert.match(css, /\.post\.has-thread::after/);
   assert.match(css, /border-bottom-left-radius: 16px/);
   assert.match(css, /--thread-rail-x: 36px/);
@@ -218,7 +223,7 @@ assert.match(page, /if \(replyTarget\) \{ awardTask\("reply", 15\); setNotice\("
   assert.match(css, /grid-template-columns: repeat\(4, 1fr\)/);
   assert.match(css, /\.top-action-theme, \.top-action-search/);
   assert.match(css, /prefers-reduced-transparency/);
-  assert.match(page, /Profilini aç/);
+  assert.match(page, /profilini aç/);
   assert.match(page, /onBookmarks/);
   assert.match(css, /--brand-fill: #324BFF/);
   assert.match(css, /--brand-text: #AEB8FF/);
