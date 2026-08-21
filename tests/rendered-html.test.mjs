@@ -66,6 +66,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /\.participation-sheet \{[\s\S]*backdrop-filter: blur\(30px\)/);
   assert.match(css, /\.conversation-node\.is-selected/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(css, /\.search-field input,[\s\S]*font-size: 16px/);
+  assert.match(css, /grid-template-columns: repeat\(5, minmax\(0, 1fr\)\)/);
+  assert.match(css, /\.post-actions \.action small \{ display: inline-block/);
   assert.match(page, /authorBadge/);
   assert.match(page, /MilestoneSheet/);
   assert.match(page, /profile-reputation/);

@@ -2063,3 +2063,24 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 @media (prefers-reduced-transparency: reduce) {
   .participation-trigger, .participation-sheet { background: var(--surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
+
+/* iOS only zooms focused controls when their text is smaller than 16px.
+   Keep search and writing fields at that threshold without changing desktop density. */
+@media (max-width: 680px) {
+  .search-field input,
+  .explore-search input,
+  .composer textarea,
+  .studio-draft textarea { font-size: 16px; }
+}
+
+/* Compact phones keep every social action legible.  A five-column grid gives
+   the reply, repost, and like counts equal space instead of hiding them. */
+@media (max-width: 390px) {
+  .post-actions { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; max-width: none; justify-content: initial; }
+  .post-actions .action-wrap,
+  .post-actions .action-wrap:last-child { width: 100%; min-width: 0; margin-left: 0; }
+  .post-actions .action,
+  .post-actions .action-wrap.icon-only .action,
+  .post:not(.has-thread) .post-actions .action { width: 100%; min-width: 0; padding: 4px 2px; gap: 2px; justify-content: center; }
+  .post-actions .action small { display: inline-block; min-width: 0; overflow: hidden; font-size: 10px; font-variant-numeric: tabular-nums; text-overflow: ellipsis; white-space: nowrap; }
+}
