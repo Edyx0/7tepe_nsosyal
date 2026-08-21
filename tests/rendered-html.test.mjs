@@ -57,7 +57,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /nsosyal-actions/);
   assert.match(page, /nsosyal-gamification/);
   assert.match(page, /dailyTasks/);
-  assert.match(page, /pointsBadge/);
+  assert.match(page, /authorBadge/);
+  assert.match(page, /MilestoneSheet/);
+  assert.match(page, /points-summary/);
   assert.match(page, /points-badge/);
   assert.match(page, /nsosyal-drafts/);
   assert.match(page, /Yer İmleri/);

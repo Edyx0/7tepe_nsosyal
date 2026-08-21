@@ -1759,3 +1759,73 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .nav-item, .mini-profile, .feed-tabs, .feed-tabs button { transition: none; }
 }
+
+/* Reputation stays informative, not dominant: it follows the name in the same
+   visual rhythm as a verified mark and opens a focused milestone sheet. */
+.post-meta .points-badge {
+  width: 16px;
+  height: 16px;
+  margin-left: 2px;
+  font-size: 9px;
+  flex: 0 0 auto;
+}
+.profile-copy h2 { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.points-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 22px;
+  margin: 0;
+  padding: 2px 7px 2px 3px;
+  border: 1px solid color-mix(in srgb, var(--line) 78%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  color: var(--muted);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .07);
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+  transition: transform .2s var(--native-motion), border-color .2s var(--native-motion), background .2s var(--native-motion), box-shadow .2s var(--native-motion);
+}
+.points-summary .points-badge { width: 16px; height: 16px; margin: 0; font-size: 9px; }
+.points-summary small { font-size: 11px; font-weight: 750; letter-spacing: .01em; white-space: nowrap; }
+.points-summary:hover { border-color: color-mix(in srgb, var(--brand) 45%, var(--line)); background: color-mix(in srgb, var(--brand) 12%, var(--surface)); }
+.points-summary:active { transform: scale(.96); }
+.points-summary:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+.milestone-backdrop { align-items: end; padding: 20px; }
+.milestone-sheet {
+  width: min(100%, 440px);
+  padding: 18px;
+  border: 1px solid var(--glass-nav-edge);
+  border-radius: 28px;
+  background: var(--glass-nav-fill);
+  box-shadow: var(--glass-nav-shadow), inset 0 1px 0 var(--glass-nav-highlight);
+  color: var(--text);
+  -webkit-backdrop-filter: blur(28px) saturate(1.24);
+  backdrop-filter: blur(28px) saturate(1.24);
+  animation: native-sheet-in .32s var(--native-motion) both;
+}
+.milestone-sheet > header { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; }
+.milestone-sheet > header > .points-badge { width: 40px; height: 40px; margin: 0; font-size: 19px; }
+.milestone-sheet > header > span:nth-child(2) { display: grid; gap: 2px; }
+.milestone-sheet > header small, .milestone-list small { color: var(--muted); }
+.milestone-sheet > header strong { font-size: 20px; letter-spacing: -.02em; }
+.milestone-sheet > header .icon-button { width: 34px; height: 34px; }
+.milestone-sheet > p { margin: 16px 0 10px; color: var(--muted); font-size: 14px; }
+.milestone-progress { height: 7px; overflow: hidden; border-radius: 999px; background: color-mix(in srgb, var(--line) 76%, transparent); box-shadow: inset 0 1px 2px rgb(0 0 0 / .17); }
+.milestone-progress > span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--brand), #9ca9ff); transition: width .45s var(--native-motion); }
+.milestone-list { display: grid; gap: 7px; margin: 16px 0 0; padding: 0; list-style: none; }
+.milestone-list li { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: center; gap: 9px; padding: 9px; border: 1px solid transparent; border-radius: 16px; color: var(--muted); background: color-mix(in srgb, var(--surface) 38%, transparent); }
+.milestone-list li.is-unlocked { border-color: color-mix(in srgb, var(--brand) 23%, var(--line)); color: var(--text); background: color-mix(in srgb, var(--brand) 9%, var(--surface)); }
+.milestone-list .points-badge { width: 26px; height: 26px; margin: 0; font-size: 12px; }
+.milestone-list span:nth-child(2) { display: grid; gap: 2px; min-width: 0; }
+.milestone-list b { font-size: 14px; }
+.milestone-list small { font-size: 12px; }
+.milestone-list em { color: var(--muted); font-size: 12px; font-style: normal; white-space: nowrap; }
+.milestone-list .is-unlocked em { color: var(--brand-text); }
+
+@media (max-width: 680px) {
+  .milestone-backdrop { align-items: end; padding: 12px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+  .milestone-sheet { padding: 16px; border-radius: 24px; }
+}
