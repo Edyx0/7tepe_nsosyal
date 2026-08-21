@@ -266,7 +266,7 @@ test("thread replies never repeat the root post", () => {
     root,
     { id: "reply-1", name: "Selin Uçak", replyTo: "İdil Aras", replyToId: "root" },
     { id: "reply-2", name: "Bora Ekin", replyTo: "İdil Aras", replyToId: "root" },
-    { id: "other", name: "Mert Soylu", replyTo: "Başka Biri" },
+    { id: "other", name: "Başka Kullanıcı", replyTo: "Başka Biri" },
     { id: "same-name-root", name: "İdil Aras", replyTo: "Başka Biri", replyToId: "other-root" },
   ];
   assert.deepEqual(

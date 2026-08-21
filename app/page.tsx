@@ -50,17 +50,17 @@ const badgeMilestones: Array<PointsBadge & { points: number; copy: string }> = [
 ];
 const authorPointsByHandle: Record<string, number> = {
   "@idilaras": 268,
-  "@mertsoylu": 134,
+  "@edizyilmaz": 134,
   "@acikverigunlugu": 66,
-  "@cemreyln": 22,
+  "@adnankantar": 22,
   "@selinm": 116,
   "@borak": 48,
 };
 const seedPosts: Post[] = [
   { id: "iklim-kent", name: "İdil Aras", handle: "@idilaras", time: "18 dk", body: "Kentte serinlemek bir lüks değil, altyapı meselesi. Gölgeli duraklar, açık su noktaları ve gece geç saatlere kadar açık kütüphaneler hakkında konuşalım.", initials: "İA", tone: "coral", replies: 86, reposts: 142, likes: 982, audience: "all", context: true, attachment: "signal" },
-  { id: "film-kulubu", name: "Mert Soylu", handle: "@mertsoylu", time: "31 dk", body: "Bu akşam filmlerden sonra 10 dakika sessizlik kuralı koyabilir miyiz? Her şey biter bitmez yorum yapmak zorunda değiliz.", initials: "MS", tone: "violet", replies: 24, reposts: 18, likes: 311, audience: "following" },
+  { id: "film-kulubu", name: "Ediz Yılmaz", handle: "@edizyilmaz", time: "31 dk", body: "Bu akşam filmlerden sonra 10 dakika sessizlik kuralı koyabilir miyiz? Her şey biter bitmez yorum yapmak zorunda değiliz.", initials: "EY", tone: "violet", replies: 24, reposts: 18, likes: 311, audience: "following" },
   { id: "acik-veri", name: "Açık Veri Günlüğü", handle: "@acikverigunlugu", time: "1 sa", body: "Yeni açık veri notumuz yayında: Belediyelerin erişilebilirlik haritaları tek bir standartta nasıl buluşabilir? Kısa bir okuma listesi bıraktık.", initials: "AV", tone: "teal", replies: 39, reposts: 204, likes: 746, audience: "all", attachment: "note" },
-  { id: "sabah-kosu", name: "Cemre Yalın", handle: "@cemreyln", time: "2 sa", body: "Sabah yürüyüşünde duyduğum tek motor sesi vapurdu. Şehrin bazen kendine bıraktığı o dar aralık çok iyi geliyor.", initials: "CY", tone: "gold", replies: 11, reposts: 7, likes: 198, audience: "following" },
+  { id: "sabah-kosu", name: "Adnan Kantar", handle: "@adnankantar", time: "2 sa", body: "Sabah yürüyüşünde duyduğum tek motor sesi vapurdu. Şehrin bazen kendine bıraktığı o dar aralık çok iyi geliyor.", initials: "AK", tone: "gold", replies: 11, reposts: 7, likes: 198, audience: "following" },
 ];
 const seedReplies: Post[] = [
   { id: "yanit-1", name: "Selin Uçak", handle: "@selinucak", time: "12 dk", body: "Buna okul çıkış saatlerinde çalışan serin rota bilgisini de eklemek gerekir. İklim haritaları günlük kararları etkiliyor.", initials: "SU", tone: "teal", replies: 3, reposts: 4, likes: 76, audience: "all", replyTo: "İdil Aras", replyToId: "iklim-kent" },
