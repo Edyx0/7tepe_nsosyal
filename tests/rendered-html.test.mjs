@@ -57,6 +57,15 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /nsosyal-actions/);
   assert.match(page, /nsosyal-gamification/);
   assert.match(page, /dailyTasks/);
+  assert.match(page, /ParticipationJourney/);
+  assert.match(page, /role="tree" aria-label="Tartışma yanıt ağacı"/);
+  assert.match(page, /aria-level=\{4\}/);
+  assert.match(page, /contributionIntents/);
+  assert.match(page, /maxLength=\{280\}/);
+  assert.match(page, /awardTask\("deep-contribution", 20\)/);
+  assert.match(css, /\.participation-sheet \{[\s\S]*backdrop-filter: blur\(30px\)/);
+  assert.match(css, /\.conversation-node\.is-selected/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(page, /authorBadge/);
   assert.match(page, /MilestoneSheet/);
   assert.match(page, /profile-reputation/);

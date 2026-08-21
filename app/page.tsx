@@ -41,6 +41,7 @@ const dailyTasks = [
   { id: "repost", label: "Bir gönderiyi yeniden paylaş", points: 10 },
   { id: "reply", label: "Bir konuşmaya katkı yap", points: 15 },
   { id: "post", label: "Kendi düşünceni paylaş", points: 25 },
+  { id: "deep-contribution", label: "Bir tartışmayı derinleştir", points: 20 },
 ];
 const badgeMilestones: Array<PointsBadge & { points: number; copy: string }> = [
   { points: 0, label: "Yeni üye", mark: "·", tone: "starter", copy: "İlk adımını attın." },
@@ -304,6 +305,12 @@ export default function Home() {
     if (replyTarget) { awardTask("reply", 15); setNotice("Yanıtın konuşmaya eklendi."); setView("detail"); }
     else { awardTask("post", 25); setNotice("Gönderi Ana Sayfa'ya eklendi."); setView("feed"); }
   }
+  function publishGuidedContribution(body: string) {
+    const contribution = body.trim();
+    if (!contribution) { setNotice("Katkını paylaşmadan önce kısa bir düşünce ekle."); return; }
+    const post: Post = { id: "derinlik-" + Date.now(), name: profile.name, handle: profile.handle, time: "şimdi", body: contribution, initials: profile.initials, tone: "ink", replies: 0, reposts: 0, likes: 0, audience: "following", own: true, attachment: "note" };
+    setDraftPosts((current) => [post, ...current]); awardTask("deep-contribution", 20); setNotice("Katkın konuşmaya eklendi; +20 NSosyal puanı kazandın."); setView("feed");
+  }
   function useComposerTool(kind: "media" | "location" | "poll" | "mood") {
     if (kind === "media") { setComposerMedia((value) => !value); setNotice(composerMedia ? "Görsel taslağı kaldırıldı." : "Görsel taslağı eklendi."); }
     if (kind === "location") setComposerText((value) => value + (value ? " " : "") + "#" + profile.location.replaceAll(" ", ""));
@@ -340,6 +347,7 @@ export default function Home() {
       </div>
     </section>
     <aside className="right-rail" aria-label="Gündem ve öneriler"><div className="search-field"><span aria-hidden="true"><UiIcon name="search" /></span><input aria-label="NSosyal ara" placeholder="NSosyal ara" value={search} onChange={(event) => { setSearch(event.target.value); setView("explore"); }} /></div><TrendPanel onSelect={(topic) => { setSearch(topic); setView("explore"); }} /><WhoToFollow following={following} onFollow={toggleFollow} /><p className="legal">Koşullar · Gizlilik · Çerezler<br />NSosyal 2026</p></aside>
+    <ParticipationJourney onPublish={publishGuidedContribution} />
 <MobileNav view={view} setView={setView} unread={3 - readNotifications.length} onCompose={openComposer} composeHidden={composeHidden} onSearch={openSearch} />
     <button className={"desktop-compose-fab " + (composeHidden ? "is-hidden" : "")} onClick={openComposer} aria-label="Yeni gönderi paylaş" tabIndex={composeHidden ? -1 : 0}><UiIcon name="plus" /></button>
     {shareFeedback && <div className="toast" role="status">{shareFeedback}</div>}
@@ -355,6 +363,55 @@ export default function Home() {
 
 function BrandMark({ small = false }: { small?: boolean }) { return <span className={"brand-mark " + (small ? "small" : "")} aria-hidden="true">{small ? <img src="/brand/nsosyal-favicon.svg" alt="" /> : <><img className="logo-for-dark" src="/brand/nsosyal-source-era-logo-dark.svg" alt="" /><img className="logo-for-light" src="/brand/nsosyal-source-era-logo-light.svg" alt="" /></>}</span>; }
 function Avatar({ initials, tone }: { initials: string; tone: string }) { return <span className={"avatar " + tone}>{initials}</span>; }
+
+type ContributionIntent = { id: string; label: string; helper: string; prompt: string };
+const contributionIntents: ContributionIntent[] = [
+  { id: "ask", label: "Soru sor", helper: "Eksik bir noktayı netleştir", prompt: "Şunu daha iyi anlamak istiyorum: " },
+  { id: "agree", label: "Katılıyorum", helper: "Görüşü kendi gerekçenle güçlendir", prompt: "Bu görüşe katılıyorum; çünkü " },
+  { id: "counter", label: "Karşı görüş", helper: "Saygılı bir alternatif öner", prompt: "Farklı bir açıdan bakınca " },
+  { id: "source", label: "Kaynak ekle", helper: "Konuşmayı doğrulanabilir bilgiyle besle", prompt: "Bu noktayı destekleyen kaynak: " },
+  { id: "summarize", label: "Özetle", helper: "Dalı herkes için anlaşılır kıl", prompt: "Bu daldaki ortak nokta şu: " },
+];
+
+function ParticipationJourney({ onPublish }: { onPublish: (body: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const [step, setStep] = useState<"mission" | "map" | "studio" | "complete">("mission");
+  const [expanded, setExpanded] = useState(false);
+  const [selectedNode, setSelectedNode] = useState("n2");
+  const [intent, setIntent] = useState<ContributionIntent>(contributionIntents[0]);
+  const [draft, setDraft] = useState("");
+  const [message, setMessage] = useState("Mikro görev hazır.");
+
+  useEffect(() => {
+    if (!open) return;
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setOpen(false); };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [open]);
+
+  const openJourney = () => { setOpen(true); setStep("mission"); setMessage("Bugünkü mikro görev açıldı."); };
+  const selectIntent = (next: ContributionIntent) => { setIntent(next); setDraft((current) => current.trim() ? current : next.prompt); setMessage(next.label + " niyeti seçildi."); };
+  const publish = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); if (!draft.trim()) { setMessage("Paylaşmadan önce kısa bir düşünce ekle."); return; } onPublish(draft); setStep("complete"); setMessage("Katkın yayınlandı. +20 puan eklendi."); };
+  const close = () => { setOpen(false); setStep("mission"); };
+
+  return <>
+    <button className="participation-trigger" type="button" onClick={openJourney} aria-haspopup="dialog" aria-label="Katkını derinleştir görevini aç">
+      <span className="participation-trigger-mark" aria-hidden="true">✦</span><span><b>Katkını derinleştir</b><small>Bugünün mikro görevi</small></span>
+    </button>
+    {open && <div className="participation-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) close(); }}>
+      <section className="participation-sheet" role="dialog" aria-modal="true" aria-labelledby="participation-title" aria-describedby="participation-copy">
+        <header className="participation-header"><div><span className="eyebrow">NSosyal Katılım Döngüsü</span><h2 id="participation-title">{step === "complete" ? "Katkın konuşmaya eklendi" : "Katkını derinleştir"}</h2></div><button type="button" className="participation-close" onClick={close} aria-label="Katılım stüdyosunu kapat">×</button></header>
+        {step !== "complete" && <ol className="journey-progress" aria-label="Katılım akışı"><li className={step === "mission" ? "is-current" : "is-complete"}><span>1</span><b>Hedef</b></li><li className={step === "map" ? "is-current" : step === "studio" ? "is-complete" : ""}><span>2</span><b>Bağlam</b></li><li className={step === "studio" ? "is-current" : ""}><span>3</span><b>Katkı</b></li></ol>}
+        <p id="participation-copy" className="participation-copy">{step === "mission" ? "Kısa bir görevle, yoğun bir tartışmanın açıkta kalan dalına anlamlı bir katkı ver." : step === "map" ? "Harita önce üç düzeyi gösterir. Bağlamı kaybetmeden konuşmanın uygun noktasını seç." : step === "studio" ? "Boş bir ekrana değil, seçtiğin niyete ve bağlama göre üret." : "Geri bildirim döngüsü tamamlandı. İstersen yeni bir dal keşfedebilirsin."}</p>
+        {step === "mission" && <div className="mission-card"><div className="mission-icon" aria-hidden="true">⌁</div><div><span className="mission-kicker">Mikro görev · 2 dakika</span><h3>Derinleşmiş bir yanıta yapıcı katkı bırak</h3><p>Bir görüşü netleştir, kaynak ekle ya da sakin bir karşı görüş sun.</p></div><button type="button" className="journey-primary" onClick={() => { setStep("map"); setMessage("Sohbet haritası açıldı."); }}>Sohbet haritasını aç <span aria-hidden="true">→</span></button></div>}
+        {step === "map" && <div className="conversation-map"><div className="map-toolbar"><span><b>Konuşma haritası</b><small>4 kişi · 1 açık dal</small></span><button type="button" onClick={() => { setStep("studio"); setMessage("Katılım stüdyosu açıldı."); }}>Seçili dala yaz</button></div><div className="map-canvas" role="tree" aria-label="Tartışma yanıt ağacı"><button role="treeitem" aria-level={1} aria-selected={selectedNode === "n1"} className={"conversation-node level-1 " + (selectedNode === "n1" ? "is-selected" : "")} onClick={() => { setSelectedNode("n1"); setMessage("Ana görüş seçildi."); }}><span className="node-shape node-claim" aria-hidden="true">●</span><span><b>Selin</b><small>Kamusal alanın gölgeleri neden önemli?</small></span><em>1</em></button><button role="treeitem" aria-level={2} aria-selected={selectedNode === "n2"} className={"conversation-node level-2 " + (selectedNode === "n2" ? "is-selected" : "")} onClick={() => { setSelectedNode("n2"); setMessage("Açık uçlu yanıt seçildi."); }}><span className="node-shape node-question" aria-hidden="true">?</span><span><b>Barış</b><small>Mahalle ölçeğinde kim karar veriyor?</small></span><em>2</em></button><button role="treeitem" aria-level={3} aria-selected={selectedNode === "n3"} className={"conversation-node level-3 " + (selectedNode === "n3" ? "is-selected" : "")} onClick={() => { setSelectedNode("n3"); setMessage("Örnek içeren yanıt seçildi."); }}><span className="node-shape node-answer" aria-hidden="true">↗</span><span><b>İpek</b><small>Yerel veriye dayanan örnek ekliyorum.</small></span><em>3</em></button>{expanded && <><button role="treeitem" aria-level={4} aria-selected={selectedNode === "n4"} className={"conversation-node level-4 " + (selectedNode === "n4" ? "is-selected" : "")} onClick={() => { setSelectedNode("n4"); setMessage("Derin dal seçildi."); }}><span className="node-shape node-answer" aria-hidden="true">↗</span><span><b>Merve</b><small>Bu örneği başka ilçelerde de görüyoruz.</small></span><em>4</em></button><button role="treeitem" aria-level={4} aria-selected={selectedNode === "n5"} className={"conversation-node level-4 " + (selectedNode === "n5" ? "is-selected" : "")} onClick={() => { setSelectedNode("n5"); setMessage("Kaynak isteyen dal seçildi."); }}><span className="node-shape node-question" aria-hidden="true">?</span><span><b>Umut</b><small>Bu gözlemi destekleyen bir kaynak var mı?</small></span><em>4</em></button></>}<button type="button" className="map-disclosure" onClick={() => { setExpanded((current) => !current); setMessage(expanded ? "Alt dallar gizlendi." : "İki alt dal daha gösterildi."); }} aria-expanded={expanded}>{expanded ? "Alt dalları daralt" : "2 alt yanıtı göster"}</button></div><div className="map-selection"><span className="node-shape node-question" aria-hidden="true">?</span><p><b>Seçili bağlam</b> · Bu dalın sorusu açıkta. Katkın konuşmayı ilerletebilir.</p><button type="button" className="journey-primary" onClick={() => { setStep("studio"); setMessage("Katılım stüdyosu açıldı."); }}>Bu dala katkı ver</button></div></div>}
+        {step === "studio" && <form className="participation-studio" onSubmit={publish}><fieldset><legend>Niyetini seç</legend><div className="intent-grid">{contributionIntents.map((item) => <button type="button" key={item.id} className={"intent-card " + (intent.id === item.id ? "is-selected" : "")} aria-pressed={intent.id === item.id} onClick={() => selectIntent(item)}><b>{item.label}</b><small>{item.helper}</small></button>)}</div></fieldset><div className="studio-draft"><span><b>{intent.label}</b><small>Seçili dal: seviye {selectedNode === "n1" ? "1" : selectedNode === "n2" ? "2" : selectedNode === "n3" ? "3" : "4"}</small></span><textarea id="guided-contribution" aria-label={intent.label + " için katkın"} value={draft} onChange={(event) => setDraft(event.target.value)} placeholder={intent.prompt} maxLength={280} aria-describedby="studio-hint" /></div><div className="studio-footer"><p id="studio-hint">Kısa, somut ve saygılı kal. {draft.length}/280</p><button className="journey-primary" type="submit">Katkını paylaş <span aria-hidden="true">→</span></button></div></form>}
+        {step === "complete" && <div className="completion-card"><div className="completion-burst" aria-hidden="true">✦</div><h3>Konuşmaya yeni bir bağ eklendi</h3><p>Katkın, seçtiğin niyet ve bağlamla birlikte ana akışta görünür. Günlük görev ilerlemen de güncellendi.</p><div className="completion-points"><b>+20</b><span>NSosyal puanı</span></div><button type="button" className="journey-primary" onClick={close}>Akışa dön</button></div>}
+        <p className="journey-status" role="status" aria-live="polite">{message}</p>
+      </section>
+    </div>}
+  </>;
+}
 function Sidebar({ view, setView, profile, unread, onCompose, onOwnProfile, onSearch }: { view: View; setView: (view: View) => void; profile: Profile; unread: number; onCompose: () => void; onOwnProfile: () => void; onSearch: () => void }) { const openHome = () => { setView("feed"); window.scrollTo({ top: 0, behavior: "smooth" }); }; return <aside className="sidebar" aria-label="Ana gezinme"><button className="brand" onClick={openHome} aria-label="NSosyal ana sayfa"><BrandMark /><span className="sr-only">NSosyal</span></button><nav className="nav-list">{navigation.map((item) => <button key={item.id} className={"nav-item " + (view === item.id || (view === "detail" && item.id === "feed") ? "is-active" : "")} onClick={() => item.id === "profile" ? onOwnProfile() : item.id === "feed" ? openHome() : item.id === "explore" ? onSearch() : setView(item.id)}><span className="nav-icon" aria-hidden="true"><UiIcon name={item.icon} /></span><span>{item.label}</span>{item.id === "notifications" && unread > 0 && <b className="nav-dot">{unread}</b>}</button>)}<button className={"nav-item " + (view === "settings" ? "is-active" : "")} onClick={() => setView("settings")} aria-label="Daha Fazla"><span className="nav-icon" aria-hidden="true"><UiIcon name="settings" /></span><span>Daha Fazla</span></button></nav><button className="primary-button sidebar-compose" onClick={onCompose} aria-label="Yeni gönderi paylaş"><span className="desktop-only">Paylaş</span><span className="mobile-only" aria-hidden="true"><UiIcon name="spark" /></span></button><button className="mini-profile" onClick={onOwnProfile}><Avatar initials={profile.initials} tone="ink" /><span><strong>{profile.name}</strong><small>{profile.handle}</small></span><b aria-hidden="true"><UiIcon name="more" /></b></button></aside>; }
 function MobileNav({ view, setView, unread, onCompose, composeHidden, onSearch }: { view: View; setView: (view: View) => void; unread: number; onCompose: () => void; composeHidden: boolean; onSearch: () => void }) { const openHome = () => { setView("feed"); window.scrollTo({ top: 0, behavior: "smooth" }); }; return <nav className={"bottom-nav " + (composeHidden ? "is-compact" : "")} aria-label="Mobil gezinme">{navigation.slice(0, 4).map((item) => <button key={item.id} className={view === item.id ? "is-active" : ""} onClick={() => item.id === "feed" ? openHome() : item.id === "explore" ? onSearch() : setView(item.id)} aria-current={view === item.id ? "page" : undefined} aria-label={item.label}><UiIcon name={item.icon} />{item.id === "notifications" && unread > 0 && <b />}</button>)}<button className={"bottom-compose " + (composeHidden ? "is-hidden" : "")} onClick={onCompose} aria-label="Yeni gönderi paylaş" aria-hidden={composeHidden} tabIndex={composeHidden ? -1 : 0}><UiIcon name="plus" /></button></nav>; }
 function MobileMoreMenu({ onClose, onProfile, onBookmarks, onSettings }: { onClose: () => void; onProfile: () => void; onBookmarks: () => void; onSettings: () => void }) { const dialogRef = useDialogFocus(onClose); return <div className="modal-backdrop"><section ref={dialogRef} className="more-menu mobile-more-menu" role="dialog" aria-modal="true" aria-label="Daha fazla gezinme" tabIndex={-1}><button onClick={onProfile}><UiIcon name="profile" /> Profil</button><button onClick={onBookmarks}><UiIcon name="bookmark" /> Yer İmleri</button><button onClick={onSettings}><UiIcon name="settings" /> Ayarlar</button><button onClick={onClose}><UiIcon name="close" /> Vazgeç</button></section></div>; }
