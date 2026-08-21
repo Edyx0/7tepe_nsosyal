@@ -2084,3 +2084,15 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   .post:not(.has-thread) .post-actions .action { width: 100%; min-width: 0; padding: 4px 2px; gap: 2px; justify-content: center; }
   .post-actions .action small { display: inline-block; min-width: 0; overflow: hidden; font-size: 10px; font-variant-numeric: tabular-nums; text-overflow: ellipsis; white-space: nowrap; }
 }
+
+/* Keep the desktop task entry point alongside the profile control, and clear
+   the mobile compose affordance with enough room for a deliberate tap. */
+@media (min-width: 1121px) {
+  .participation-trigger { left: max(20px, calc((100vw - 1280px) / 2)); right: auto; bottom: 110px; width: 240px; }
+}
+@media (min-width: 681px) and (max-width: 1120px) {
+  .participation-trigger { right: 18px; bottom: 100px; }
+}
+@media (max-width: 680px) {
+  .participation-trigger { bottom: calc(142px + env(safe-area-inset-bottom)); }
+}

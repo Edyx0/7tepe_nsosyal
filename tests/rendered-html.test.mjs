@@ -63,9 +63,12 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /contributionIntents/);
   assert.match(page, /maxLength=\{280\}/);
   assert.match(page, /awardTask\("deep-contribution", 20\)/);
+  assert.match(page, /current === intent\.prompt \? next\.prompt : current/);
   assert.match(css, /\.participation-sheet \{[\s\S]*backdrop-filter: blur\(30px\)/);
   assert.match(css, /\.conversation-node\.is-selected/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(css, /@media \(min-width: 1121px\) \{[\s\S]*\.participation-trigger/);
+  assert.match(css, /bottom: calc\(142px \+ env\(safe-area-inset-bottom\)\)/);
   assert.match(css, /\.search-field input,[\s\S]*font-size: 16px/);
   assert.match(css, /grid-template-columns: repeat\(5, minmax\(0, 1fr\)\)/);
   assert.match(css, /\.post-actions \.action small \{ display: inline-block/);

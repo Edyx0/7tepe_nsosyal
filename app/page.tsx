@@ -390,7 +390,7 @@ function ParticipationJourney({ onPublish }: { onPublish: (body: string) => void
   }, [open]);
 
   const openJourney = () => { setOpen(true); setStep("mission"); setMessage("Bugünkü mikro görev açıldı."); };
-  const selectIntent = (next: ContributionIntent) => { setIntent(next); setDraft((current) => current.trim() ? current : next.prompt); setMessage(next.label + " niyeti seçildi."); };
+  const selectIntent = (next: ContributionIntent) => { setDraft((current) => !current.trim() || current === intent.prompt ? next.prompt : current); setIntent(next); setMessage(next.label + " niyeti seçildi."); };
   const publish = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); if (!draft.trim()) { setMessage("Paylaşmadan önce kısa bir düşünce ekle."); return; } onPublish(draft); setStep("complete"); setMessage("Katkın yayınlandı. +20 puan eklendi."); };
   const close = () => { setOpen(false); setStep("mission"); };
 
