@@ -106,6 +106,13 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /actions\.reposts\.includes\(post\.id\)/);
   assert.match(page, /Repostlar/);
   assert.match(page, /tab === "reposts"/);
+  assert.match(page, /rootPosts = useMemo\(\(\) => posts\.filter\(\(post\) => !post\.replyToId\)/);
+  assert.match(page, /rootPosts\.filter\(\(post\) => post\.own \|\| following\.includes\(post\.handle\)\)/);
+  assert.match(page, /item\.id === "profile" \? onOwnProfile\(\) : setView\(item\.id\)/);
+  assert.match(page, /function Messages\(\{ messages, setMessages, profile, target \}/);
+  assert.match(page, /profile-message/);
+  assert.match(page, /if \(replyTarget\) \{ setNotice\("Yanıtın konuşmaya eklendi\."\); setView\("detail"\); \}/);
+  assert.match(page, /const belongsToProfile = \(post: Post\) => props\.isOwn \? post\.own === true : post\.handle === props\.profile\.handle/);
   assert.doesNotMatch(page, /className="notice"/);
   assert.match(page, /const setNotice: \(message: string\) => void = \(\) => undefined/);
   assert.match(layout, /NSosyal - Sosyal Ağ Platformu/);
@@ -180,6 +187,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /\.post-actions \.action-wrap:last-child \.action \{[\s\S]*place-items: center/);
   assert.match(css, /\.thread-view > \.post \{[\s\S]*border-radius: 24px/);
   assert.match(css, /\.topbar\.is-detail \{/);
+  assert.match(css, /\.profile-head \{ position: relative; z-index: 2/);
+  assert.match(css, /\.profile-head \.avatar \{ position: relative; z-index: 3/);
   assert.match(css, /\.post-meta \{[\s\S]*height: 46px/);
   assert.match(css, /\.post > \.avatar \{ align-self: center; \}/);
   assert.match(css, /@media \(max-width: 680px\) \{[\s\S]*\.post > \.avatar \{ margin-top: 2px; \}/);
