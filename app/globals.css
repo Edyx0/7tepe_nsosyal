@@ -1552,3 +1552,67 @@ button,
   .post-actions .action-wrap.like.active .action,
   .post-actions .action-wrap.repost.active .action { animation: none; }
 }
+
+/* Reddit-style reputation badges and a compact daily challenge card. */
+.points-badge {
+  display: inline-grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 850;
+  line-height: 1;
+  vertical-align: middle;
+}
+.points-badge.starter { color: var(--muted); }
+.points-badge.active { color: #ffd166; background: rgb(255 209 102 / .12); }
+.points-badge.trusted { color: #72e6f0; background: rgb(114 230 240 / .12); }
+.points-badge.expert { color: #aeb8ff; background: rgb(174 184 255 / .14); box-shadow: 0 0 0 3px rgb(99 100 255 / .1); }
+.post-meta .points-badge { margin: 0 1px; }
+.profile-copy h2 .points-badge { width: 22px; height: 22px; margin-left: 4px; font-size: 12px; }
+.daily-tasks {
+  margin: 0 20px 14px;
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, var(--line) 88%, white 12%);
+  border-radius: var(--apple-radius-card);
+  background: color-mix(in srgb, var(--surface) 76%, transparent);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .07), 0 8px 22px rgb(0 0 0 / .12);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  backdrop-filter: blur(18px) saturate(1.2);
+}
+.daily-tasks header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.daily-tasks header span { display: grid; gap: 2px; }
+.daily-tasks header b { font-size: 15px; }
+.daily-tasks header small { color: var(--muted); font-size: 12px; }
+.daily-tasks header strong { color: var(--brand-text); font-size: 14px; white-space: nowrap; }
+.daily-tasks > div { display: grid; gap: 7px; }
+.daily-tasks .task { display: flex; align-items: center; gap: 9px; min-height: 30px; color: var(--muted); }
+.daily-tasks .task > span:nth-child(2) { display: grid; min-width: 0; gap: 1px; }
+.daily-tasks .task b { color: var(--ink); font-size: 13px; font-weight: 650; }
+.daily-tasks .task small { color: var(--brand-text); font-size: 11px; }
+.daily-tasks .task-check { display: grid; width: 22px; height: 22px; place-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--muted); font-size: 13px; }
+.daily-tasks .task.done .task-check { border-color: color-mix(in srgb, var(--brand) 58%, var(--line)); background: var(--brand-soft); color: var(--brand-text); }
+.daily-tasks .task.done b { color: var(--muted); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--muted) 55%, transparent); }
+
+/* Scroll-driven navigation uses compositor-friendly transforms instead of reflowing height every frame. */
+@media (max-width: 680px) {
+  .bottom-nav {
+    contain: layout paint style;
+    will-change: transform;
+    transition: transform .42s cubic-bezier(.22, 1, .36, 1), box-shadow .42s cubic-bezier(.22, 1, .36, 1), background .28s var(--ease);
+  }
+  .bottom-nav.is-compact {
+    height: 82px;
+    min-height: 82px;
+    padding: 4px 5px;
+    border-radius: 41px;
+    transform: translateY(9px) scaleY(.84);
+    transform-origin: center bottom;
+  }
+  .bottom-nav > button { will-change: transform, opacity; transition: transform .42s cubic-bezier(.22, 1, .36, 1), opacity .28s var(--ease), color .22s var(--ease), background .22s var(--ease); }
+  .bottom-nav.is-compact > button:not(.bottom-compose) { transform: scale(.96); }
+  .bottom-nav.is-compact .bottom-compose.is-hidden { display: grid; flex: 0 0 0; width: 0; min-width: 0; height: 0; min-height: 0; margin: 0; padding: 0; border-width: 0; opacity: 0; visibility: hidden; overflow: hidden; transform: scale(.55); }
+}

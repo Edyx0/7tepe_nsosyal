@@ -55,6 +55,10 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /Bağlam Özeti/);
   assert.match(page, /NSosyal yapay zekâ özeti.*Hata içerebilir/);
   assert.match(page, /nsosyal-actions/);
+  assert.match(page, /nsosyal-gamification/);
+  assert.match(page, /dailyTasks/);
+  assert.match(page, /pointsBadge/);
+  assert.match(page, /points-badge/);
   assert.match(page, /nsosyal-drafts/);
   assert.match(page, /Yer İmleri/);
   assert.match(page, /Mesajlar/);
@@ -86,6 +90,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /@keyframes social-action-pop/);
   assert.match(css, /\.action-wrap\.repost\.active/);
   assert.match(css, /@keyframes social-action-glow/);
+  assert.match(css, /will-change: transform/);
+  assert.match(css, /\.bottom-nav\.is-compact \{[\s\S]*transform: translateY\(9px\) scaleY\(\.84\)/);
   assert.match(page, /name === "menu"/);
   assert.match(page, /name === "plus"/);
   assert.match(page, /name === "check"/);
@@ -105,6 +111,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /icon-only/);
   assert.match(page, /following\.includes\(post\.handle\) \? "check" : "plus"/);
   assert.match(page, /requestAnimationFrame/);
+  assert.match(page, /directionTravel/);
+  assert.match(page, /setComposeHidden\(nextCompact\)/);
   assert.match(page, /atBottom/);
   assert.match(css, /post:not\(\.has-thread\) \.post-actions/);
   assert.match(css, /\.feed-tabs::before/);
@@ -119,7 +127,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /item\.id === "profile" \? onOwnProfile\(\) : setView\(item\.id\)/);
   assert.match(page, /function Messages\(\{ messages, setMessages, profile, target \}/);
   assert.match(page, /profile-message/);
-  assert.match(page, /if \(replyTarget\) \{ setNotice\("Yanıtın konuşmaya eklendi\."\); setView\("detail"\); \}/);
+assert.match(page, /if \(replyTarget\) \{ awardTask\("reply", 15\); setNotice\("Yanıtın konuşmaya eklendi\."\); setView\("detail"\); \}/);
   assert.match(page, /const belongsToProfile = \(post: Post\) => props\.isOwn \? post\.own === true : post\.handle === props\.profile\.handle/);
   assert.doesNotMatch(page, /className="notice"/);
   assert.match(page, /const setNotice: \(message: string\) => void = \(\) => undefined/);
