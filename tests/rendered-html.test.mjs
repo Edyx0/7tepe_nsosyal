@@ -132,6 +132,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /rootPosts\.filter\(\(post\) => post\.own \|\| following\.includes\(post\.handle\)\)/);
   assert.match(page, /item\.id === "profile" \? onOwnProfile\(\) : setView\(item\.id\)/);
   assert.match(page, /function Messages\(\{ messages, setMessages, profile, target \}/);
+  assert.match(page, /const scrollRef = useRef<HTMLDivElement>\(null\)/);
+  assert.match(page, /role="log" aria-live="polite"/);
   assert.match(page, /profile-message/);
 assert.match(page, /if \(replyTarget\) \{ awardTask\("reply", 15\); setNotice\("Yanıtın konuşmaya eklendi\."\); setView\("detail"\); \}/);
   assert.match(page, /const belongsToProfile = \(post: Post\) => props\.isOwn \? post\.own === true : post\.handle === props\.profile\.handle/);
@@ -200,6 +202,8 @@ assert.match(page, /if \(replyTarget\) \{ awardTask\("reply", 15\); setNotice\("
   assert.match(css, /\.bottom-compose\.is-hidden \{ display: none; \}/);
   assert.match(css, /flex-basis \.34s cubic-bezier\(\.22, 1, \.36, 1\)/);
   assert.match(css, /--thread-elbow-bottom: 33px/);
+  assert.match(css, /\.message-scroll \{[\s\S]*overflow-y: auto/);
+  assert.match(css, /\.messages-view \{[\s\S]*max-height: calc\(100dvh - 57px\)/);
   assert.match(css, /cubic-bezier\(\.22, 1, \.36, 1\)/);
   assert.match(css, /backdrop-filter: blur\(20px\) saturate\(1\.25\)/);
   assert.match(css, /mobile-profile-button \{ width: 46px; height: 46px; \}/);
