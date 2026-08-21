@@ -110,10 +110,11 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /tab === "bookmarks"/);
   assert.match(page, /bottom-compose/);
   assert.match(page, /desktop-compose-fab/);
-  assert.match(page, /MobileNav\(\{ view, setView, unread, onCompose, composeHidden \}/);
+  assert.match(page, /MobileNav\(\{ view, setView, unread, onCompose, composeHidden, onSearch \}/);
   assert.match(page, /setComposeHidden/);
   assert.match(page, /composeHidden \? "is-compact"/);
   assert.match(page, /top-action-search/);
+  assert.match(page, /const openSearch = \(\) => \{ setSearch\(""\); setView\("explore"\); window\.scrollTo\(\{ top: 0, behavior: "smooth" \}\)/);
   assert.match(page, /repostedByMe/);
   assert.match(page, /icon-only/);
   assert.match(page, /following\.includes\(post\.handle\) \? "check" : "plus"/);
@@ -133,7 +134,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /repostedByMe: true/);
   assert.match(page, /rootPosts = useMemo\(\(\) => posts\.filter\(\(post\) => !post\.replyToId\)/);
   assert.match(page, /rootPosts\.filter\(\(post\) => post\.own \|\| following\.includes\(post\.handle\)\)/);
-  assert.match(page, /item\.id === "profile" \? onOwnProfile\(\) : setView\(item\.id\)/);
+  assert.match(page, /item\.id === "profile" \? onOwnProfile\(\) : item\.id === "feed" \? openHome\(\) : item\.id === "explore" \? onSearch\(\) : setView\(item\.id\)/);
+  assert.match(page, /const openHome = \(\) => \{ setView\("feed"\); window\.scrollTo\(\{ top: 0, behavior: "smooth" \}\); \}/);
+  assert.match(page, /item\.id === "feed" \? openHome\(\) : item\.id === "explore" \? onSearch\(\) : setView\(item\.id\)/);
   assert.match(page, /function Messages\(\{ messages, setMessages, profile, target \}/);
   assert.match(page, /const scrollRef = useRef<HTMLDivElement>\(null\)/);
   assert.match(page, /role="log" aria-live="polite"/);
