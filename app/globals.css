@@ -1770,30 +1770,29 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   flex: 0 0 auto;
 }
 .profile-copy h2 { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
-.points-summary {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  min-height: 22px;
+.profile-reputation {
+  display: inline-grid;
+  width: 22px;
+  height: 22px;
   margin: 0;
-  padding: 2px 7px 2px 3px;
-  border: 1px solid color-mix(in srgb, var(--line) 78%, transparent);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--surface) 72%, transparent);
-  color: var(--muted);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / .07);
+  padding: 0;
+  border: 0;
+  place-items: center;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   cursor: pointer;
   font: inherit;
   line-height: 1;
-  transition: transform .2s var(--native-motion), border-color .2s var(--native-motion), background .2s var(--native-motion), box-shadow .2s var(--native-motion);
+  transition: transform .2s var(--native-motion), filter .2s var(--native-motion);
 }
-.points-summary .points-badge { width: 16px; height: 16px; margin: 0; font-size: 9px; }
-.points-summary small { font-size: 11px; font-weight: 750; letter-spacing: .01em; white-space: nowrap; }
-.points-summary:hover { border-color: color-mix(in srgb, var(--brand) 45%, var(--line)); background: color-mix(in srgb, var(--brand) 12%, var(--surface)); }
-.points-summary:active { transform: scale(.96); }
-.points-summary:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-.points-summary.is-static { cursor: default; }
-.points-summary.is-static:hover { border-color: color-mix(in srgb, var(--line) 78%, transparent); background: color-mix(in srgb, var(--surface) 72%, transparent); }
+.profile-reputation .points-badge { width: 20px; height: 20px; margin: 0; font-size: 10px; }
+.profile-reputation:hover { background: transparent; filter: brightness(1.12); }
+.profile-reputation:active { transform: scale(.92); }
+.profile-reputation:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.profile-reputation.is-static { cursor: default; }
+.profile-reputation.is-static:hover { filter: none; }
+.profile-points { margin-left: 2px; color: var(--muted); font-size: inherit; white-space: nowrap; }
 
 .milestone-backdrop { align-items: end; padding: 20px; }
 .milestone-sheet {
