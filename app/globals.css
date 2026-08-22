@@ -604,9 +604,13 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
   .topbar-center-brand .brand-mark { width: 76px; height: 42px; }
   .topbar-heading, .mobile-brand, .top-action-theme { display: none; }
   .top-action-search { display: grid; margin-left: auto; }
-  .compact-menu-backdrop { display: block; padding: 0; background: rgb(6 8 14 / .58); }
-  .compact-menu { position: absolute; inset: 0 auto 0 0; display: flex; width: min(320px, 86vw); flex-direction: column; overflow-y: auto; border-right: 1px solid color-mix(in srgb, var(--line) 88%, white 12%); border-radius: 0 26px 26px 0; background: color-mix(in srgb, var(--surface) 94%, transparent); box-shadow: 18px 0 42px rgb(0 0 0 / .28), inset -1px 0 0 rgb(255 255 255 / .05); -webkit-backdrop-filter: blur(28px) saturate(1.35); backdrop-filter: blur(28px) saturate(1.35); }
+  .compact-menu-backdrop { display: grid; grid-template-columns: min(320px, 86vw) minmax(0, 1fr); align-items: stretch; padding: 0; background: rgb(6 8 14 / .58); }
+  .compact-menu { position: relative; inset: auto; display: flex; width: 100%; min-height: 100dvh; flex-direction: column; overflow-y: auto; border-right: 1px solid color-mix(in srgb, var(--line) 88%, white 12%); border-radius: 0 26px 26px 0; background: color-mix(in srgb, var(--surface) 94%, transparent); box-shadow: 18px 0 42px rgb(0 0 0 / .28), inset -1px 0 0 rgb(255 255 255 / .05); -webkit-backdrop-filter: blur(28px) saturate(1.35); backdrop-filter: blur(28px) saturate(1.35); }
 }
+
+/* Public profiles have three visible sections; private profiles include bookmarks. */
+.profile-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.profile-tabs.has-private-tab { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
 /* Composer is intentionally opened from the floating action, keeping the
    feed focused on reading while preserving a full posting flow on demand. */
@@ -2232,8 +2236,11 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   border-block: 1px solid color-mix(in srgb, var(--brand) 24%, var(--line));
   border-radius: 0;
   background: color-mix(in srgb, var(--brand) 6%, var(--surface));
+  isolation: isolate;
+  position: relative;
+  z-index: 2;
 }
-.inline-contribution-mark { width: 30px; height: 30px; border-radius: 10px; }
+.inline-contribution-mark { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 10px; }
 .inline-contribution-mark .ui-icon { width: 16px; height: 16px; }
 .inline-contribution-copy { min-width: 0; }
 .inline-contribution h2 { margin: 0; color: var(--ink); font-size: .875rem; letter-spacing: -.012em; }
