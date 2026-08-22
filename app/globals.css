@@ -2173,6 +2173,14 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 .inline-draft { padding-top: 2px; }
 .inline-draft label { font-size: .875rem; }
 .inline-draft footer small { max-width: 34ch; }
+.inline-published-reply { position: relative; display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 8px; padding-top: 2px; }
+.inline-reply-rail { position: relative; width: 16px; }
+.inline-reply-rail::before { position: absolute; top: 0; bottom: 0; left: 7px; width: 1px; background: color-mix(in srgb, var(--line) 82%, transparent); content: ""; }
+.inline-published-reply > div { min-width: 0; padding: 10px 11px; border: 1px solid color-mix(in srgb, var(--brand) 30%, var(--line)); border-radius: 12px; background: color-mix(in srgb, var(--brand) 6%, var(--surface)); }
+.inline-published-reply p { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 7px; margin: 0; }
+.inline-published-reply b { font-size: .8125rem; line-height: 1.25; }
+.inline-published-reply small { color: var(--muted); font-size: .6875rem; line-height: 1.25; }
+.inline-published-reply blockquote { margin: 5px 0 0; color: var(--text); font-size: .875rem; line-height: 1.45; }
 @media (max-width: 680px) {
   .inline-contribution { padding: 14px; }
   .inline-context { padding: 9px; }

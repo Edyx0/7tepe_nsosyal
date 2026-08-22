@@ -64,6 +64,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /Bu gönderiye yanıt ver/);
   assert.match(page, /Yanıtınla ne eklemek istersin/);
   assert.match(page, /Yanıtın bu gönderinin altına eklenecek/);
+  assert.match(page, /publishedReply/);
+  assert.match(page, /Gönderiye eklediğin yanıt/);
   assert.match(page, /contributionIntents/);
   assert.match(page, /maxLength=\{280\}/);
   assert.match(page, /awardTask\("deep-contribution", 20\)/);
@@ -74,6 +76,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /\.inline-contribution \{[\s\S]*border-radius: 16px/);
   assert.match(css, /\.inline-publish \{[\s\S]*background: var\(--brand\)/);
   assert.match(css, /\.inline-context \{[\s\S]*grid-template-columns: 30px minmax\(0, 1fr\)/);
+  assert.match(css, /\.inline-published-reply \{/);
   assert.match(css, /\.search-field input,[\s\S]*font-size: 16px/);
   assert.match(css, /grid-template-columns: repeat\(5, minmax\(0, 1fr\)\)/);
   assert.match(css, /\.post-actions \.action small \{ display: inline-block/);
