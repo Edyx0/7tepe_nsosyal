@@ -2253,6 +2253,9 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 .avatar.has-photo { overflow: hidden; background: var(--surface-muted); color: transparent; }
 .avatar.has-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .avatar-button:hover .avatar.has-photo { outline-color: color-mix(in srgb, var(--brand) 40%, transparent); }
+.avatar:not(.has-photo) { background-image: none; }
+.avatar::before,
+.avatar::after { display: none !important; content: none !important; }
 .profile-cover { background-image: linear-gradient(90deg, rgb(11 16 28 / .26), rgb(11 16 28 / .05)), var(--profile-cover-image, url("/demo/kent-serinligi.png")); background-position: center; background-size: cover; }
 .profile-cover .cover-ripple { display: none; }
 .repost-quote { margin: 7px 0 2px; padding: 8px 10px; border: 1px solid color-mix(in srgb, var(--line) 88%, transparent); border-radius: 10px; background: color-mix(in srgb, var(--surface-muted) 54%, transparent); color: var(--secondary); font-size: .875rem; line-height: 1.4; }
