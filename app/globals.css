@@ -2145,3 +2145,39 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 @media (prefers-reduced-transparency: reduce) {
   .inline-intents > div { background: var(--surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
+
+/* The prompt now names the exact post and outcome before asking for a choice. */
+.inline-contribution { padding: 15px; }
+.inline-contribution form { gap: 12px; }
+.inline-contribution-header { grid-template-columns: 38px minmax(0, 1fr); align-items: start; }
+.inline-contribution-mark { width: 38px; height: 38px; border-radius: 12px; }
+.inline-contribution-kicker { display: block; margin-bottom: 3px; color: var(--brand-text); font-size: .75rem; font-weight: 750; letter-spacing: .01em; }
+.inline-contribution h2 { font-size: 1.0625rem; }
+.inline-contribution-header p { max-width: 50ch; margin-top: 4px; }
+.inline-context { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 9px; padding: 10px; border: 1px solid color-mix(in srgb, var(--line) 88%, rgb(255 255 255 / .08)); border-radius: 12px; background: color-mix(in srgb, var(--surface) 68%, transparent); }
+.inline-context > span { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 50%; background: color-mix(in srgb, var(--brand) 18%, transparent); color: var(--brand-text); font-size: .6875rem; font-weight: 800; }
+.inline-context div { min-width: 0; }
+.inline-context b { font-size: .8125rem; }
+.inline-context small { margin-left: 5px; color: var(--muted); font-size: .75rem; }
+.inline-context p { display: -webkit-box; margin: 4px 0 0; overflow: hidden; color: var(--muted); font-size: .8125rem; line-height: 1.4; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.inline-intents legend { margin-bottom: 8px; }
+.inline-intents > div { gap: 7px; overflow: visible; border: 0; border-radius: 0; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
+.inline-intents button, .inline-intents button:first-child { display: grid; grid-template-columns: 22px minmax(0, 1fr); align-items: center; gap: 8px; min-height: 68px; padding: 9px; border: 1px solid var(--line); border-radius: 12px; background: color-mix(in srgb, var(--surface) 68%, transparent); color: var(--text); text-align: left; transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease; }
+.inline-intents button .ui-icon { width: 18px; height: 18px; color: var(--brand-text); }
+.inline-intents button span { display: grid; min-width: 0; gap: 2px; }
+.inline-intents button b { font-size: .8125rem; line-height: 1.2; }
+.inline-intents button small { color: var(--muted); font-size: .6875rem; line-height: 1.25; }
+.inline-intents button:hover { border-color: color-mix(in srgb, var(--brand) 45%, var(--line)); background: color-mix(in srgb, var(--brand) 7%, var(--surface)); }
+.inline-intents button.is-selected { border-color: var(--brand); background: color-mix(in srgb, var(--brand) 15%, var(--surface)); color: var(--text); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand) 26%, transparent); }
+.inline-intents button.is-selected .ui-icon { color: var(--brand-text); }
+.inline-draft { padding-top: 2px; }
+.inline-draft label { font-size: .875rem; }
+.inline-draft footer small { max-width: 34ch; }
+@media (max-width: 680px) {
+  .inline-contribution { padding: 14px; }
+  .inline-context { padding: 9px; }
+  .inline-intents > div { grid-template-columns: 1fr; }
+  .inline-intents button, .inline-intents button:first-child { min-height: 58px; grid-template-columns: 22px minmax(0, 1fr); padding: 8px 10px; }
+  .inline-intents button span { grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 8px; }
+  .inline-intents button small { text-align: right; }
+}
