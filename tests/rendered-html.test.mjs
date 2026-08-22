@@ -84,6 +84,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.doesNotMatch(page, /useComposerTool/);
   assert.match(css, /\.composer-image/);
   assert.match(css, /\.post-poll/);
+  assert.match(css, /\.action-wrap\.bookmark \.action \{ width: 40px;[\s\S]*aspect-ratio: 1;[\s\S]*border-radius: 50%/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(css, /\.inline-contribution \{[\s\S]*border-radius: 16px/);
   assert.match(css, /\.inline-publish \{[\s\S]*background: var\(--brand\)/);
