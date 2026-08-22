@@ -2094,6 +2094,26 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   .post-actions .action small { display: inline-block; min-width: 0; overflow: hidden; font-size: 10px; font-variant-numeric: tabular-nums; text-overflow: ellipsis; white-space: nowrap; }
 }
 
+/* Nested replies trade oversized action capsules for a compact five-control
+   rail: counts stay readable and the two icon-only actions remain true circles. */
+@media (max-width: 430px) {
+  .post-actions,
+  .post.has-thread .post-actions { grid-template-columns: repeat(3, minmax(0, 1fr)) 34px 34px; gap: 3px; }
+  .post-actions .action-wrap,
+  .post.has-thread .action-wrap,
+  .post-actions .action-wrap:last-child,
+  .post.has-thread .action-wrap:last-child { display: block; width: auto; min-width: 0; height: auto; margin-left: 0; }
+  .post-actions .action,
+  .post.has-thread .action { width: 100%; min-width: 0; height: 34px; min-height: 34px; padding: 3px 2px; gap: 3px; border-radius: 999px; }
+  .post-actions .action i,
+  .post-actions .action i svg { width: 18px; height: 18px; }
+  .post-actions .action small { display: inline-block; min-width: 0; overflow: visible; font-size: 10px; text-overflow: clip; white-space: nowrap; }
+  .post-actions .action-wrap.icon-only .action,
+  .post-actions .action-wrap:last-child .action,
+  .post.has-thread .action-wrap.icon-only .action,
+  .post.has-thread .action-wrap:last-child .action { width: 34px; min-width: 34px; height: 34px; min-height: 34px; padding: 0; border-radius: 50%; }
+}
+
 /* Keep the desktop task entry point alongside the profile control, and clear
    the mobile compose affordance with enough room for a deliberate tap. */
 @media (min-width: 1121px) {
