@@ -84,6 +84,11 @@ const portraitByInitials: Record<string, string> = {
   ES: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=240&q=82",
   YE: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=240&q=82",
 };
+const avatarStyleByInitials: Record<string, string> = {
+  AG: "is-pattern-dots", CE: "is-pattern-orbit", DU: "is-initials", İD: "is-pattern-corner", KS: "is-initials",
+  LO: "is-pattern-dots", MK: "is-initials", ÖA: "is-pattern-orbit", PS: "is-initials", YT: "is-pattern-corner",
+  BK: "is-pattern-orbit", SE: "is-initials",
+};
 const profilesByHandle: Record<string, Profile> = {
   "@idilaras": { name: "İdil Aras", handle: "@idilaras", initials: "İA", bio: "Kentte biraz daha rahat nefes alabilmek için küçük, uygulanabilir fikirleri topluyorum.", location: "Kadıköy, İstanbul", cover: "/demo/kent-serinligi.png" },
   "@edizyilmaz": { name: "Ediz Yılmaz", handle: "@edizyilmaz", initials: "EY", bio: "Film, kitap ve mahalle hayatı hakkında kısa notlar. Bazen fazla düşünüyorum.", location: "Beyoğlu, İstanbul", cover: "/demo/mahalle-kutuphanesi.png" },
@@ -425,7 +430,7 @@ export default function Home() {
 }
 
 function BrandMark({ small = false }: { small?: boolean }) { return <span className={"brand-mark " + (small ? "small" : "")} aria-hidden="true">{small ? <img src="/brand/nsosyal-favicon.svg" alt="" /> : <><img className="logo-for-dark" src="/brand/nsosyal-source-era-logo-dark.svg" alt="" /><img className="logo-for-light" src="/brand/nsosyal-source-era-logo-light.svg" alt="" /></>}</span>; }
-function Avatar({ initials, tone }: { initials: string; tone: string }) { const photo = portraitByInitials[initials]; return <span className={"avatar " + tone + (photo ? " has-photo" : "")}>{photo ? <img src={photo} alt="" /> : initials}</span>; }
+function Avatar({ initials, tone }: { initials: string; tone: string }) { const photo = portraitByInitials[initials]; const treatment = photo ? "has-photo" : avatarStyleByInitials[initials] ?? "is-initials"; return <span className={"avatar " + tone + " " + treatment}>{photo ? <img src={photo} alt="" /> : <span className="avatar-label">{initials}</span>}</span>; }
 
 type ContributionIntent = { id: string; label: string; helper: string; prompt: string; icon: UiIconName };
 const contributionIntents: ContributionIntent[] = [
