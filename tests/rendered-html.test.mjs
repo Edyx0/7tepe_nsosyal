@@ -165,9 +165,15 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /item\.id === "profile" \? onOwnProfile\(\) : item\.id === "feed" \? openHome\(\) : item\.id === "explore" \? onSearch\(\) : setView\(item\.id\)/);
   assert.match(page, /const openHome = \(\) => \{ setView\("feed"\); window\.scrollTo\(\{ top: 0, behavior: "smooth" \}\); \}/);
   assert.match(page, /item\.id === "feed" \? openHome\(\) : item\.id === "explore" \? onSearch\(\) : setView\(item\.id\)/);
-  assert.match(page, /function Messages\(\{ messages, setMessages, profile, target \}/);
+  assert.match(page, /function Messages\(\{ messages, setMessages, target \}/);
   assert.match(page, /const scrollRef = useRef<HTMLDivElement>\(null\)/);
   assert.match(page, /role="log" aria-live="polite"/);
+  assert.match(page, /message-empty/);
+  assert.match(page, /profilesByHandle/);
+  assert.match(page, /repostQuote/);
+  assert.match(page, /post-photo/);
+  assert.match(css, /\.post-photo \{/);
+  assert.match(css, /\.message-empty \{/);
   assert.match(page, /profile-message/);
   assert.match(page, /if \(replyTarget\) \{ awardTask\("reply", 15\); setNotice\("Yanıtın konuşmaya eklendi\."\); setView\("detail"\); \}/);
   assert.match(page, /const displayPost = withLocalReplyCount\(post, props\.allPosts\)/);

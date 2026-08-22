@@ -2210,3 +2210,48 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   .thread-children > .thread-reply-node::before { left: -8px; width: 8px; }
   .thread-children > .thread-reply-node:last-child::after { left: -8px; }
 }
+
+/* Real imagery keeps the demo grounded without changing the product's quiet reading rhythm. */
+.avatar.has-photo { overflow: hidden; background: var(--surface-muted); color: transparent; }
+.avatar.has-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.avatar-button:hover .avatar.has-photo { outline-color: color-mix(in srgb, var(--brand) 40%, transparent); }
+.profile-cover { background-image: linear-gradient(90deg, rgb(11 16 28 / .26), rgb(11 16 28 / .05)), var(--profile-cover-image, url("/demo/kent-serinligi.png")); background-position: center; background-size: cover; }
+.profile-cover .cover-ripple { display: none; }
+.repost-quote { margin: 7px 0 2px; padding: 8px 10px; border: 1px solid color-mix(in srgb, var(--line) 88%, transparent); border-radius: 10px; background: color-mix(in srgb, var(--surface-muted) 54%, transparent); color: var(--secondary); font-size: .875rem; line-height: 1.4; }
+.post-photo { position: relative; display: block; width: 100%; margin-top: 10px; padding: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-muted); text-align: left; }
+.post-photo img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; transition: transform 220ms cubic-bezier(.22, 1, .36, 1); }
+.post-photo span { position: absolute; right: 9px; bottom: 9px; padding: 5px 7px; border-radius: 999px; background: rgb(13 18 31 / .76); color: #fff; font-size: .6875rem; opacity: 0; transition: opacity 160ms ease; }
+.post-photo:hover img { transform: scale(1.015); }
+.post-photo:hover span, .post-photo:focus-visible span { opacity: 1; }
+.media-preview.has-photo { display: grid; min-height: min(72dvh, 620px); padding: 0; background: #10131b; }
+.media-preview.has-photo > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .72; }
+.media-preview.has-photo::after { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(8 12 20 / .04) 20%, rgb(8 12 20 / .86) 100%); content: ""; }
+.media-preview-copy { position: relative; z-index: 1; align-self: end; display: grid; gap: 7px; padding: 28px; color: #fff; }
+.media-preview-copy p, .media-preview-copy h2, .media-preview-copy small { position: relative; z-index: 1; margin: 0; }
+.media-preview-copy p { color: #d4ddff; font-size: .8125rem; font-weight: 700; }
+.media-preview-copy h2 { max-width: 30ch; font-size: 1.25rem; line-height: 1.35; }
+.media-preview-copy small { color: rgb(255 255 255 / .75); }
+
+/* The composer stays in its own compact viewport and never drifts below navigation. */
+.messages-view { height: calc(100dvh - 58px); min-height: min(520px, calc(100dvh - 58px)); max-height: calc(100dvh - 58px); grid-template-rows: minmax(0, 1fr); }
+.message-thread { min-height: 0; }
+.message-thread header { flex: 0 0 auto; background: color-mix(in srgb, var(--surface) 86%, transparent); }
+.message-scroll { min-height: 0; padding: 14px; }
+.message-day { align-self: center; margin: 2px 0 8px; color: var(--muted); font-size: .6875rem; }
+.message-empty { align-self: center; display: grid; justify-items: center; gap: 7px; max-width: 270px; margin: auto; color: var(--secondary); text-align: center; }
+.message-empty .avatar { width: 48px; height: 48px; }
+.message-empty b { color: var(--ink); font-size: .875rem; }
+.message-empty p { margin: 0; font-size: .8125rem; line-height: 1.45; }
+.message-compose { position: relative; z-index: 2; min-height: 60px; padding: 10px 12px; background: color-mix(in srgb, var(--surface) 96%, transparent); }
+.message-compose input { min-height: 42px; font-size: 16px; }
+.message-compose button { width: 42px; height: 42px; flex: 0 0 42px; }
+@media (min-width: 1001px) {
+  .messages-view { height: calc(100dvh - 58px); max-height: calc(100dvh - 58px); }
+}
+@media (max-width: 680px) {
+  .messages-view { height: calc(100dvh - 148px); min-height: 0; max-height: calc(100dvh - 148px); grid-template-rows: 70px minmax(0, 1fr); }
+  .message-thread header { min-height: 62px; }
+  .message-scroll { padding: 12px; }
+  .message-compose { min-height: 62px; padding: 9px 12px calc(9px + env(safe-area-inset-bottom)); }
+  .post-photo span { opacity: 1; }
+}
