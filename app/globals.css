@@ -2417,3 +2417,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   .message-compose { min-height: 62px; padding: 9px 12px calc(9px + env(safe-area-inset-bottom)); }
   .post-photo span { opacity: 1; }
 }
+
+/* The fixed desktop composer is the single compose entry point on wide screens. */
+@media (min-width: 681px) {
+  .sidebar .sidebar-compose { display: none; }
+}

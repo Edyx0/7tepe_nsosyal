@@ -152,7 +152,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /mobile-profile-button/);
   assert.match(page, /mobile-profile-button" onClick=\{openOwnProfile\}/);
   assert.match(page, /profile-settings/);
-  assert.match(page, /tab === "bookmarks"/);
+  assert.match(page, /tab === "reposts"/);
   assert.match(page, /bottom-compose/);
   assert.match(page, /desktop-compose-fab/);
   assert.match(page, /MobileNav\(\{ view, setView, unread, composeHidden, onSearch, onCompose \}/);
@@ -175,7 +175,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /\.topbar::before/);
   assert.match(page, /Yeniden paylaştın/);
   assert.match(page, /actions\.reposts\.includes\(post\.id\)/);
-  assert.doesNotMatch(page, />Repostlar</);
+  assert.match(page, />Yeniden Paylaşımlar</);
   assert.match(page, /props\.actions\.reposts\.includes\(post\.id\)/);
   assert.match(page, /repostedByMe: true/);
   assert.match(page, /rootPosts = useMemo\(\(\) => posts\.filter\(\(post\) => !post\.replyToId\)/);
@@ -184,6 +184,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /const openHome = \(\) => \{ setView\("feed"\); window\.scrollTo\(\{ top: 0, behavior: "smooth" \}\); \}/);
   assert.match(page, /item\.id === "feed" \? openHome\(\) : item\.id === "explore" \? onSearch\(\) : setView\(item\.id\)/);
   assert.match(page, /function Messages\(\{ messages, setMessages, target \}/);
+  assert.match(page, /previewFor/);
+  assert.match(page, /Henüz mesaj yok/);
   assert.match(page, /const scrollRef = useRef<HTMLDivElement>\(null\)/);
   assert.match(page, /role="log" aria-live="polite"/);
   assert.match(page, /message-empty/);
@@ -294,9 +296,16 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /prefers-reduced-transparency/);
   assert.match(page, /profilini aç/);
   assert.match(page, /onBookmarks/);
+  assert.match(page, /notificationIds/);
+  assert.match(page, /view !== "notifications"/);
+  assert.match(page, /setReadNotifications\(notificationIds\)/);
+  assert.match(page, /trendPostTokens/);
+  assert.match(page, /postsForTrend/);
+  assert.doesNotMatch(page, /trend\.count\}<\/small><\/span><em/);
   assert.match(css, /--brand-fill: #324BFF/);
   assert.match(css, /--brand-text: #AEB8FF/);
   assert.match(css, /\.post-follow \{ position: static/);
+  assert.match(css, /\.sidebar \.sidebar-compose \{ display: none; \}/);
   assert.match(css, /\.ui-icon/);
   assert.match(page, /function deleteOwnPost/);
   assert.match(page, /function resetDemo/);
