@@ -206,7 +206,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
   .action i, .action i svg { width: 17px; height: 17px; }
   .signal-card { border-radius: 14px; }
 }
-@media (max-width: 390px) {
+@media (max-width: 430px) {
   .post-actions { justify-content: flex-start; }
   .action { min-height: 33px; padding: 4px 6px; }
   .action small { display: none; }
@@ -2075,13 +2075,17 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 
 /* Compact phones keep every social action legible.  A five-column grid gives
    the reply, repost, and like counts equal space instead of hiding them. */
-@media (max-width: 390px) {
+@media (max-width: 430px) {
   .post-actions { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; max-width: none; justify-content: initial; }
   .post-actions .action-wrap,
   .post-actions .action-wrap:last-child { width: 100%; min-width: 0; margin-left: 0; }
   .post-actions .action,
   .post-actions .action-wrap.icon-only .action,
   .post:not(.has-thread) .post-actions .action { width: 100%; min-width: 0; padding: 4px 2px; gap: 2px; justify-content: center; }
+  .post.has-thread .action-wrap,
+  .post.has-thread .action-wrap:last-child { width: 100%; min-width: 0; margin-left: 0; }
+  .post.has-thread .action,
+  .post.has-thread .action-wrap:last-child .action { width: 100%; min-width: 0; padding: 4px 2px; border-radius: 999px; }
   .post-actions .action small { display: inline-block; min-width: 0; overflow: hidden; font-size: 10px; font-variant-numeric: tabular-nums; text-overflow: ellipsis; white-space: nowrap; }
 }
 
