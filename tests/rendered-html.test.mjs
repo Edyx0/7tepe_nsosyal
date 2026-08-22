@@ -158,6 +158,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /MobileNav\(\{ view, setView, unread, composeHidden, onSearch, onCompose \}/);
   assert.match(page, /setComposeHidden/);
   assert.match(page, /composeHidden \? "is-compact"/);
+  assert.match(page, /bottom-compose " \+ \(composeHidden \? "is-hidden"/);
   assert.match(page, /top-action-search/);
   assert.match(page, /const openSearch = \(\) => \{ setSearch\(""\); setView\("explore"\); window\.scrollTo\(\{ top: 0, behavior: "smooth" \}\)/);
   assert.match(page, /repostedByMe/);
