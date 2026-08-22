@@ -73,6 +73,17 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /replyToId: replyTarget\.id/);
   assert.match(css, /\.contribution-intents \{ display: grid/);
   assert.match(css, /\.contribution-intents button\.is-selected/);
+  assert.match(page, /type ComposerImage/);
+  assert.match(page, /accept="image\/\*"/);
+  assert.match(page, /FileReader/);
+  assert.match(page, /composer-poll/);
+  assert.match(page, /Anket için bir soru ve en az iki seçenek ekle/);
+  assert.match(page, /emoji-menu/);
+  assert.match(page, /function PostPoll/);
+  assert.doesNotMatch(page, /Konum ekle/);
+  assert.doesNotMatch(page, /useComposerTool/);
+  assert.match(css, /\.composer-image/);
+  assert.match(css, /\.post-poll/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(css, /\.inline-contribution \{[\s\S]*border-radius: 16px/);
   assert.match(css, /\.inline-publish \{[\s\S]*background: var\(--brand\)/);
