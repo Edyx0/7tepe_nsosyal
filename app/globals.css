@@ -2228,6 +2228,18 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   pointer-events: none;
 }
 .thread-children > .thread-reply-node:last-child::after { display: none; }
+
+/* Topic labels give a hashtag enough context to be useful at a glance. */
+.trend-panel > button > span { min-width: 0; }
+.trend-panel .trend-topic {
+  display: block;
+  margin-top: 1px;
+  color: color-mix(in oklch, var(--ink) 74%, var(--muted));
+  font-size: .75rem;
+  font-weight: 500;
+  line-height: 1.35;
+  white-space: normal;
+}
 @media (max-width: 680px) {
   .thread-replies > h2 { margin-inline: 14px; }
   .thread-reply-node > .post { padding: 11px 12px 8px; }
