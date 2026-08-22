@@ -153,6 +153,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /mobile-profile-button" onClick=\{openOwnProfile\}/);
   assert.match(page, /profile-settings/);
   assert.match(page, /tab === "bookmarks"/);
+  assert.match(page, /props\.isOwn && <button role="tab" aria-selected=\{tab === "bookmarks"\}/);
   assert.match(page, /bottom-compose/);
   assert.match(page, /desktop-compose-fab/);
   assert.match(page, /MobileNav\(\{ view, setView, unread, composeHidden, onSearch, onCompose \}/);
