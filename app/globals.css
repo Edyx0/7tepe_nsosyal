@@ -2189,3 +2189,24 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   .inline-intents button span { grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 8px; }
   .inline-intents button small { text-align: right; }
 }
+
+/* Threaded comments use quiet connectors to make parent-child relationships scannable. */
+.thread-replies { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.thread-replies > h2 { display: flex; align-items: baseline; gap: 7px; margin: 0 16px 3px; color: var(--ink); font-size: .9375rem; letter-spacing: -.012em; }
+.thread-replies > h2 span { color: var(--muted); font-size: .75rem; font-weight: 500; }
+.thread-reply-tree { padding: 0 2px 8px; }
+.thread-reply-node { position: relative; min-width: 0; }
+.thread-reply-node > .post { padding: 12px 14px 8px; border-bottom: 0; background: transparent; }
+.thread-reply-node > .post:hover { background: color-mix(in oklch, var(--surface-muted) 42%, transparent); }
+.thread-reply-node > .post.has-thread::before { display: none; }
+.thread-children { position: relative; margin-left: 34px; padding-left: 12px; }
+.thread-children::before { position: absolute; top: -3px; bottom: 15px; left: 0; width: 1px; background: var(--line); content: ""; }
+.thread-children > .thread-reply-node::before { position: absolute; top: 0; left: -12px; width: 12px; height: 39px; border-bottom: 1px solid var(--line); border-left: 1px solid var(--line); border-bottom-left-radius: 10px; content: ""; pointer-events: none; }
+.thread-children > .thread-reply-node:last-child::after { position: absolute; right: 0; bottom: 0; left: -12px; height: 10px; background: var(--bg); content: ""; pointer-events: none; }
+@media (max-width: 680px) {
+  .thread-replies > h2 { margin-inline: 14px; }
+  .thread-reply-node > .post { padding: 11px 12px 8px; }
+  .thread-children { margin-left: 25px; padding-left: 8px; }
+  .thread-children > .thread-reply-node::before { left: -8px; width: 8px; }
+  .thread-children > .thread-reply-node:last-child::after { left: -8px; }
+}

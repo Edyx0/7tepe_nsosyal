@@ -6,6 +6,8 @@ import {
   removeItem,
   repliesForThread,
   runExclusive,
+  threadedRepliesForRoot,
+  threadRootForPost,
   toggleItem,
   togglePinned,
 } from "../app/demo-state.mjs";
@@ -109,6 +111,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /strokeWidth: 2\.05/);
   assert.doesNotMatch(page, /className="quote-mini"/);
   assert.match(page, /thread-reply-input/);
+  assert.match(page, /ThreadReplies/);
+  assert.match(page, /threadedRepliesForRoot/);
+  assert.match(page, /threadRootForPost/);
   assert.match(page, /replyToId/);
   assert.match(page, /MobileMoreMenu/);
   assert.match(page, /useDialogFocus/);
@@ -246,6 +251,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /\.post-actions \.action-wrap:last-child \{[\s\S]*flex: 0 0 46px/);
   assert.match(css, /\.post-actions \.action-wrap:last-child \.action \{[\s\S]*place-items: center/);
   assert.match(css, /\.thread-view > \.post \{[\s\S]*border-radius: 24px/);
+  assert.match(css, /\.thread-children::before/);
+  assert.match(css, /\.thread-children > \.thread-reply-node::before/);
   assert.match(css, /\.topbar\.is-detail \{/);
   assert.match(css, /\.profile-head \{ position: relative; z-index: 2/);
   assert.match(css, /\.profile-head \.avatar \{ position: relative; z-index: 3/);
@@ -272,7 +279,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /restoredLocalState/);
   assert.doesNotMatch(page, /useState<Theme>\(\(\) => readStored/);
   assert.match(page, /aria-pressed=\{following\.includes\(post\.handle\)\}/);
-  assert.match(page, /repliesForThread\(merged, props\.post\)/);
+  assert.match(page, /threadedRepliesForRoot\(merged, props\.post\)/);
   assert.match(page, /<PostCard key=\{post\.id\} \{\.\.\.props\} post=\{displayPost\} \/>/);
   assert.doesNotMatch(page, /ParticipationJourney|participation-trigger/);
   assert.match(page, /runExclusive\(event, \(\) => onProfile\(post\)\)/);
@@ -312,6 +319,17 @@ test("stable reply ids keep a published detail reply in its thread", () => {
   const published = { id: "local-reply", name: "Deniz Naz", replyTo: "İdil Aras", replyToId: "root" };
   const reopened = repliesForThread([root, published, published], root);
   assert.deepEqual(reopened.map((post) => post.id), ["local-reply"]);
+});
+
+test("threaded replies preserve parent-child order and find the conversation root", () => {
+  const root = { id: "root", name: "İdil Aras" };
+  const first = { id: "first", name: "Selin Uçak", replyToId: "root" };
+  const nested = { id: "nested", name: "Deniz Naz", replyToId: "first" };
+  const second = { id: "second", name: "Bora Ekin", replyToId: "root" };
+  const tree = threadedRepliesForRoot([root, first, nested, second], root);
+  assert.deepEqual(tree.map((node) => node.post.id), ["first", "second"]);
+  assert.deepEqual(tree[0].children.map((node) => node.post.id), ["nested"]);
+  assert.equal(threadRootForPost([root, first, nested, second], nested).id, "root");
 });
 
 test("reply totals include newly published comments outside the opened thread", () => {
