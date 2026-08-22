@@ -171,6 +171,26 @@ function isValidStored(key: string, value: unknown): boolean {
   return true;
 }
 function formatNumber(value: number) { return new Intl.NumberFormat("tr-TR", { notation: "compact", maximumFractionDigits: 1 }).format(value); }
+function mixAvatarPresence(posts: Post[]) {
+  const withPhoto = posts.filter((post) => !!portraitByInitials[post.initials]);
+  const withoutPhoto = posts.filter((post) => !portraitByInitials[post.initials]);
+  const sequence = [withPhoto, withoutPhoto, withPhoto, withoutPhoto, withoutPhoto];
+  const cursors = new Map<Post[], number>([[withPhoto, 0], [withoutPhoto, 0]]);
+  const mixed: Post[] = [];
+
+  for (let index = 0; mixed.length < posts.length; index += 1) {
+    const preferred = sequence[index % sequence.length];
+    const fallback = preferred === withPhoto ? withoutPhoto : withPhoto;
+    const pickFrom = cursors.get(preferred)! < preferred.length ? preferred : fallback;
+    const cursor = cursors.get(pickFrom)!;
+    if (cursor < pickFrom.length) {
+      mixed.push(pickFrom[cursor]);
+      cursors.set(pickFrom, cursor + 1);
+    }
+  }
+
+  return mixed;
+}
 function getPointsBadge(points: number): PointsBadge {
   return [...badgeMilestones].reverse().find((badge) => points >= badge.points) ?? badgeMilestones[0];
 }
@@ -326,7 +346,8 @@ export default function Home() {
   const posts = useMemo(() => [...draftPosts, ...seedPosts].filter((post) => !mods.deleted.includes(post.id)).sort((a, b) => Number(b.id === mods.pinned) - Number(a.id === mods.pinned)), [draftPosts, mods]);
   const bookmarkPosts = posts.filter((post) => actions.bookmarks.includes(post.id));
   const rootPosts = useMemo(() => posts.filter((post) => !post.replyToId), [posts]);
-  const displayedPosts = useMemo(() => view === "bookmarks" ? bookmarkPosts : feedMode === "following" ? rootPosts.filter((post) => post.own || following.includes(post.handle)) : rootPosts, [bookmarkPosts, feedMode, following, rootPosts, view]);
+  const mixedRootPosts = useMemo(() => mixAvatarPresence(rootPosts), [rootPosts]);
+  const displayedPosts = useMemo(() => view === "bookmarks" ? bookmarkPosts : feedMode === "following" ? rootPosts.filter((post) => post.own || following.includes(post.handle)) : mixedRootPosts, [bookmarkPosts, feedMode, following, mixedRootPosts, rootPosts, view]);
   const startReply = (post: Post) => { const root = threadRootForPost([...seedReplies, ...posts], post); setSelectedPost(root); setReplyingTo(post); setContextOpen(true); setView("detail"); window.scrollTo({ top: 0, behavior: "smooth" }); window.setTimeout(() => document.getElementById("thread-reply-input")?.focus(), 120); };
   const openDetail = (post: Post) => { const root = threadRootForPost([...seedReplies, ...posts], post); setSelectedPost(root); setContextOpen(true); setView("detail"); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const openProfile = (post: Post) => { setProfilePost(post); setView("profile"); window.scrollTo({ top: 0, behavior: "smooth" }); };
