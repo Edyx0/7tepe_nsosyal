@@ -2070,7 +2070,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   .search-field input,
   .explore-search input,
   .composer textarea,
-  .studio-draft textarea { font-size: 16px; }
+  .inline-draft textarea { font-size: 16px; }
 }
 
 /* Compact phones keep every social action legible.  A five-column grid gives
@@ -2095,4 +2095,53 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 }
 @media (max-width: 680px) {
   .participation-trigger { bottom: calc(142px + env(safe-area-inset-bottom)); }
+}
+
+/* One deliberately elevated contribution prompt in the home feed. The rest of
+   the social timeline keeps its existing, dense treatment. */
+.inline-contribution {
+  margin: 12px;
+  padding: 16px;
+  border: 1px solid color-mix(in srgb, var(--brand) 28%, var(--line));
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--surface) 91%, #101a33 9%);
+  color: var(--text);
+}
+.inline-contribution form { display: grid; gap: 14px; }
+.inline-contribution-header { display: grid; grid-template-columns: 36px minmax(0, 1fr); align-items: center; gap: 10px; }
+.inline-contribution-mark { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid color-mix(in srgb, var(--brand) 45%, var(--line)); border-radius: 11px; background: color-mix(in srgb, var(--brand) 13%, transparent); color: var(--brand-text); }
+.inline-contribution-mark .ui-icon { width: 17px; height: 17px; }
+.inline-contribution h2 { margin: 0; font-size: 1rem; line-height: 1.2; letter-spacing: -.018em; }
+.inline-contribution-header p { margin: 3px 0 0; color: var(--muted); font-size: .875rem; line-height: 1.4; }
+.inline-intents { min-width: 0; margin: 0; padding: 0; border: 0; }
+.inline-intents legend { margin-bottom: 8px; color: var(--text); font-size: .8125rem; font-weight: 750; }
+.inline-intents > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: hidden; border: 1px solid color-mix(in srgb, var(--line) 84%, rgb(255 255 255 / .12)); border-radius: 14px; background: color-mix(in srgb, var(--surface) 72%, transparent); backdrop-filter: blur(14px) saturate(1.08); -webkit-backdrop-filter: blur(14px) saturate(1.08); }
+.inline-intents button { min-height: 44px; padding: 8px; border: 0; border-left: 1px solid color-mix(in srgb, var(--line) 84%, rgb(255 255 255 / .1)); background: transparent; color: var(--muted); font: inherit; font-size: .8125rem; font-weight: 700; line-height: 1.2; transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease; }
+.inline-intents button:first-child { border-left: 0; }
+.inline-intents button:hover { color: var(--text); background: color-mix(in srgb, var(--brand) 7%, transparent); }
+.inline-intents button:focus-visible, .inline-publish:focus-visible, .inline-draft textarea:focus-visible { outline: 2px solid var(--brand-text); outline-offset: 2px; }
+.inline-intents button.is-selected { background: var(--brand); color: var(--brand-contrast, #fff); box-shadow: inset 0 1px 0 rgb(255 255 255 / .24); }
+.inline-draft { display: grid; gap: 8px; animation: inline-contribution-expand 180ms cubic-bezier(.22, 1, .36, 1) both; }
+.inline-draft label { color: var(--text); font-size: .8125rem; font-weight: 750; }
+.inline-draft textarea { width: 100%; min-height: 96px; resize: vertical; padding: 11px 12px; border: 1px solid var(--line); border-radius: 12px; background: color-mix(in srgb, var(--surface) 83%, transparent); color: var(--text); font: inherit; font-size: .875rem; line-height: 1.5; }
+.inline-draft textarea::placeholder { color: color-mix(in srgb, var(--muted) 92%, var(--text)); opacity: 1; }
+.inline-draft footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.inline-draft footer small, .inline-contribution-status { color: var(--muted); font-size: .75rem; line-height: 1.35; }
+.inline-publish { min-height: 40px; padding: 9px 13px; border: 1px solid transparent; border-radius: 12px; background: var(--brand); color: var(--brand-contrast, #fff); font: inherit; font-size: .8125rem; font-weight: 750; transition: filter 180ms ease, transform 180ms ease; }
+.inline-publish:hover:not(:disabled) { filter: brightness(1.08); }
+.inline-publish:active:not(:disabled) { transform: scale(.98); }
+.inline-publish:disabled { cursor: not-allowed; opacity: .48; }
+.inline-contribution-status { min-height: 1.1em; margin: -4px 0 0; }
+@keyframes inline-contribution-expand { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 680px) {
+  .inline-contribution { margin: 10px 12px; padding: 14px; }
+  .inline-intents button { min-height: 46px; padding: 7px 4px; font-size: .75rem; }
+  .inline-draft footer { align-items: flex-start; flex-direction: column; }
+  .inline-publish { width: 100%; min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .inline-intents button, .inline-publish, .inline-draft { animation: none; transition: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .inline-intents > div { background: var(--surface); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
