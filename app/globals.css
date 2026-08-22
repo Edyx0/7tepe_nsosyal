@@ -2190,8 +2190,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   .inline-intents button small { text-align: right; }
 }
 
-/* A single rail owns each branch. Keeping the connector out of individual
-   posts prevents action-row borders from being mistaken for comment hierarchy. */
+/* Comment branches borrow the same rounded action rail as a parent post, so
+   the conversation path lands on its controls instead of ending beside them. */
 .thread-replies { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
 .thread-replies > h2 { display: flex; align-items: baseline; gap: 7px; margin: 0 16px 3px; color: var(--ink); font-size: .9375rem; letter-spacing: -.012em; }
 .thread-replies > h2 span { color: var(--muted); font-size: .75rem; font-weight: 500; }
@@ -2199,17 +2199,15 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 .thread-reply-node { position: relative; min-width: 0; }
 .thread-reply-node > .post { padding: 12px 14px 8px; border-bottom: 0; background: transparent; }
 .thread-reply-node > .post:hover { background: color-mix(in oklch, var(--surface-muted) 42%, transparent); }
-.thread-reply-node > .post.has-thread::before,
-.thread-reply-node > .post.has-thread::after { display: none; }
 .thread-children {
   --thread-connector: color-mix(in oklch, var(--line) 88%, transparent);
   position: relative;
-  margin: 2px 0 0 34px;
+  margin: 2px 0 0 36px;
   padding-left: 14px;
 }
 .thread-children::before {
   position: absolute;
-  top: 29px;
+  top: -36px;
   bottom: 31px;
   left: 0;
   width: 1px;
@@ -2221,7 +2219,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   position: absolute;
   top: 29px;
   left: -14px;
-  width: 14px;
+  width: 50px;
   height: 1px;
   background: var(--thread-connector);
   content: "";
@@ -2243,8 +2241,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 @media (max-width: 680px) {
   .thread-replies > h2 { margin-inline: 14px; }
   .thread-reply-node > .post { padding: 11px 12px 8px; }
-  .thread-children { margin-left: 25px; padding-left: 10px; }
-  .thread-children > .thread-reply-node::before { left: -10px; width: 10px; }
+  .thread-children { margin-left: 35px; padding-left: 10px; }
+  .thread-children > .thread-reply-node::before { left: -10px; width: 45px; }
 }
 
 /* Real imagery keeps the demo grounded without changing the product's quiet reading rhythm. */
