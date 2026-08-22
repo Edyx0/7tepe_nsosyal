@@ -152,7 +152,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /mobile-profile-button/);
   assert.match(page, /mobile-profile-button" onClick=\{openOwnProfile\}/);
   assert.match(page, /profile-settings/);
-  assert.match(page, /tab === "reposts"/);
+  assert.match(page, /tab === "bookmarks"/);
   assert.match(page, /bottom-compose/);
   assert.match(page, /desktop-compose-fab/);
   assert.match(page, /MobileNav\(\{ view, setView, unread, composeHidden, onSearch, onCompose \}/);
@@ -175,9 +175,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /\.topbar::before/);
   assert.match(page, /Yeniden paylaştın/);
   assert.match(page, /actions\.reposts\.includes\(post\.id\)/);
-  assert.match(page, />Yeniden Paylaşımlar</);
-  assert.match(page, /props\.actions\.reposts\.includes\(post\.id\)/);
-  assert.match(page, /repostedByMe: true/);
+  assert.match(page, />Yer İmleri</);
+  assert.match(page, /props\.actions\.bookmarks\.includes\(post\.id\)/);
   assert.match(page, /rootPosts = useMemo\(\(\) => posts\.filter\(\(post\) => !post\.replyToId\)/);
   assert.match(page, /rootPosts\.filter\(\(post\) => post\.own \|\| following\.includes\(post\.handle\)\)/);
   assert.match(page, /item\.id === "profile" \? onOwnProfile\(\) : item\.id === "feed" \? openHome\(\) : item\.id === "explore" \? onSearch\(\) : setView\(item\.id\)/);
