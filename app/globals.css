@@ -908,7 +908,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
     transition: flex-basis .34s cubic-bezier(.22, 1, .36, 1), width .34s cubic-bezier(.22, 1, .36, 1), min-width .34s cubic-bezier(.22, 1, .36, 1), height .34s cubic-bezier(.22, 1, .36, 1), min-height .34s cubic-bezier(.22, 1, .36, 1), margin .34s cubic-bezier(.22, 1, .36, 1), padding .34s cubic-bezier(.22, 1, .36, 1), border-width .34s cubic-bezier(.22, 1, .36, 1), opacity .2s ease, transform .34s cubic-bezier(.22, 1, .36, 1);
   }
   .bottom-nav.is-compact .bottom-compose.is-hidden {
-    display: grid;
+    display: none;
     flex: 0 0 0;
     width: 0;
     min-width: 0;
