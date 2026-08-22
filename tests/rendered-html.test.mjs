@@ -64,7 +64,10 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /Konuşmayı ileri taşı/);
   assert.match(page, /Kendi deneyimini ekle/);
   assert.match(page, /Doğrudan bağlantılı yorum olarak görünür/);
-  assert.match(page, /bottom-contribute/);
+  assert.match(page, /InlineContributionPrompt/);
+  assert.match(page, /showContributionPrompt=\{feedMode === "for-you"\}/);
+  assert.match(page, /index === 0/);
+  assert.match(page, /Konuşmaya katkı yap/);
   assert.match(page, /Katkın konuşmaya eklendi/);
   assert.match(page, /ile başlayan konuşmaya ekliyorsun/);
   assert.match(page, /contributionIntents/);
@@ -150,9 +153,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /mobile-profile-button" onClick=\{openOwnProfile\}/);
   assert.match(page, /profile-settings/);
   assert.match(page, /tab === "bookmarks"/);
-  assert.match(page, /bottom-contribute/);
+  assert.match(page, /bottom-compose/);
   assert.match(page, /desktop-compose-fab/);
-  assert.match(page, /MobileNav\(\{ view, setView, unread, composeHidden, onSearch, onContribute \}/);
+  assert.match(page, /MobileNav\(\{ view, setView, unread, composeHidden, onSearch, onCompose \}/);
   assert.match(page, /setComposeHidden/);
   assert.match(page, /composeHidden \? "is-compact"/);
   assert.match(page, /top-action-search/);
@@ -300,7 +303,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.doesNotMatch(page, /useState<Theme>\(\(\) => readStored/);
   assert.match(page, /aria-pressed=\{following\.includes\(post\.handle\)\}/);
   assert.match(page, /threadedRepliesForRoot\(merged, props\.post\)/);
-  assert.match(page, /<PostCard key=\{post\.id\} \{\.\.\.props\} post=\{displayPost\} \/>/);
+  assert.match(page, /<Fragment key=\{post\.id\}><PostCard \{\.\.\.props\} post=\{displayPost\} \/>/);
   assert.doesNotMatch(page, /ParticipationJourney|participation-trigger/);
   assert.match(page, /runExclusive\(event, \(\) => onProfile\(post\)\)/);
   assert.match(notices, /62a9588577ec6f5ce6d28b50d30bf46d2229453d/);

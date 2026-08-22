@@ -2219,6 +2219,36 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   .inline-intents button small { text-align: right; }
 }
 
+/* The home-feed prompt is a quiet, one-line doorway; the guided flow opens
+   only when someone chooses to participate. */
+.inline-contribution {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 10px 16px;
+  border: 0;
+  border-block: 1px solid color-mix(in srgb, var(--brand) 24%, var(--line));
+  border-radius: 0;
+  background: color-mix(in srgb, var(--brand) 6%, var(--surface));
+}
+.inline-contribution-mark { width: 30px; height: 30px; border-radius: 10px; }
+.inline-contribution-mark .ui-icon { width: 16px; height: 16px; }
+.inline-contribution-copy { min-width: 0; }
+.inline-contribution h2 { margin: 0; color: var(--ink); font-size: .875rem; letter-spacing: -.012em; }
+.inline-contribution-copy p { margin: 2px 0 0; overflow: hidden; color: var(--muted); font-size: .75rem; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+.inline-contribution-cta { display: inline-flex; align-items: center; gap: 4px; min-height: 32px; padding: 5px 8px; border: 0; border-radius: 8px; background: transparent; color: var(--brand-text); font: inherit; font-size: .75rem; font-weight: 750; white-space: nowrap; }
+.inline-contribution-cta:hover { background: color-mix(in srgb, var(--brand) 10%, transparent); }
+.inline-contribution-cta:focus-visible { outline: 2px solid var(--brand-text); outline-offset: 2px; }
+.inline-contribution-cta .ui-icon { width: 15px; height: 15px; }
+@media (max-width: 430px) {
+  .inline-contribution { grid-template-columns: 28px minmax(0, 1fr) auto; gap: 8px; padding: 9px 12px; }
+  .inline-contribution-mark { width: 28px; height: 28px; border-radius: 9px; }
+  .inline-contribution-copy p { display: none; }
+  .inline-contribution-cta { min-height: 30px; padding: 4px 6px; }
+}
+
 /* A dedicated contribution space keeps the timeline for reading and makes the
    next step of participation explicit. */
 .contribution-view { max-width: 720px; margin: 0 auto; padding: 22px 16px 34px; }
