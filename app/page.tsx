@@ -252,6 +252,23 @@ function organicCommentsFor(post: Post, replies: number, reposts: number, likes:
     return { ...commenter, body: comments[(start + index) % comments.length], time: ["4 dk", "17 dk", "38 dk"][index] };
   });
 }
+function organicRepliesFor(post: Post): Post[] {
+  return organicCommentsFor(post, post.replies, post.reposts, post.likes).map((comment, index) => ({
+    id: post.id + "-organic-" + index,
+    name: comment.name,
+    handle: comment.handle,
+    time: comment.time,
+    body: comment.body,
+    initials: comment.initials,
+    tone: comment.tone,
+    replies: 0,
+    reposts: 0,
+    likes: 0,
+    audience: "all",
+    replyTo: post.name,
+    replyToId: post.id,
+  }));
+}
 const seedMessages: Message[] = [{ id: "welcome", conversationId: "team", from: "them", body: "Bağlam özetini istersen konuşmanın başında aç. Kaynağa bakmak için iyi bir başlangıç oluyor." }];
 const contextBullets = [
   "Konu, sıcak dalgalarında kamusal alanların erişilebilir kalması etrafında şekilleniyor.",
@@ -364,8 +381,16 @@ export default function Home() {
   const [following, setFollowing] = useState<string[]>(["@bariskoral"]);
   const [messages, setMessages] = useState<Message[]>(seedMessages);
   const [readNotifications, setReadNotifications] = useState<string[]>([]);
+  const detailReturnScroll = useRef<number | null>(null);
   useEffect(() => { if (view !== "notifications") return; const frame = window.requestAnimationFrame(() => setReadNotifications(notificationIds)); return () => window.cancelAnimationFrame(frame); }, [view]);
-  useEffect(() => { window.scrollTo({ top: 0, behavior: "auto" }); }, [view]);
+  useEffect(() => {
+    if (view === "feed" && detailReturnScroll.current !== null) {
+      window.scrollTo({ top: detailReturnScroll.current, behavior: "auto" });
+      detailReturnScroll.current = null;
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [view]);
   const [composerText, setComposerText] = useState("");
   const [composerImage, setComposerImage] = useState<ComposerImage | null>(null);
   const [composerPoll, setComposerPoll] = useState<Poll | null>(null);
@@ -453,8 +478,9 @@ export default function Home() {
   const rootPosts = useMemo(() => posts.filter((post) => !post.replyToId), [posts]);
   const mixedRootPosts = useMemo(() => mixAvatarPresence(rootPosts), [rootPosts]);
   const displayedPosts = useMemo(() => view === "bookmarks" ? bookmarkPosts : feedMode === "following" ? rootPosts.filter((post) => post.own || following.includes(post.handle)) : mixedRootPosts, [bookmarkPosts, feedMode, following, mixedRootPosts, rootPosts, view]);
-  const startReply = (post: Post) => { const root = threadRootForPost([...seedReplies, ...posts], post); setSelectedPost(root); setReplyingTo(post); setContextOpen(true); setView("detail"); window.scrollTo({ top: 0, behavior: "smooth" }); window.setTimeout(() => document.getElementById("thread-reply-input")?.focus(), 120); };
-  const openDetail = (post: Post) => { const root = threadRootForPost([...seedReplies, ...posts], post); setSelectedPost(root); setContextOpen(true); setView("detail"); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const rememberDetailReturnPosition = () => { if (view !== "detail") detailReturnScroll.current = window.scrollY; };
+  const startReply = (post: Post) => { rememberDetailReturnPosition(); const root = threadRootForPost([...seedReplies, ...posts], post); setSelectedPost(root); setReplyingTo(post); setContextOpen(true); setView("detail"); window.setTimeout(() => document.getElementById("thread-reply-input")?.focus(), 120); };
+  const openDetail = (post: Post) => { rememberDetailReturnPosition(); const root = threadRootForPost([...seedReplies, ...posts], post); setSelectedPost(root); setContextOpen(true); setView("detail"); };
   const openProfile = (post: Post) => { setProfilePost(post); setView("profile"); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const openOwnProfile = () => { setProfilePost(null); setMessageTarget(null); setMobileMoreOpen(false); setView("profile"); window.scrollTo({ top: 0, behavior: "smooth" }); };
   const openMessages = (target?: Profile) => { setMessageTarget(target ?? null); setView("messages"); window.scrollTo({ top: 0, behavior: "smooth" }); };
@@ -646,9 +672,10 @@ function ActionIcon({ name }: { name: ActionIconName }) {
 function ActionButton({ icon, label, count, active, kind, onClick }: { icon: ActionIconName; label: string; count?: number; active?: boolean; kind?: "like"; onClick: () => void }) { const accessibleLabel = typeof count === "number" ? label + " " + formatNumber(count) : label; return <span className={"action-wrap " + icon + " " + (active ? "active " : "") + (kind || "") + (typeof count !== "number" ? " icon-only" : "")}><button className="action" aria-label={accessibleLabel} aria-pressed={typeof active === "boolean" ? active : undefined} onClick={(event) => runExclusive(event, onClick)}><i aria-hidden="true"><ActionIcon name={icon} /></i>{typeof count === "number" && <small>{formatNumber(count)}</small>}</button></span>; }
 type ThreadDetailProps = Omit<FeedProps, "posts" | "morePost" | "allPosts"> & { post: Post; morePost: Post | null; allPosts: Post[]; contextOpen: boolean; setContextOpen: (value: boolean) => void; composerText: string; setComposerText: (value: string) => void; composerImage: ComposerImage | null; onImageSelect: (file: File | null) => void; clearImage: () => void; composerPoll: Poll | null; setComposerPoll: (poll: Poll | null) => void; toggleComposerPoll: () => void; replyingTo: Post | null; clearReply: () => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void };
 function ThreadDetail(props: ThreadDetailProps) {
-  const merged = Array.from(new Map([...seedReplies, ...props.allPosts].map((post) => [post.id, post])).values());
-  const replyTree = threadedRepliesForRoot(merged, props.post) as ThreadReplyNode[];
+  const stored = Array.from(new Map([...seedReplies, ...props.allPosts].map((post) => [post.id, post])).values());
   const displayPost = withLocalReplyCount(props.post, props.allPosts);
+  const merged = [...stored, ...organicRepliesFor(displayPost)];
+  const replyTree = threadedRepliesForRoot(merged, props.post) as ThreadReplyNode[];
   return <div className="thread-view"><PostCard {...props} posts={props.allPosts} post={displayPost} showCommentPreviews={false} />{props.post.context && <section className="context-summary" aria-label="Bağlam özeti"><button className="context-toggle" onClick={() => props.setContextOpen(!props.contextOpen)} aria-expanded={props.contextOpen}><span><i aria-hidden="true"><UiIcon name="spark" /></i><b>Bağlam Özeti</b><small>Bu konuşmada öne çıkanlar</small></span><span aria-hidden="true"><UiIcon name={props.contextOpen ? "arrow-left" : "arrow-right"} /></span></button>{props.contextOpen && <div className="summary-content"><ul>{contextBullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul><p>NSosyal yapay zekâ özeti <span>·</span> Hata içerebilir.</p></div>}</section>}{props.replyingTo ? <Composer text={props.composerText} setText={props.setComposerText} image={props.composerImage} onImageSelect={props.onImageSelect} clearImage={props.clearImage} poll={props.composerPoll} setPoll={props.setComposerPoll} togglePoll={props.toggleComposerPoll} replyingTo={props.replyingTo} clearReply={props.clearReply} onSubmit={props.onSubmit} inputId="thread-reply-input" /> : <div className="thread-reply"><Avatar initials="DN" tone="ink" /><button onClick={() => props.onReply(props.post)}>Yanıtını yaz</button></div>}{replyTree.length ? <ThreadReplies {...props} posts={props.allPosts} nodes={replyTree} totalReplies={displayPost.replies} /> : <EmptyState title="Konuşma burada sakin" copy="İlk düşünceni paylaşarak bu gönderiyi büyütebilirsin." />}</div>;
 }
 const trendPostTokens: Record<string, string[]> = { "#serinrota": ["gölge", "durak", "çeşme", "serin"], "#acikveri": ["veri", "harita", "güncel"], "#sessizsinema": ["film", "sinema", "gösterim"], "#gecekutuphanesi": ["gece", "kütüphane", "güvenli"], "#kaldirimhakki": ["kaldırım", "erişilebilir", "yaya", "rampa", "puset"], "#sokaksesleri": ["ses", "sokak", "vapur", "iskele"], "#vapurhatti": ["vapur", "iskele", "turnike", "hat"], "#mahallepanosu": ["mahalle", "pano", "komşu", "ilan"] };
