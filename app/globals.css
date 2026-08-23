@@ -2604,3 +2604,26 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 @media (max-width: 430px) {
   .post:not(.has-thread) .post-actions .action { width: 100%; min-width: 0; }
 }
+
+/* Nested comment branches finish with the same gentle elbow as feed previews. */
+.thread-children::before {
+  z-index: 0;
+  bottom: 55px;
+}
+.thread-children::after {
+  position: absolute;
+  z-index: 0;
+  right: 16px;
+  bottom: 35px;
+  left: 0;
+  height: 20px;
+  border-bottom: 1.5px solid var(--thread-connector);
+  border-left: 1.5px solid var(--thread-connector);
+  border-bottom-left-radius: 16px;
+  content: "";
+  pointer-events: none;
+}
+@media (max-width: 680px) {
+  .thread-children::before { bottom: 49px; }
+  .thread-children::after { right: 14px; bottom: 31px; height: 18px; border-bottom-left-radius: 14px; }
+}
