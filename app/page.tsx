@@ -252,7 +252,11 @@ function organicCommentsFor(post: Post, replies: number, reposts: number, likes:
     return { ...commenter, body: comments[(start + index) % comments.length], time: ["4 dk", "17 dk", "38 dk"][index] };
   });
 }
+function shouldShowCommentPreview(post: Post) {
+  return post.replies > 0 && stableNumber(post.id) % 5 !== 0;
+}
 function organicRepliesFor(post: Post): Post[] {
+  if (!shouldShowCommentPreview(post)) return [];
   return organicCommentsFor(post, post.replies, post.reposts, post.likes).map((comment, index) => ({
     id: post.id + "-organic-" + index,
     name: comment.name,
@@ -630,7 +634,7 @@ function countThreadReplies(nodes: ThreadReplyNode[]): number {
 function visibleReplyCount(post: Post, allPosts: Post[], includeOrganicReplies = true): number {
   const stored = Array.from(new Map([...seedReplies, ...allPosts].map((item) => [item.id, item])).values());
   const directReplies = stored.filter((item) => item.id !== post.id && item.replyToId === post.id).length;
-  const organicReplies = organicCommentsFor(post, post.replies, post.reposts, post.likes).length;
+  const organicReplies = shouldShowCommentPreview(post) ? organicCommentsFor(post, post.replies, post.reposts, post.likes).length : 0;
   return directReplies + (includeOrganicReplies ? organicReplies : 0);
 }
 function ThreadReplyBranch({ node, depth, allPosts, feedProps }: { node: ThreadReplyNode; depth: number; allPosts: Post[]; feedProps: FeedProps }) { return <div className="thread-reply-node" data-depth={depth}><PostCard {...feedProps} threaded hasChildReplies={node.children.length > 0} post={withLocalReplyCount(node.post, allPosts)} />{node.children.length > 0 && <div className="thread-children">{node.children.map((child) => <ThreadReplyBranch key={child.post.id} node={child} depth={depth + 1} allPosts={allPosts} feedProps={feedProps} />)}</div>}</div>; }
@@ -650,7 +654,8 @@ function PostCard({ post, allPosts, actions, pinned, following, points, onAction
   const authorPoints = post.own ? points : authorPointsByHandle[post.handle] ?? 0;
   const authorBadge = getPointsBadge(authorPoints);
   const showThreadRail = threaded && hasChildReplies;
-  return <article className={"post " + (showThreadRail ? "has-thread" : "")}>
+  const showCommentPreviewsForPost = showCommentPreviews && !threaded && shouldShowCommentPreview(post);
+  return <article className={"post " + (showThreadRail ? "has-thread " : "") + (showCommentPreviewsForPost ? "has-comment-previews" : "")}>
     {pinned === post.id && <p className="pin-status"><UiIcon name="pin" /> Profilde sabitlendi</p>}
     <button className="avatar-button" onClick={(event) => runExclusive(event, () => onProfile(post))} aria-label={post.initials + ", " + post.name + " profilini aç"}><Avatar initials={post.initials} tone={post.tone} handle={post.handle} /></button>
     <div className="post-content">
@@ -664,7 +669,7 @@ function PostCard({ post, allPosts, actions, pinned, following, points, onAction
       {post.attachment === "signal" && !post.image && <button className="signal-card media-card" onClick={(event) => runExclusive(event, () => onMedia(post))}><span className="signal-art" aria-hidden="true"><i /><i /><i /></span><span className="signal-caption"><span>Kent notları</span><b>Şehir serinliği notları</b><small>Görsel önizlemeyi aç</small></span><em aria-hidden="true"><UiIcon name="arrow-right" /></em></button>}
       {post.attachment === "note" && !post.image && <button className="note-card" onClick={(event) => runExclusive(event, () => onMedia(post))}><span>Okuma notu</span><b>Yerel veriyi ortak bir dilde buluşturmak</b><small>Önizlemeyi aç · 4 dk okuma</small></button>}
       <div className="post-actions" aria-label="Gönderi işlemleri"><ActionButton icon="reply" label="Yanıtla" count={interactions.replies} onClick={() => onReply(post)} /><ActionButton icon="repost" label="Yeniden paylaş" count={interactions.reposts} active={reposted} onClick={() => onAction("reposts", post.id)} /><ActionButton icon="like" label="Beğen" count={interactions.likes} active={liked} kind="like" onClick={() => onAction("likes", post.id)} /><ActionButton icon="bookmark" label={saved ? "Yer iminden kaldır" : "Yer imlerine ekle"} active={saved} onClick={() => onAction("bookmarks", post.id)} /><ActionButton icon="share" label="Paylaş" onClick={() => onShare(post)} /></div>
-      {showCommentPreviews && !threaded && <OrganicComments post={post} {...interactions} onDetail={onDetail} />}
+      {showCommentPreviewsForPost && <OrganicComments post={post} {...interactions} onDetail={onDetail} />}
     </div>
   </article>;
 }

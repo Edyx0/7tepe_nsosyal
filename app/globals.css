@@ -2481,3 +2481,39 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   .sidebar .nav-item:nth-child(5),
   .compact-menu .compact-nav-item:nth-child(5) { display: none; }
 }
+
+/* Preview replies inherit a single quiet thread rail from the post above. */
+.post.has-comment-previews {
+  --preview-rail-x: 43px;
+  --preview-rail-color: color-mix(in oklch, var(--line) 84%, transparent);
+  --preview-elbow-height: 20px;
+  --preview-elbow-bottom: 8px;
+}
+.post.has-comment-previews::before {
+  position: absolute;
+  z-index: 0;
+  top: 58px;
+  bottom: calc(var(--preview-elbow-bottom) + var(--preview-elbow-height));
+  left: var(--preview-rail-x);
+  width: 1.5px;
+  background: var(--preview-rail-color);
+  content: "";
+  pointer-events: none;
+}
+.post.has-comment-previews::after {
+  position: absolute;
+  z-index: 0;
+  right: 16px;
+  bottom: var(--preview-elbow-bottom);
+  left: var(--preview-rail-x);
+  height: var(--preview-elbow-height);
+  border-bottom: 1.5px solid var(--preview-rail-color);
+  border-left: 1.5px solid var(--preview-rail-color);
+  border-bottom-left-radius: 16px;
+  content: "";
+  pointer-events: none;
+}
+@media (max-width: 680px) {
+  .post.has-comment-previews { --preview-rail-x: 33px; --preview-elbow-bottom: 7px; }
+  .post.has-comment-previews::after { right: 14px; }
+}
