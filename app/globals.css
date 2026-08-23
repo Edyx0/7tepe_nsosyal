@@ -1606,6 +1606,50 @@ button,
 
 /* Compact navigation keeps every circular control at a 1:1 ratio. The former
    scaleY treatment squashed SVGs and ring geometry into a wide/condensed form. */
+.organic-comments {
+  margin-top: 9px;
+  padding-top: 9px;
+  border-top: 1px solid color-mix(in oklch, var(--line) 82%, transparent);
+}
+.organic-comments > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 3px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+.organic-comments > header span { display: flex; flex-wrap: wrap; gap: 4px; }
+.organic-comments > header b { color: var(--ink); font-weight: 750; }
+.organic-comments > header i { color: var(--line); font-style: normal; }
+.organic-comments > header button,
+.organic-comments.is-empty button {
+  flex: 0 0 auto;
+  padding: 3px 0;
+  border: 0;
+  background: transparent;
+  color: var(--brand-text);
+  font: inherit;
+  font-weight: 750;
+}
+.organic-comments > header button:hover,
+.organic-comments.is-empty button:hover { text-decoration: underline; }
+.organic-comment {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px 0;
+  border-top: 1px solid color-mix(in oklch, var(--line) 62%, transparent);
+}
+.organic-comment .avatar { width: 28px; height: 28px; font-size: 9px; }
+.organic-comment p { display: grid; gap: 2px; margin: 0; color: var(--ink); font-size: 13px; line-height: 1.36; }
+.organic-comment p > span { display: flex; align-items: baseline; gap: 5px; min-width: 0; }
+.organic-comment p b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
+.organic-comment p small { overflow: hidden; color: var(--muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.organic-comments.is-empty { padding-top: 7px; }
+
 @media (max-width: 680px) {
   .bottom-nav {
     contain: layout paint style;

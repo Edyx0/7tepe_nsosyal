@@ -23,6 +23,7 @@ type Theme = "light" | "dark";
 type Attachment = "signal" | "note";
 type Poll = { question: string; options: string[] };
 type ComposerImage = { src: string; name: string };
+type OrganicComment = { name: string; handle: string; initials: string; tone: string; time: string; body: string };
 type Post = {
   id: string; name: string; handle: string; time: string; body: string; initials: string;
   tone: string; replies: number; reposts: number; likes: number; audience: "all" | "following";
@@ -75,17 +76,80 @@ const authorPointsByHandle: Record<string, number> = {
   "@pelinnotlar": 38,
   "@yagiztoprak": 45,
 };
+// Unsplash portreleri, uygulama için serbest kullanım lisansıyla sunuluyor.
+// Baş harfler benzersiz olmadığından görselleri kullanıcı adına göre eşliyoruz.
+const portraitByHandle: Record<string, string> = {
+  "@denizn": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=240&q=82",
+  "@idilaras": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=240&q=82",
+  "@edizyilmaz": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=240&q=82",
+  "@selinucak": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=240&q=82",
+  "@boraekin": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=240&q=82",
+  "@cerenyaziyor": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=240&q=82",
+  "@efe_s": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=240&q=82",
+  "@asliguler": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=240&q=82",
+  "@canerdogan": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=240&q=82",
+  "@deryauzun": "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=240&q=82",
+  "@iremdeniz": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=240&q=82",
+  "@kivancsari": "https://images.unsplash.com/photo-1669268576117-d58d73b6d110?auto=format&fit=crop&w=240&q=82",
+  "@leylaoruc": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=240&q=82",
+  "@meliskara": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=240&q=82",
+  "@oneraktas": "https://images.unsplash.com/photo-1649712041612-021cf78bca23?auto=format&fit=crop&w=240&q=82",
+  "@pelinnotlar": "https://images.unsplash.com/photo-1496278572195-e6003a211eab?auto=format&fit=crop&w=240&q=82",
+  "@yagiztoprak": "https://images.unsplash.com/photo-1670253302160-97eb5eaf4a92?auto=format&fit=crop&w=240&q=82",
+  "@acikverigunlugu": "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=240&q=82",
+  "@adnankantar": "https://images.unsplash.com/photo-1674851993934-0b0599418642?auto=format&fit=crop&w=240&q=82",
+  "@nisanaksoy": "https://images.unsplash.com/photo-1733697184692-efd62759118e?auto=format&fit=crop&w=240&q=82",
+  "@burcuince": "https://images.unsplash.com/photo-1704137893005-99736147b6aa?auto=format&fit=crop&w=240&q=82",
+  "@mkaannot": "https://images.unsplash.com/photo-1503443207922-dff7d543fd0e?auto=format&fit=crop&w=240&q=82",
+  "@ecepoyraz": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=240&q=82",
+  "@sarpkilic": "https://images.unsplash.com/photo-1683538980030-f1931d3c500d?auto=format&fit=crop&w=240&q=82",
+  "@zeynepkir": "https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?auto=format&fit=crop&w=240&q=82",
+  "@onurcelik": "https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?auto=format&fit=crop&w=240&q=82",
+  "@gokceisik": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=240&q=82",
+  "@fundaacar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=240&q=82",
+  "@mertege": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=240&q=82",
+  "@aylakorkmaz": "https://images.unsplash.com/photo-1512316609839-ce289d3eba0a?auto=format&fit=crop&w=240&q=82",
+  "@sibeltan": "https://images.unsplash.com/photo-1496278572195-e6003a211eab?auto=format&fit=crop&w=240&q=82",
+  "@ardabilgin": "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&w=240&q=82",
+  "@nsosyalekibi": "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=240&q=82",
+  "@senaertem": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=240&q=82",
+  "@bariskoral": "https://images.unsplash.com/photo-1504257432389-52343af06ae3?auto=format&fit=crop&w=240&q=82",
+};
 const portraitByInitials: Record<string, string> = {
-  DN: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=240&q=82",
-  İA: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=240&q=82",
-  EY: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=240&q=82",
-  AV: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=240&q=82",
-  AK: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=240&q=82",
-  SU: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=240&q=82",
-  BE: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=240&q=82",
-  CY: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=240&q=82",
-  ES: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=240&q=82",
-  YE: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=240&q=82",
+  DN: portraitByHandle["@denizn"],
+  İA: portraitByHandle["@idilaras"],
+  EY: portraitByHandle["@edizyilmaz"],
+  SU: portraitByHandle["@selinucak"],
+  BE: portraitByHandle["@boraekin"],
+  CY: portraitByHandle["@cerenyaziyor"],
+  ES: portraitByHandle["@efe_s"],
+  AG: portraitByHandle["@asliguler"],
+  CE: portraitByHandle["@canerdogan"],
+  DU: portraitByHandle["@deryauzun"],
+  İD: portraitByHandle["@iremdeniz"],
+  KS: portraitByHandle["@kivancsari"],
+  LO: portraitByHandle["@leylaoruc"],
+  MK: portraitByHandle["@meliskara"],
+  ÖA: portraitByHandle["@oneraktas"],
+  PS: portraitByHandle["@pelinnotlar"],
+  YT: portraitByHandle["@yagiztoprak"],
+  AV: portraitByHandle["@acikverigunlugu"],
+  AK: portraitByHandle["@adnankantar"],
+  NA: portraitByHandle["@nisanaksoy"],
+  Bİ: portraitByHandle["@burcuince"],
+  EP: portraitByHandle["@ecepoyraz"],
+  SK: portraitByHandle["@sarpkilic"],
+  ZK: portraitByHandle["@zeynepkir"],
+  OÇ: portraitByHandle["@onurcelik"],
+  Gİ: portraitByHandle["@gokceisik"],
+  FA: portraitByHandle["@fundaacar"],
+  ME: portraitByHandle["@mertege"],
+  ST: portraitByHandle["@sibeltan"],
+  AB: portraitByHandle["@ardabilgin"],
+  YE: portraitByHandle["@nsosyalekibi"],
+  SE: portraitByHandle["@senaertem"],
+  BK: portraitByHandle["@bariskoral"],
+  MS: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=240&q=82",
 };
 const profilesByHandle: Record<string, Profile> = {
   "@idilaras": { name: "İdil Aras", handle: "@idilaras", initials: "İA", bio: "Kentte biraz daha rahat nefes alabilmek için küçük, uygulanabilir fikirleri topluyorum.", location: "Kadıköy, İstanbul", cover: "/demo/kent-serinligi.png" },
@@ -147,6 +211,47 @@ function withLocalReplyCount(post: Post, allPosts: Post[]) {
   const localReplyCount = countNewRepliesForThread([...seedReplies, ...allPosts], post, seedReplyIds);
   return localReplyCount ? { ...post, replies: post.replies + localReplyCount } : post;
 }
+const organicCommenters = [
+  { name: "Aslı Güler", handle: "@asliguler", initials: "AG", tone: "coral" },
+  { name: "Can Erdoğan", handle: "@canerdogan", initials: "CE", tone: "violet" },
+  { name: "Derya Uzun", handle: "@deryauzun", initials: "DU", tone: "teal" },
+  { name: "İrem Deniz", handle: "@iremdeniz", initials: "İD", tone: "gold" },
+  { name: "Kıvanç Sarı", handle: "@kivancsari", initials: "KS", tone: "ink" },
+  { name: "Pelin Soylu", handle: "@pelinnotlar", initials: "PS", tone: "violet" },
+];
+const organicCommentCopy = {
+  transit: ["Bu küçük ayrıntılar rota seçimini gerçekten değiştiriyor. Deneyip sonucu paylaşmak iyi olur.", "Durağa gelince işe yarayan bilgi, uygulamadaki en şık ekrandan daha kıymetli oluyor.", "Aynı şeyi her gün yaşayanların notları toplansa, öncelik sırası çok daha net çıkar."],
+  access: ["Yürüyen biri için küçük görünen engel, pusetle ya da tekerlekli sandalyeyle bambaşka oluyor.", "Bunu yerinde denemeden yapılan her güncelleme biraz eksik kalıyor.", "Rota bilgisinin genişlik ve eğimle birlikte görünmesi çok iş görür."],
+  data: ["Tarihi görünmeyen veriyle karar vermek zor. Güncelleme kaydını açmak bile büyük fark yaratır.", "Dosyayı bulmak değil, bugün hâlâ geçerli olup olmadığını anlamak asıl mesele.", "Bir ortak format olsa hem kullananın hem güncelleyenin işi hafifler."],
+  culture: ["Böyle anlar bitince değil, biraz bekleyince yerleşiyor akılda.", "Buna katılıyorum; çıkıştaki kısa sohbet bazen izlediğimiz şeyden daha uzun sürüyor.", "Bir sonraki buluşmada bunu deneyelim, konuşmanın tonu değişebilir."],
+  library: ["İnsanların sadece oturup nefes alabileceği açık yerler de şehir hizmeti aslında.", "Bekleme listesinin yanına küçük bir not köşesi çok yakışır.", "Saat kadar eve dönüş yolunun rahatlığı da belirleyici oluyor."],
+  neighbourhood: ["Mahallede işe yarayan şeyler çoğu zaman en sade hâliyle ortaya çıkıyor.", "Bunu görünce insanın aynı sokakta biraz daha uzun kalası geliyor.", "Birinin başlattığı küçük şeyin etrafında nasıl bir bağ kurulduğunu seviyorum."],
+  default: ["Bunu okuyunca aynı ayrıntıyı kendi mahallemde fark ettim.", "Küçük bir denemeyle başlanması fikri çok yerinde.", "Böyle somut örnekler konuşmayı daha kolay ilerletiyor."],
+};
+function commentTopic(body: string): keyof typeof organicCommentCopy {
+  const normalized = body.toLocaleLowerCase("tr");
+  if (/kaldırım|puset|rampa|erişilebilir|yaya/.test(normalized)) return "access";
+  if (/veri|harita|excel|pdf|güncelleme/.test(normalized)) return "data";
+  if (/film|sinema|sergi|gösterim/.test(normalized)) return "culture";
+  if (/kütüphane|kitap/.test(normalized)) return "library";
+  if (/durak|otobüs|vapur|iskele|sefer|rota/.test(normalized)) return "transit";
+  if (/mahalle|bostan|pano|komşu|sokak/.test(normalized)) return "neighbourhood";
+  return "default";
+}
+function stableNumber(value: string) { return Array.from(value).reduce((total, character) => (total * 31 + character.charCodeAt(0)) % 997, 0); }
+function featuredCommentCount(replies: number, reposts: number, likes: number) {
+  const engagement = replies * 8 + reposts * 5 + likes;
+  return engagement >= 1900 ? 3 : engagement >= 850 ? 2 : 1;
+}
+function organicCommentsFor(post: Post, replies: number, reposts: number, likes: number): OrganicComment[] {
+  if (replies + reposts + likes === 0) return [];
+  const comments = organicCommentCopy[commentTopic(post.body)];
+  const start = stableNumber(post.id);
+  return Array.from({ length: featuredCommentCount(replies, reposts, likes) }, (_, index) => {
+    const commenter = organicCommenters[(start + index * 2) % organicCommenters.length];
+    return { ...commenter, body: comments[(start + index) % comments.length], time: ["4 dk", "17 dk", "38 dk"][index] };
+  });
+}
 const seedMessages: Message[] = [{ id: "welcome", conversationId: "team", from: "them", body: "Bağlam özetini istersen konuşmanın başında aç. Kaynağa bakmak için iyi bir başlangıç oluyor." }];
 const contextBullets = [
   "Konu, sıcak dalgalarında kamusal alanların erişilebilir kalması etrafında şekilleniyor.",
@@ -187,26 +292,7 @@ function isValidStored(key: string, value: unknown): boolean {
   return true;
 }
 function formatNumber(value: number) { return new Intl.NumberFormat("tr-TR", { notation: "compact", maximumFractionDigits: 1 }).format(value); }
-function mixAvatarPresence(posts: Post[]) {
-  const withPhoto = posts.filter((post) => !!portraitByInitials[post.initials]);
-  const withoutPhoto = posts.filter((post) => !portraitByInitials[post.initials]);
-  const sequence = [withPhoto, withoutPhoto, withPhoto, withoutPhoto, withoutPhoto];
-  const cursors = new Map<Post[], number>([[withPhoto, 0], [withoutPhoto, 0]]);
-  const mixed: Post[] = [];
-
-  for (let index = 0; mixed.length < posts.length; index += 1) {
-    const preferred = sequence[index % sequence.length];
-    const fallback = preferred === withPhoto ? withoutPhoto : withPhoto;
-    const pickFrom = cursors.get(preferred)! < preferred.length ? preferred : fallback;
-    const cursor = cursors.get(pickFrom)!;
-    if (cursor < pickFrom.length) {
-      mixed.push(pickFrom[cursor]);
-      cursors.set(pickFrom, cursor + 1);
-    }
-  }
-
-  return mixed;
-}
+function mixAvatarPresence(posts: Post[]) { return posts; }
 function getPointsBadge(points: number): PointsBadge {
   return [...badgeMilestones].reverse().find((badge) => points >= badge.points) ?? badgeMilestones[0];
 }
@@ -463,7 +549,7 @@ export default function Home() {
 }
 
 function BrandMark({ small = false }: { small?: boolean }) { return <span className={"brand-mark " + (small ? "small" : "")} aria-hidden="true">{small ? <img src="/brand/nsosyal-favicon.svg" alt="" /> : <><img className="logo-for-dark" src="/brand/nsosyal-source-era-logo-dark.svg" alt="" /><img className="logo-for-light" src="/brand/nsosyal-source-era-logo-light.svg" alt="" /></>}</span>; }
-function Avatar({ initials, tone }: { initials: string; tone: string }) { const photo = portraitByInitials[initials]; return <span className={"avatar " + tone + (photo ? " has-photo" : "")}>{photo ? <img src={photo} alt="" /> : initials}</span>; }
+function Avatar({ initials, tone, handle }: { initials: string; tone: string; handle?: string }) { const photo = (handle ? portraitByHandle[handle] : undefined) ?? portraitByInitials[initials]; return <span className={"avatar " + tone + (photo ? " has-photo" : "")}>{photo ? <img src={photo} alt="" /> : initials}</span>; }
 
 type ContributionIntent = { id: string; label: string; helper: string; prompt: string; icon: UiIconName };
 const contributionIntents: ContributionIntent[] = [
@@ -507,21 +593,30 @@ function Composer({ text, setText, image, onImageSelect, clearImage, poll, setPo
   return <form className="composer" onSubmit={onSubmit}><Avatar initials="DN" tone="ink" /><div className="composer-body">{replyingTo && <div className="replying">Şunu yanıtlıyorsun: <b>{replyingTo.name}</b><button type="button" onClick={clearReply} aria-label="Yanıtı iptal et"><UiIcon name="close" /></button></div>}<label className="sr-only" htmlFor={inputId}>Yeni gönderi yaz</label><textarea id={inputId} value={text} onChange={(event) => setText(event.target.value.slice(0, 280))} placeholder={replyingTo ? "Yanıtını yaz" : "Ne paylaşmak istersin?"} rows={2} /><input ref={imageInputRef} className="sr-only" type="file" accept="image/*" onChange={(event) => { onImageSelect(event.currentTarget.files?.[0] ?? null); event.currentTarget.value = ""; }} />{image && <figure className="composer-image"><img src={image.src} alt="Seçilen görsel önizlemesi" /><figcaption><span><b>{image.name}</b><small>Gönderiyle birlikte paylaşılacak</small></span><button type="button" onClick={clearImage} aria-label="Görseli kaldır"><UiIcon name="close" /></button></figcaption></figure>}{poll && <fieldset className="composer-poll"><legend>Anket</legend><label>Anket sorusu<input value={poll.question} maxLength={120} onChange={(event) => updatePoll((current) => ({ ...current, question: event.target.value }))} placeholder="Neyi merak ediyorsun?" /></label>{poll.options.map((option, index) => <label key={index}>Seçenek {index + 1}<span><input value={option} maxLength={80} onChange={(event) => updatePoll((current) => ({ ...current, options: current.options.map((value, position) => position === index ? event.target.value : value) }))} placeholder={index === 0 ? "İlk seçenek" : "Diğer seçenek" } />{poll.options.length > 2 && <button type="button" onClick={() => updatePoll((current) => ({ ...current, options: current.options.filter((_, position) => position !== index) }))} aria-label={(index + 1) + ". seçeneği kaldır"}><UiIcon name="close" /></button>}</span></label>)}<button className="poll-option-add" type="button" disabled={poll.options.length >= 4} onClick={() => updatePoll((current) => ({ ...current, options: [...current.options, ""] }))}><UiIcon name="plus" /> Seçenek ekle</button></fieldset>}<div className="compose-footer"><div className="compose-tools" aria-label="Gönderi ekleri"><button type="button" onClick={() => imageInputRef.current?.click()} aria-label="Fotoğraf yükle"><UiIcon name="media" /></button><button type="button" className={poll ? "is-active" : ""} onClick={togglePoll} aria-pressed={Boolean(poll)} aria-label={poll ? "Anketi kaldır" : "Anket oluştur"}><UiIcon name="poll" /></button><span className="emoji-tool"><button type="button" className={emojiOpen ? "is-active" : ""} onClick={() => setEmojiOpen((open) => !open)} aria-expanded={emojiOpen} aria-label="Emoji ekle"><UiIcon name="mood" /></button>{emojiOpen && <span className="emoji-menu" role="group" aria-label="Emoji seç">{emojis.map((emoji) => <button type="button" key={emoji} onClick={() => { setText((text + emoji).slice(0, 280)); setEmojiOpen(false); }} aria-label={emoji + " ekle"}>{emoji}</button>)}</span>}</span></div><span className={text.length > 250 ? "limit near" : "limit"}>{280 - text.length}</span><button className="primary-button small-button" type="submit">Paylaş</button></div></div></form>;
 }
 
-type FeedProps = { posts: Post[]; allPosts: Post[]; actions: Actions; pinned: string | null; morePost: Post | null; following: string[]; points: number; showContributionPrompt?: boolean; onContribution?: () => void; onAction: (kind: keyof Actions, id: string) => void; onReply: (post: Post) => void; onDetail: (post: Post) => void; onProfile: (post: Post) => void; onQuote: (post: Post) => void; onShare: (post: Post) => void; onMore: (post: Post | null) => void; onMedia: (post: Post) => void; onDelete: (post: Post) => void; onPin: (post: Post) => void; onFollow: (handle: string) => void; };
+type FeedProps = { posts: Post[]; allPosts: Post[]; actions: Actions; pinned: string | null; morePost: Post | null; following: string[]; points: number; showContributionPrompt?: boolean; showCommentPreviews?: boolean; onContribution?: () => void; onAction: (kind: keyof Actions, id: string) => void; onReply: (post: Post) => void; onDetail: (post: Post) => void; onProfile: (post: Post) => void; onQuote: (post: Post) => void; onShare: (post: Post) => void; onMore: (post: Post | null) => void; onMedia: (post: Post) => void; onDelete: (post: Post) => void; onPin: (post: Post) => void; onFollow: (handle: string) => void; };
 function Feed(props: FeedProps) { return <div className="post-list">{props.posts.map((post, index) => { const displayPost = withLocalReplyCount(post, props.allPosts); return <Fragment key={post.id}><PostCard {...props} post={displayPost} />{props.showContributionPrompt && index === 0 && props.onContribution && <InlineContributionPrompt onOpen={props.onContribution} />}</Fragment>; })}</div>; }
 function InlineContributionPrompt({ onOpen }: { onOpen: () => void }) { return <section className="inline-contribution" aria-label="Konuşmaya katkı yap"><span className="inline-contribution-mark" aria-hidden="true"><UiIcon name="spark" /></span><div className="inline-contribution-copy"><h2>Konuşmaya katkı yap</h2><p>Bir fikri, öneriyi ya da kaynağı doğrudan ilgili konuşmaya bağla.</p></div><button className="inline-contribution-cta" type="button" onClick={onOpen}>Katkı yap <UiIcon name="arrow-right" /></button></section>; }
 type ThreadReplyNode = { post: Post; children: ThreadReplyNode[] };
 function ThreadReplyBranch({ node, depth, allPosts, feedProps }: { node: ThreadReplyNode; depth: number; allPosts: Post[]; feedProps: FeedProps }) { return <div className="thread-reply-node" data-depth={depth}><PostCard {...feedProps} threaded hasChildReplies={node.children.length > 0} post={withLocalReplyCount(node.post, allPosts)} />{node.children.length > 0 && <div className="thread-children">{node.children.map((child) => <ThreadReplyBranch key={child.post.id} node={child} depth={depth + 1} allPosts={allPosts} feedProps={feedProps} />)}</div>}</div>; }
-function ThreadReplies({ nodes, allPosts, ...rest }: FeedProps & { nodes: ThreadReplyNode[] }) { const feedProps = { ...rest, allPosts } as FeedProps; const countNodes = (branches: ThreadReplyNode[]): number => branches.reduce((total, branch) => total + 1 + countNodes(branch.children), 0); const replyCount = countNodes(nodes); return <section className="thread-replies" aria-labelledby="thread-replies-title"><h2 id="thread-replies-title">Yorumlar <span>{replyCount}</span></h2><div className="thread-reply-tree">{nodes.map((node) => <ThreadReplyBranch key={node.post.id} node={node} depth={0} allPosts={allPosts} feedProps={feedProps} />)}</div></section>; }
+function ThreadReplies({ nodes, allPosts, totalReplies, ...rest }: FeedProps & { nodes: ThreadReplyNode[]; totalReplies: number }) { const feedProps = { ...rest, allPosts } as FeedProps; return <section className="thread-replies" aria-labelledby="thread-replies-title"><h2 id="thread-replies-title">Yorumlar <span>{formatNumber(totalReplies)}</span></h2><div className="thread-reply-tree">{nodes.map((node) => <ThreadReplyBranch key={node.post.id} node={node} depth={0} allPosts={allPosts} feedProps={feedProps} />)}</div></section>; }
 function PostPoll({ poll }: { poll: Poll }) { const [selected, setSelected] = useState<number | null>(null); const [votes, setVotes] = useState(() => poll.options.map((_, index) => 8 + index * 5)); const total = votes.reduce((sum, vote) => sum + vote, 0) || 1; const choose = (next: number) => { if (next === selected) return; setVotes((current) => current.map((vote, index) => vote + (index === next ? 1 : index === selected ? -1 : 0))); setSelected(next); }; return <section className="post-poll" aria-label={"Anket: " + poll.question}><p>{poll.question}</p><div>{poll.options.map((option, index) => <button key={option + index} type="button" className={selected === index ? "selected" : ""} aria-pressed={selected === index} onClick={() => choose(index)}><span>{option}</span><small>{Math.round((votes[index] / total) * 100)}%</small></button>)}</div><footer>{selected === null ? "Oyunu seçerek sonucu gör" : "Oyun kaydedildi"} <span>· {formatNumber(total)} oy</span></footer></section>; }
-function PostCard({ post, actions, pinned, following, points, onAction, onReply, onDetail, onProfile, onShare, onMore, onMedia, onFollow, threaded = false, hasChildReplies = false }: FeedProps & { post: Post; threaded?: boolean; hasChildReplies?: boolean }) {
+function OrganicComments({ post, replies, reposts, likes, onDetail }: { post: Post; replies: number; reposts: number; likes: number; onDetail: (post: Post) => void }) {
+  const comments = organicCommentsFor(post, replies, reposts, likes);
+  if (!comments.length) return <section className="organic-comments is-empty" aria-label="Gönderi yorumları"><button type="button" onClick={() => onDetail(post)}>İlk yorumu sen yaz</button></section>;
+  return <section className="organic-comments" aria-label={post.name + " gönderisine öne çıkan yorumlar"}>
+    <header><span><b>{formatNumber(replies)} yorum</b><i>·</i>{formatNumber(reposts)} yeniden paylaşım<i>·</i>{formatNumber(likes)} beğeni</span><button type="button" onClick={() => onDetail(post)}>Tümünü gör</button></header>
+    <div>{comments.map((comment) => <div className="organic-comment" key={comment.handle + comment.time}><Avatar initials={comment.initials} tone={comment.tone} /><p><span><b>{comment.name}</b><small>{comment.handle} · {comment.time}</small></span>{comment.body}</p></div>)}</div>
+  </section>;
+}
+function PostCard({ post, actions, pinned, following, points, onAction, onReply, onDetail, onProfile, onShare, onMore, onMedia, onFollow, threaded = false, hasChildReplies = false, showCommentPreviews = true }: FeedProps & { post: Post; threaded?: boolean; hasChildReplies?: boolean }) {
   const liked = actions.likes.includes(post.id), reposted = actions.reposts.includes(post.id), saved = actions.bookmarks.includes(post.id);
+  const interactions = { replies: post.replies, reposts: post.reposts + Number(reposted), likes: post.likes + Number(liked) };
   const authorPoints = post.own ? points : authorPointsByHandle[post.handle] ?? 0;
   const authorBadge = getPointsBadge(authorPoints);
   const showThreadRail = threaded ? hasChildReplies : post.replies > 0;
   return <article className={"post " + (showThreadRail ? "has-thread" : "")}>
     {pinned === post.id && <p className="pin-status"><UiIcon name="pin" /> Profilde sabitlendi</p>}
-    <button className="avatar-button" onClick={(event) => runExclusive(event, () => onProfile(post))} aria-label={post.initials + ", " + post.name + " profilini aç"}><Avatar initials={post.initials} tone={post.tone} /></button>
+    <button className="avatar-button" onClick={(event) => runExclusive(event, () => onProfile(post))} aria-label={post.initials + ", " + post.name + " profilini aç"}><Avatar initials={post.initials} tone={post.tone} handle={post.handle} /></button>
     <div className="post-content">
       {(post.repostedByMe || post.repostedBy) && <p className="repost-status" aria-label={(post.repostedByMe ? "Sen" : post.repostedBy) + " tarafından yeniden paylaşılan gönderi"}><ActionIcon name="repost" /> {post.repostedByMe ? "Yeniden paylaştın" : post.repostedBy + " yeniden paylaştı"}</p>}
       <div className="post-meta"><button className="name" onClick={(event) => runExclusive(event, () => onProfile(post))}>{post.name}</button><span className={"points-badge " + authorBadge.tone} title={authorBadge.label + ": " + authorPoints + " puan"} aria-label={authorBadge.label + ", " + authorPoints + " puan"}>{authorBadge.mark}</span><span>{post.handle}</span><span>·</span><button className="time" onClick={() => onDetail(post)}>{post.time}</button>{!post.own && <button className="post-follow" aria-label={following.includes(post.handle) ? post.handle + " takibini bırak" : post.handle + " kişisini takip et"} aria-pressed={following.includes(post.handle)} onClick={(event) => runExclusive(event, () => onFollow(post.handle))}><UiIcon name={following.includes(post.handle) ? "check" : "plus"} /><span className="sr-only">{following.includes(post.handle) ? "Takip ediliyor" : "Takip et"}</span></button>}<button className="more" aria-label="Gönderi seçeneklerini aç" onClick={(event) => runExclusive(event, () => onMore(post))}><UiIcon name="more" /></button></div>
@@ -532,7 +627,8 @@ function PostCard({ post, actions, pinned, following, points, onAction, onReply,
       {post.image && <button className="post-photo" onClick={(event) => runExclusive(event, () => onMedia(post))} aria-label={(post.imageAlt ?? "Görsel") + " önizlemesini aç"}><img src={post.image} alt={post.imageAlt ?? ""} /><span>Görseli aç</span></button>}
       {post.attachment === "signal" && !post.image && <button className="signal-card media-card" onClick={(event) => runExclusive(event, () => onMedia(post))}><span className="signal-art" aria-hidden="true"><i /><i /><i /></span><span className="signal-caption"><span>Kent notları</span><b>Şehir serinliği notları</b><small>Görsel önizlemeyi aç</small></span><em aria-hidden="true"><UiIcon name="arrow-right" /></em></button>}
       {post.attachment === "note" && !post.image && <button className="note-card" onClick={(event) => runExclusive(event, () => onMedia(post))}><span>Okuma notu</span><b>Yerel veriyi ortak bir dilde buluşturmak</b><small>Önizlemeyi aç · 4 dk okuma</small></button>}
-      <div className="post-actions" aria-label="Gönderi işlemleri"><ActionButton icon="reply" label="Yanıtla" count={post.replies} onClick={() => onReply(post)} /><ActionButton icon="repost" label="Yeniden paylaş" count={post.reposts + Number(reposted)} active={reposted} onClick={() => onAction("reposts", post.id)} /><ActionButton icon="like" label="Beğen" count={post.likes + Number(liked)} active={liked} kind="like" onClick={() => onAction("likes", post.id)} /><ActionButton icon="bookmark" label={saved ? "Yer iminden kaldır" : "Yer imlerine ekle"} active={saved} onClick={() => onAction("bookmarks", post.id)} /><ActionButton icon="share" label="Paylaş" onClick={() => onShare(post)} /></div>
+      <div className="post-actions" aria-label="Gönderi işlemleri"><ActionButton icon="reply" label="Yanıtla" count={interactions.replies} onClick={() => onReply(post)} /><ActionButton icon="repost" label="Yeniden paylaş" count={interactions.reposts} active={reposted} onClick={() => onAction("reposts", post.id)} /><ActionButton icon="like" label="Beğen" count={interactions.likes} active={liked} kind="like" onClick={() => onAction("likes", post.id)} /><ActionButton icon="bookmark" label={saved ? "Yer iminden kaldır" : "Yer imlerine ekle"} active={saved} onClick={() => onAction("bookmarks", post.id)} /><ActionButton icon="share" label="Paylaş" onClick={() => onShare(post)} /></div>
+      {showCommentPreviews && !threaded && <OrganicComments post={post} {...interactions} onDetail={onDetail} />}
     </div>
   </article>;
 }
@@ -552,7 +648,7 @@ function ThreadDetail(props: ThreadDetailProps) {
   const merged = Array.from(new Map([...seedReplies, ...props.allPosts].map((post) => [post.id, post])).values());
   const replyTree = threadedRepliesForRoot(merged, props.post) as ThreadReplyNode[];
   const displayPost = withLocalReplyCount(props.post, props.allPosts);
-  return <div className="thread-view"><PostCard {...props} posts={props.allPosts} post={displayPost} />{props.post.context && <section className="context-summary" aria-label="Bağlam özeti"><button className="context-toggle" onClick={() => props.setContextOpen(!props.contextOpen)} aria-expanded={props.contextOpen}><span><i aria-hidden="true"><UiIcon name="spark" /></i><b>Bağlam Özeti</b><small>Bu konuşmada öne çıkanlar</small></span><span aria-hidden="true"><UiIcon name={props.contextOpen ? "arrow-left" : "arrow-right"} /></span></button>{props.contextOpen && <div className="summary-content"><ul>{contextBullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul><p>NSosyal yapay zekâ özeti <span>·</span> Hata içerebilir.</p></div>}</section>}{props.replyingTo ? <Composer text={props.composerText} setText={props.setComposerText} image={props.composerImage} onImageSelect={props.onImageSelect} clearImage={props.clearImage} poll={props.composerPoll} setPoll={props.setComposerPoll} togglePoll={props.toggleComposerPoll} replyingTo={props.replyingTo} clearReply={props.clearReply} onSubmit={props.onSubmit} inputId="thread-reply-input" /> : <div className="thread-reply"><Avatar initials="DN" tone="ink" /><button onClick={() => props.onReply(props.post)}>Yanıtını yaz</button></div>}{replyTree.length ? <ThreadReplies {...props} nodes={replyTree} /> : <EmptyState title="Konuşma burada sakin" copy="İlk düşünceni paylaşarak bu gönderiyi büyütebilirsin." />}</div>;
+  return <div className="thread-view"><PostCard {...props} posts={props.allPosts} post={displayPost} showCommentPreviews={false} />{props.post.context && <section className="context-summary" aria-label="Bağlam özeti"><button className="context-toggle" onClick={() => props.setContextOpen(!props.contextOpen)} aria-expanded={props.contextOpen}><span><i aria-hidden="true"><UiIcon name="spark" /></i><b>Bağlam Özeti</b><small>Bu konuşmada öne çıkanlar</small></span><span aria-hidden="true"><UiIcon name={props.contextOpen ? "arrow-left" : "arrow-right"} /></span></button>{props.contextOpen && <div className="summary-content"><ul>{contextBullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul><p>NSosyal yapay zekâ özeti <span>·</span> Hata içerebilir.</p></div>}</section>}{props.replyingTo ? <Composer text={props.composerText} setText={props.setComposerText} image={props.composerImage} onImageSelect={props.onImageSelect} clearImage={props.clearImage} poll={props.composerPoll} setPoll={props.setComposerPoll} togglePoll={props.toggleComposerPoll} replyingTo={props.replyingTo} clearReply={props.clearReply} onSubmit={props.onSubmit} inputId="thread-reply-input" /> : <div className="thread-reply"><Avatar initials="DN" tone="ink" /><button onClick={() => props.onReply(props.post)}>Yanıtını yaz</button></div>}{replyTree.length ? <ThreadReplies {...props} posts={props.allPosts} nodes={replyTree} totalReplies={displayPost.replies} /> : <EmptyState title="Konuşma burada sakin" copy="İlk düşünceni paylaşarak bu gönderiyi büyütebilirsin." />}</div>;
 }
 const trendPostTokens: Record<string, string[]> = { "#serinrota": ["gölge", "durak", "çeşme", "serin"], "#acikveri": ["veri", "harita", "güncel"], "#sessizsinema": ["film", "sinema", "gösterim"], "#gecekutuphanesi": ["gece", "kütüphane", "güvenli"], "#kaldirimhakki": ["kaldırım", "erişilebilir", "yaya", "rampa", "puset"], "#sokaksesleri": ["ses", "sokak", "vapur", "iskele"], "#vapurhatti": ["vapur", "iskele", "turnike", "hat"], "#mahallepanosu": ["mahalle", "pano", "komşu", "ilan"] };
 function postsForTrend(posts: Post[], query: string) { const normalized = query.toLocaleLowerCase("tr"); const tokens = trendPostTokens[normalized]; if (!tokens) return posts.filter((post) => (post.name + " " + post.body).toLocaleLowerCase("tr").includes(normalized)); const matches = posts.filter((post) => tokens.some((token) => (post.name + " " + post.body).toLocaleLowerCase("tr").includes(token))); const extras = posts.filter((post) => !matches.includes(post)).slice(0, Math.max(0, 3 - matches.length)); return [...matches, ...extras]; }
@@ -589,7 +685,7 @@ function Profile(props: FeedProps & { profile: Profile; isOwn: boolean; points: 
   const profilePoints = props.isOwn ? props.points : authorPointsByHandle[props.profile.handle] ?? 0;
   const badge = getPointsBadge(profilePoints);
   const profileBadge = props.isOwn ? <button className="profile-reputation" onClick={props.onPoints} aria-label={profilePoints + " puan. Rozet ve kilometre taşlarını gör."}><span className={"points-badge " + badge.tone} aria-hidden="true">{badge.mark}</span></button> : <span className="profile-reputation is-static" title={badge.label + ": " + profilePoints + " puan"} aria-label={badge.label + ", " + profilePoints + " puan"}><span className={"points-badge " + badge.tone} aria-hidden="true">{badge.mark}</span></span>;
-  return <div className="profile-view"><div className="profile-cover"><span className="cover-ripple"><i /><i /><i /></span></div><div className="profile-head"><Avatar initials={props.profile.initials} tone="ink" />{props.isOwn ? <div className="profile-actions"><button className="outline-button" onClick={props.onEdit}>Profili düzenle</button><button className="icon-button profile-settings" onClick={props.onSettings} aria-label="Ayarları aç"><UiIcon name="settings" /></button></div> : <div className="profile-actions"><button className={followed ? "outline-button" : "primary-button"} aria-pressed={followed} onClick={() => props.onFollow(props.profile.handle)}>{followed ? "Takip Ediliyor" : "Takip et"}</button><button className="outline-button profile-message" onClick={() => props.onMessage(props.profile)}><UiIcon name="messages" /> Mesaj gönder</button></div>}</div><section className="profile-copy"><h2>{props.profile.name}{profileBadge}</h2><p>{props.profile.handle}</p><p className="bio">{props.profile.bio}</p><div><span><UiIcon name="location" /> {props.profile.location}</span><span><UiIcon name="spark" /> Mayıs 2024’te katıldı <small className="profile-points">· {profilePoints} puan</small></span></div><p><b>284</b> Takip edilen <b>1.208</b> Takipçi</p></section>{props.isOwn && <DailyTasks gamification={props.gamification} />}<div className={"profile-tabs " + (props.isOwn ? "has-private-tab" : "")} role="tablist" aria-label="Profil bölümleri"><button role="tab" aria-selected={tab === "posts"} className={tab === "posts" ? "selected" : ""} onClick={() => setTab("posts")}>Gönderiler</button><button role="tab" aria-selected={tab === "replies"} className={tab === "replies" ? "selected" : ""} onClick={() => setTab("replies")}>Yanıtlar</button><button role="tab" aria-selected={tab === "likes"} className={tab === "likes" ? "selected" : ""} onClick={() => setTab("likes")}>Beğeniler</button>{props.isOwn && <button role="tab" aria-selected={tab === "bookmarks"} className={tab === "bookmarks" ? "selected" : ""} onClick={() => setTab("bookmarks")}>Yer İmleri</button>}</div>{visible.length ? <Feed {...props} posts={visible} /> : <EmptyState title="Henüz burada bir şey yok" copy={copy} />}</div>;
+  return <div className="profile-view"><div className="profile-cover"><span className="cover-ripple"><i /><i /><i /></span></div><div className="profile-head"><Avatar initials={props.profile.initials} tone="ink" handle={props.profile.handle} />{props.isOwn ? <div className="profile-actions"><button className="outline-button" onClick={props.onEdit}>Profili düzenle</button><button className="icon-button profile-settings" onClick={props.onSettings} aria-label="Ayarları aç"><UiIcon name="settings" /></button></div> : <div className="profile-actions"><button className={followed ? "outline-button" : "primary-button"} aria-pressed={followed} onClick={() => props.onFollow(props.profile.handle)}>{followed ? "Takip Ediliyor" : "Takip et"}</button><button className="outline-button profile-message" onClick={() => props.onMessage(props.profile)}><UiIcon name="messages" /> Mesaj gönder</button></div>}</div><section className="profile-copy"><h2>{props.profile.name}{profileBadge}</h2><p>{props.profile.handle}</p><p className="bio">{props.profile.bio}</p><div><span><UiIcon name="location" /> {props.profile.location}</span><span><UiIcon name="spark" /> Mayıs 2024’te katıldı <small className="profile-points">· {profilePoints} puan</small></span></div><p><b>284</b> Takip edilen <b>1.208</b> Takipçi</p></section>{props.isOwn && <DailyTasks gamification={props.gamification} />}<div className={"profile-tabs " + (props.isOwn ? "has-private-tab" : "")} role="tablist" aria-label="Profil bölümleri"><button role="tab" aria-selected={tab === "posts"} className={tab === "posts" ? "selected" : ""} onClick={() => setTab("posts")}>Gönderiler</button><button role="tab" aria-selected={tab === "replies"} className={tab === "replies" ? "selected" : ""} onClick={() => setTab("replies")}>Yanıtlar</button><button role="tab" aria-selected={tab === "likes"} className={tab === "likes" ? "selected" : ""} onClick={() => setTab("likes")}>Beğeniler</button>{props.isOwn && <button role="tab" aria-selected={tab === "bookmarks"} className={tab === "bookmarks" ? "selected" : ""} onClick={() => setTab("bookmarks")}>Yer İmleri</button>}</div>{visible.length ? <Feed {...props} posts={visible} /> : <EmptyState title="Henüz burada bir şey yok" copy={copy} />}</div>;
 }
 function DailyTasks({ gamification }: { gamification: Gamification }) { return <section className="daily-tasks" aria-label="Günlük görevler"><header><span><b>Günlük görevler</b><small>Katıldıkça puan kazan</small></span></header><div>{dailyTasks.map((task) => { const done = gamification.completedTasks.includes(task.id); return <div className={done ? "task done" : "task"} key={task.id}><span className="task-check" aria-hidden="true">{done ? "✓" : "○"}</span><span><b>{task.label}</b><small>{done ? "Tamamlandı" : "+" + task.points + " puan"}</small></span></div>; })}</div></section>; }
 
@@ -602,8 +698,8 @@ function MilestoneSheet({ points, onClose }: { points: number; onClose: () => vo
   return <div className="modal-backdrop milestone-backdrop"><section ref={dialogRef} className="milestone-sheet" role="dialog" aria-modal="true" aria-labelledby="milestone-title" tabIndex={-1}><header><span className={"points-badge " + current.tone} aria-hidden="true">{current.mark}</span><span><small>Topluluk puanın</small><strong id="milestone-title">{points} puan</strong></span><button className="icon-button" aria-label="Rozetleri kapat" onClick={onClose}><UiIcon name="close" /></button></header><p>{next ? next.label + " rozetine " + Math.max(0, next.points - points) + " puan kaldı." : "Tüm topluluk rozetlerini açtın."}</p>{next && <div className="milestone-progress" aria-label={next.label + " rozetine ilerleme"}><span style={{ width: Math.max(0, Math.min(100, progress)) + "%" }} /></div>}<ol className="milestone-list">{badgeMilestones.map((badge) => { const unlocked = points >= badge.points; return <li className={unlocked ? "is-unlocked" : ""} key={badge.label}><span className={"points-badge " + badge.tone} aria-hidden="true">{badge.mark}</span><span><b>{badge.label}</b><small>{badge.copy}</small></span><em>{unlocked ? "Açıldı" : badge.points + " puan"}</em></li>; })}</ol></section></div>;
 }
 function Settings({ theme, setTheme, onReset }: { theme: Theme; setTheme: (theme: Theme) => void; onReset: () => void }) { return <div className="settings-view"><section><h2>Görünüm</h2><p>NSosyal’ın bu cihazdaki görünümünü seç.</p><div className="theme-options" role="tablist" aria-label="Tema seçimi"><button role="tab" aria-selected={theme === "light"} className={theme === "light" ? "selected" : ""} onClick={() => setTheme("light")}><span className="theme-preview light" />Açık</button><button role="tab" aria-selected={theme === "dark"} className={theme === "dark" ? "selected" : ""} onClick={() => setTheme("dark")}><span className="theme-preview dark" />Koyu</button></div></section><section><h2>Yerel demo</h2><p>Gönderilerin, beğenilerin, mesajların ve yer imlerin sadece bu tarayıcıda saklanır.</p><button className="outline-button demo-reset" onClick={onReset}>Demo verisini sıfırla</button></section><section><h2>Bağlam özeti</h2><p>Özetler konuşmaya yaklaşmana yardım eder; kesin bilgi yerine kaynaklara ve katılımcılara öncelik ver.</p></section></div>; }
-function TrendPanel({ full = false, onSelect }: { full?: boolean; onSelect: (topic: string) => void }) { const trends = [{ meta: "Türkiye’de gündem", tag: "#serinrota", topic: "Gölgelik duraklar ve okul yolu", count: "4.282 gönderi" }, { meta: "Teknoloji · Gündem", tag: "#acikveri", topic: "Belediye verilerinin güncelliği", count: "1.904 gönderi" }, { meta: "Kültür · Gündem", tag: "#sessizsinema", topic: "Yazlık gösterimler ve mahalle salonları", count: "916 gönderi" }, { meta: "İstanbul’da gündem", tag: "#gecekutuphanesi", topic: "Gece açık, güvenli kamusal alanlar", count: "683 gönderi" }, { meta: "Şehir yaşamı", tag: "#kaldirimhakki", topic: "Puset, sandalye ve yaya geçişi", count: "572 gönderi" }, { meta: "İzmir’de gündem", tag: "#sokaksesleri", topic: "Sabahın ses haritası", count: "341 gönderi" }, { meta: "İstanbul’da gündem", tag: "#vapurhatti", topic: "İskele, sefer saati ve son vapur", count: "289 gönderi" }, { meta: "Mahalle hayatı", tag: "#mahallepanosu", topic: "Duyurular, ödünç eşyalar ve küçük haberler", count: "214 gönderi" }]; return <section className={"trend-panel " + (full ? "full" : "")}><h2>{full ? "Gündem" : "Şu an konuşulanlar"}</h2>{trends.map((trend) => <button key={trend.tag} onClick={() => onSelect(trend.tag)}><span><small>{trend.meta}</small><b>{trend.tag}</b><small className="trend-topic">{trend.topic}</small><small>{trend.count}</small></span></button>)}<p className="show-more">Gündem, örnek verilerle güncellenir.</p></section>; }
-function WhoToFollow({ following, onFollow }: { following: string[]; onFollow: (handle: string) => void }) { const people = [{ name: "Sena Ertem", handle: "@senaertem", initials: "SE", tone: "gold" }, { name: "Barış Koral", handle: "@bariskoral", initials: "BK", tone: "violet" }, { name: "Derya Uzun", handle: "@deryauzun", initials: "DU", tone: "teal" }, { name: "Kıvanç Sarı", handle: "@kivancsari", initials: "KS", tone: "ink" }, { name: "Leyla Oruç", handle: "@leylaoruc", initials: "LO", tone: "coral" }, { name: "Yağız Toprak", handle: "@yagiztoprak", initials: "YT", tone: "violet" }]; return <section className="who-panel"><h2>Tanıyor olabileceğin kişiler</h2>{people.map((person) => <div key={person.handle}><Avatar initials={person.initials} tone={person.tone} /><span><b>{person.name}</b><small>{person.handle}</small></span><button className={following.includes(person.handle) ? "outline-button" : "dark-button"} aria-pressed={following.includes(person.handle)} onClick={() => onFollow(person.handle)}>{following.includes(person.handle) ? "Takip Ediliyor" : "Takip et"}</button></div>)}<p className="show-more">Kişi önerileri örnek veriyle sınırlı.</p></section>; }
+function TrendPanel({ full = false, onSelect }: { full?: boolean; onSelect: (topic: string) => void }) { const trends = [{ meta: "Türkiye’de gündem", tag: "#serinrota", topic: "Gölgelik duraklar ve okul yolu", count: "4.282 gönderi" }, { meta: "Teknoloji · Gündem", tag: "#acikveri", topic: "Belediye verilerinin güncelliği", count: "1.904 gönderi" }, { meta: "Kültür · Gündem", tag: "#sessizsinema", topic: "Yazlık gösterimler ve mahalle salonları", count: "916 gönderi" }, { meta: "İstanbul’da gündem", tag: "#gecekutuphanesi", topic: "Gece açık, güvenli kamusal alanlar", count: "683 gönderi" }, { meta: "Şehir yaşamı", tag: "#kaldirimhakki", topic: "Puset, sandalye ve yaya geçişi", count: "572 gönderi" }, { meta: "İzmir’de gündem", tag: "#sokaksesleri", topic: "Sabahın ses haritası", count: "341 gönderi" }, { meta: "İstanbul’da gündem", tag: "#vapurhatti", topic: "İskele, sefer saati ve son vapur", count: "289 gönderi" }, { meta: "Mahalle hayatı", tag: "#mahallepanosu", topic: "Duyurular, ödünç eşyalar ve küçük haberler", count: "214 gönderi" }]; return <section className={"trend-panel " + (full ? "full" : "")}><h2>{full ? "Gündem" : "Şu an konuşulanlar"}</h2>{trends.slice(0, 5).map((trend) => <button key={trend.tag} onClick={() => onSelect(trend.tag)}><span><small>{trend.meta}</small><b>{trend.tag}</b><small className="trend-topic">{trend.topic}</small><small>{trend.count}</small></span></button>)}<p className="show-more">Gündem, örnek verilerle güncellenir.</p></section>; }
+function WhoToFollow({ following, onFollow }: { following: string[]; onFollow: (handle: string) => void }) { const people = [{ name: "Sena Ertem", handle: "@senaertem", initials: "SE", tone: "gold" }, { name: "Barış Koral", handle: "@bariskoral", initials: "BK", tone: "violet" }, { name: "Derya Uzun", handle: "@deryauzun", initials: "DU", tone: "teal" }, { name: "Kıvanç Sarı", handle: "@kivancsari", initials: "KS", tone: "ink" }, { name: "Leyla Oruç", handle: "@leylaoruc", initials: "LO", tone: "coral" }, { name: "Yağız Toprak", handle: "@yagiztoprak", initials: "YT", tone: "violet" }]; return <section className="who-panel"><h2>Tanıyor olabileceğin kişiler</h2>{people.slice(0, 3).map((person) => <div key={person.handle}><Avatar initials={person.initials} tone={person.tone} /><span><b>{person.name}</b><small>{person.handle}</small></span><button className={following.includes(person.handle) ? "outline-button" : "dark-button"} aria-pressed={following.includes(person.handle)} onClick={() => onFollow(person.handle)}>{following.includes(person.handle) ? "Takip Ediliyor" : "Takip et"}</button></div>)}<p className="show-more">Kişi önerileri örnek veriyle sınırlı.</p></section>; }
 function MoreMenu({ post, isPinned, followed, onClose, onDelete, onPin, onFollow, onShare, onQuote }: { post: Post; isPinned: boolean; followed: boolean; onClose: () => void; onDelete: (post: Post) => void; onPin: (post: Post) => void; onFollow: (handle: string) => void; onShare: (post: Post) => void; onQuote: (post: Post) => void }) { const dialogRef = useDialogFocus(onClose); return <div className="modal-backdrop"><section ref={dialogRef} className="more-menu" role="dialog" aria-modal="true" aria-label="Gönderi seçenekleri" tabIndex={-1}><button onClick={() => { onShare(post); onClose(); }}><UiIcon name="send" /> Metni paylaş</button><button onClick={() => { onQuote(post); onClose(); }}><UiIcon name="quote" /> Alıntıla</button>{post.own ? <><button aria-pressed={isPinned} onClick={() => onPin(post)}><UiIcon name="pin" /> {isPinned ? "Profilden sabitlemeyi kaldır" : "Profiline sabitle"}</button><button className="danger" onClick={() => onDelete(post)}><UiIcon name="close" /> Gönderiyi sil</button></> : <button aria-pressed={followed} onClick={() => { onFollow(post.handle); onClose(); }}><UiIcon name="profile" /> {followed ? post.handle + " takipten çıkar" : post.handle + " takip et"}</button>}<button onClick={onClose}><UiIcon name="close" /> Vazgeç</button></section></div>; }
 function MediaPreview({ post, onClose }: { post: Post; onClose: () => void }) { const dialogRef = useDialogFocus(onClose); return <div className="modal-backdrop"><section ref={dialogRef} className={"media-preview " + (post.image ? "has-photo" : "")} role="dialog" aria-modal="true" aria-label="Medya önizlemesi" tabIndex={-1}>{post.image && <img src={post.image} alt={post.imageAlt ?? ""} />}<button className="modal-close" onClick={onClose} aria-label="Önizlemeyi kapat"><UiIcon name="close" /></button>{!post.image && <span className="media-ripple"><i /><i /><i /></span>}<div className="media-preview-copy"><p>{post.attachment === "note" ? "Mahalle notu" : "Kent notu"}</p><h2>{post.body}</h2><small>NSosyal demosu için hazırlanmış görsel not.</small></div></section></div>; }
 function ProfileEditor({ profile, onClose, onSave }: { profile: Profile; onClose: () => void; onSave: (profile: Profile) => void }) { const [draft, setDraft] = useState(profile); const dialogRef = useDialogFocus<HTMLFormElement>(onClose); return <div className="modal-backdrop"><form ref={dialogRef} className="profile-editor" onSubmit={(event) => { event.preventDefault(); onSave(draft); }} role="dialog" aria-modal="true" aria-label="Profili düzenle" tabIndex={-1}><header><h2>Profili düzenle</h2><button type="button" onClick={onClose} aria-label="Kapat"><UiIcon name="close" /></button></header><label>Adın<input value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value.slice(0, 36) })} /></label><label>Kısa bio<textarea value={draft.bio} onChange={(event) => setDraft({ ...draft, bio: event.target.value.slice(0, 160) })} /></label><label>Konum<input value={draft.location} onChange={(event) => setDraft({ ...draft, location: event.target.value.slice(0, 36) })} /></label><button className="primary-button" type="submit">Kaydet</button></form></div>; }
