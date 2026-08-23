@@ -2517,15 +2517,30 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   position: absolute;
   z-index: 0;
   top: 58px;
-  bottom: -1px;
+  bottom: calc(var(--feed-elbow-bottom, 35px) + var(--feed-elbow-height, 20px));
   left: 43px;
   width: 1.5px;
   background: color-mix(in oklch, var(--line) 84%, transparent);
   content: "";
   pointer-events: none;
 }
+.post.has-feed-rail::after {
+  position: absolute;
+  z-index: 0;
+  right: 16px;
+  bottom: var(--feed-elbow-bottom, 35px);
+  left: 43px;
+  height: var(--feed-elbow-height, 20px);
+  border-bottom: 1.5px solid color-mix(in oklch, var(--line) 84%, transparent);
+  border-left: 1.5px solid color-mix(in oklch, var(--line) 84%, transparent);
+  border-bottom-left-radius: 16px;
+  content: "";
+  pointer-events: none;
+}
 @media (max-width: 680px) {
   .post.has-comment-previews { --preview-rail-x: 33px; --preview-elbow-bottom: 7px; }
   .post.has-comment-previews::after { right: 14px; }
+  .post.has-feed-rail { --feed-elbow-bottom: 31px; }
   .post.has-feed-rail::before { top: 54px; left: 33px; }
+  .post.has-feed-rail::after { right: 14px; left: 33px; border-bottom-left-radius: 14px; }
 }
