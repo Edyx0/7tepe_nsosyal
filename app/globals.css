@@ -2550,3 +2550,33 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   .post.has-feed-rail::before { top: 54px; left: 33px; }
   .post.has-feed-rail::after { right: 14px; left: 33px; border-bottom-left-radius: 14px; }
 }
+
+/* The share control must remain a true circle, independent of its feed rail. */
+.post:not(.has-thread) .post-actions .action-wrap.icon-only .action {
+  width: 46px;
+  min-width: 46px;
+  height: 46px;
+  min-height: 46px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+/* Highlighted replies end with their one clear next step, directly above the rail elbow. */
+.organic-comment-list > .organic-comment:first-child { padding-top: 0; border-top: 0; }
+.organic-comment-list > footer { display: flex; justify-content: flex-end; min-height: 30px; padding-top: 5px; }
+.organic-comment-list > footer button {
+  padding: 3px 0;
+  border: 0;
+  background: transparent;
+  color: var(--brand-text);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+}
+.organic-comment-list > footer button:hover { text-decoration: underline; }
+@media (max-width: 680px) {
+  .post:not(.has-thread) .post-actions .action-wrap.icon-only .action { width: 44px; min-width: 44px; height: 44px; min-height: 44px; }
+}
+@media (max-width: 390px) {
+  .post:not(.has-thread) .post-actions .action-wrap.icon-only .action { width: 42px; min-width: 42px; height: 42px; min-height: 42px; }
+}
