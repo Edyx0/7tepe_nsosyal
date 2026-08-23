@@ -640,7 +640,7 @@ function PostCard({ post, actions, pinned, following, points, onAction, onReply,
   const interactions = { replies: post.replies, reposts: post.reposts + Number(reposted), likes: post.likes + Number(liked) };
   const authorPoints = post.own ? points : authorPointsByHandle[post.handle] ?? 0;
   const authorBadge = getPointsBadge(authorPoints);
-  const showThreadRail = threaded ? hasChildReplies : post.replies > 0;
+  const showThreadRail = threaded && hasChildReplies;
   return <article className={"post " + (showThreadRail ? "has-thread" : "")}>
     {pinned === post.id && <p className="pin-status"><UiIcon name="pin" /> Profilde sabitlendi</p>}
     <button className="avatar-button" onClick={(event) => runExclusive(event, () => onProfile(post))} aria-label={post.initials + ", " + post.name + " profilini aç"}><Avatar initials={post.initials} tone={post.tone} handle={post.handle} /></button>

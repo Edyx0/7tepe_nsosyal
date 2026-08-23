@@ -89,7 +89,9 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /\.post-poll/);
   assert.match(css, /\.action-wrap\.bookmark \.action \{ width: 40px;[\s\S]*aspect-ratio: 1;[\s\S]*border-radius: 50%/);
   assert.match(page, /hasChildReplies=\{node\.children\.length > 0\}/);
-  assert.match(page, /const showThreadRail = threaded \? hasChildReplies : post\.replies > 0/);
+  assert.match(page, /const showThreadRail = threaded && hasChildReplies/);
+  assert.match(page, /function organicRepliesFor/);
+  assert.match(page, /detailReturnScroll/);
   assert.match(css, /grid-template-columns: repeat\(3, minmax\(0, 1fr\)\) 34px 34px/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(css, /\.inline-contribution \{[\s\S]*border-radius: 16px/);
