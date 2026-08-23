@@ -228,6 +228,11 @@ const organicCommentCopy = {
   neighbourhood: ["Mahallede işe yarayan şeyler çoğu zaman en sade hâliyle ortaya çıkıyor.", "Bunu görünce insanın aynı sokakta biraz daha uzun kalası geliyor.", "Birinin başlattığı küçük şeyin etrafında nasıl bir bağ kurulduğunu seviyorum."],
   default: ["Bunu okuyunca aynı ayrıntıyı kendi mahallemde fark ettim.", "Küçük bir denemeyle başlanması fikri çok yerinde.", "Böyle somut örnekler konuşmayı daha kolay ilerletiyor."],
 };
+const organicReplyCopy = [
+  "Bu kısmı özellikle not ettim; deneyim paylaşılınca daha anlaşılır oluyor.",
+  "Katılıyorum, küçük bir güncelleme bile günlük kullanımı değiştiriyor.",
+  "Bunun için mahalleden düzenli geri bildirim toplamak iyi bir başlangıç olur.",
+];
 function commentTopic(body: string): keyof typeof organicCommentCopy {
   const normalized = body.toLocaleLowerCase("tr");
   if (/kaldırım|puset|rampa|erişilebilir|yaya/.test(normalized)) return "access";
@@ -241,7 +246,7 @@ function commentTopic(body: string): keyof typeof organicCommentCopy {
 function stableNumber(value: string) { return Array.from(value).reduce((total, character) => (total * 31 + character.charCodeAt(0)) % 997, 0); }
 function featuredCommentCount(replies: number, reposts: number, likes: number) {
   const engagement = replies * 8 + reposts * 5 + likes;
-  return engagement >= 1900 ? 3 : engagement >= 850 ? 2 : 1;
+  return engagement >= 1_600 ? 6 : engagement >= 1_000 ? 5 : engagement >= 600 ? 4 : engagement >= 300 ? 3 : 2;
 }
 function organicCommentsFor(post: Post, replies: number, reposts: number, likes: number): OrganicComment[] {
   if (replies + reposts + likes === 0) return [];
@@ -255,23 +260,33 @@ function organicCommentsFor(post: Post, replies: number, reposts: number, likes:
 function shouldShowCommentPreview(post: Post) {
   return post.replies > 0 && stableNumber(post.id) % 5 !== 0;
 }
+function organicCommentChildCount(post: Post, index: number) {
+  const engagement = post.replies * 8 + post.reposts * 5 + post.likes;
+  const value = stableNumber(post.id + "-child-" + index);
+  if (engagement >= 1_000) return value % 3 === 0 ? 2 : value % 2;
+  if (engagement >= 500) return value % 3 === 0 ? 1 : 0;
+  return value % 5 === 0 ? 1 : 0;
+}
+function organicCommentEngagement(post: Post, index: number, childCount: number) {
+  const value = stableNumber(post.id + "-engagement-" + index);
+  const reach = Math.max(1, Math.round((post.likes + post.reposts * 3) / 260));
+  return { replies: childCount, reposts: value % (2 + reach * 2), likes: 3 + value % (12 + reach * 8) };
+}
 function organicRepliesFor(post: Post): Post[] {
   if (!shouldShowCommentPreview(post)) return [];
-  return organicCommentsFor(post, post.replies, post.reposts, post.likes).map((comment, index) => ({
-    id: post.id + "-organic-" + index,
-    name: comment.name,
-    handle: comment.handle,
-    time: comment.time,
-    body: comment.body,
-    initials: comment.initials,
-    tone: comment.tone,
-    replies: 0,
-    reposts: 0,
-    likes: 0,
-    audience: "all",
-    replyTo: post.name,
-    replyToId: post.id,
-  }));
+  const start = stableNumber(post.id);
+  return organicCommentsFor(post, post.replies, post.reposts, post.likes).flatMap((comment, index) => {
+    const id = post.id + "-organic-" + index;
+    const childCount = organicCommentChildCount(post, index);
+    const engagement = organicCommentEngagement(post, index, childCount);
+    const commentPost: Post = { id, name: comment.name, handle: comment.handle, time: comment.time, body: comment.body, initials: comment.initials, tone: comment.tone, ...engagement, audience: "all", replyTo: post.name, replyToId: post.id };
+    const childReplies = Array.from({ length: childCount }, (_, childIndex) => {
+      const commenter = organicCommenters[(start + index * 3 + childIndex + 1) % organicCommenters.length];
+      const value = stableNumber(id + "-" + childIndex);
+      return { id: id + "-reply-" + childIndex, name: commenter.name, handle: commenter.handle, time: ["az önce", "6 dk"][childIndex], body: organicReplyCopy[(start + index + childIndex) % organicReplyCopy.length], initials: commenter.initials, tone: commenter.tone, replies: 0, reposts: value % 3, likes: 1 + value % 12, audience: "all" as const, replyTo: comment.name, replyToId: id };
+    });
+    return [commentPost, ...childReplies];
+  });
 }
 const seedMessages: Message[] = [{ id: "welcome", conversationId: "team", from: "them", body: "Bağlam özetini istersen konuşmanın başında aç. Kaynağa bakmak için iyi bir başlangıç oluyor." }];
 const contextBullets = [
@@ -634,14 +649,14 @@ function countThreadReplies(nodes: ThreadReplyNode[]): number {
 function visibleReplyCount(post: Post, allPosts: Post[], includeOrganicReplies = true): number {
   const stored = Array.from(new Map([...seedReplies, ...allPosts].map((item) => [item.id, item])).values());
   const directReplies = stored.filter((item) => item.id !== post.id && item.replyToId === post.id).length;
-  const organicReplies = shouldShowCommentPreview(post) ? organicCommentsFor(post, post.replies, post.reposts, post.likes).length : 0;
+  const organicReplies = shouldShowCommentPreview(post) ? organicRepliesFor(post).length : 0;
   return directReplies + (includeOrganicReplies ? organicReplies : 0);
 }
 function ThreadReplyBranch({ node, depth, allPosts, feedProps }: { node: ThreadReplyNode; depth: number; allPosts: Post[]; feedProps: FeedProps }) { return <div className="thread-reply-node" data-depth={depth}><PostCard {...feedProps} threaded hasChildReplies={node.children.length > 0} post={withLocalReplyCount(node.post, allPosts)} />{node.children.length > 0 && <div className="thread-children">{node.children.map((child) => <ThreadReplyBranch key={child.post.id} node={child} depth={depth + 1} allPosts={allPosts} feedProps={feedProps} />)}</div>}</div>; }
 function ThreadReplies({ nodes, allPosts, totalReplies, ...rest }: FeedProps & { nodes: ThreadReplyNode[]; totalReplies: number }) { const feedProps = { ...rest, allPosts } as FeedProps; const visibleTotal = countThreadReplies(nodes) || totalReplies; return <section className="thread-replies" aria-labelledby="thread-replies-title"><h2 id="thread-replies-title">Yorumlar <span>{formatNumber(visibleTotal)}</span></h2><div className="thread-reply-tree">{nodes.map((node) => <ThreadReplyBranch key={node.post.id} node={node} depth={0} allPosts={allPosts} feedProps={feedProps} />)}</div></section>; }
 function PostPoll({ poll }: { poll: Poll }) { const [selected, setSelected] = useState<number | null>(null); const [votes, setVotes] = useState(() => poll.options.map((_, index) => 8 + index * 5)); const total = votes.reduce((sum, vote) => sum + vote, 0) || 1; const choose = (next: number) => { if (next === selected) return; setVotes((current) => current.map((vote, index) => vote + (index === next ? 1 : index === selected ? -1 : 0))); setSelected(next); }; return <section className="post-poll" aria-label={"Anket: " + poll.question} onClick={(event) => event.stopPropagation()}><p>{poll.question}</p><div>{poll.options.map((option, index) => <button key={option + index} type="button" className={selected === index ? "selected" : ""} aria-pressed={selected === index} onClick={() => choose(index)}><span>{option}</span><small>{Math.round((votes[index] / total) * 100)}%</small></button>)}</div><footer>{selected === null ? "Oyunu seçerek sonucu gör" : "Oyun kaydedildi"} <span>· {formatNumber(total)} oy</span></footer></section>; }
 function OrganicComments({ post, onDetail }: { post: Post; onDetail: (post: Post) => void }) {
-  const comments = organicCommentsFor(post, post.replies, post.reposts, post.likes);
+  const comments = organicCommentsFor(post, post.replies, post.reposts, post.likes).slice(0, 3);
   if (!comments.length) return <section className="organic-comments is-empty" aria-label="Gönderi yorumları"><button type="button" onClick={(event) => { event.stopPropagation(); onDetail(post); }}>İlk yorumu sen yaz</button></section>;
   return <section className="organic-comments" aria-label={post.name + " gönderisine öne çıkan yorumlar"}>
     <div className="organic-comment-list">{comments.map((comment) => <div className="organic-comment" key={comment.handle + comment.time}><Avatar initials={comment.initials} tone={comment.tone} /><p><span><b>{comment.name}</b><small>{comment.handle} · {comment.time}</small></span>{comment.body}</p></div>)}<footer><button type="button" onClick={(event) => { event.stopPropagation(); onDetail(post); }}>Tümünü gör</button></footer></div>
@@ -690,7 +705,7 @@ function ThreadDetail(props: ThreadDetailProps) {
   const displayPost = withLocalReplyCount(props.post, props.allPosts);
   const merged = [...stored, ...organicRepliesFor(displayPost)];
   const replyTree = threadedRepliesForRoot(merged, props.post) as ThreadReplyNode[];
-  return <div className="thread-view"><PostCard {...props} posts={props.allPosts} post={displayPost} showCommentPreviews={false} />{props.post.context && <section className="context-summary" aria-label="Bağlam özeti"><button className="context-toggle" onClick={() => props.setContextOpen(!props.contextOpen)} aria-expanded={props.contextOpen}><span><i aria-hidden="true"><UiIcon name="spark" /></i><b>Bağlam Özeti</b><small>Bu konuşmada öne çıkanlar</small></span><span aria-hidden="true"><UiIcon name={props.contextOpen ? "arrow-left" : "arrow-right"} /></span></button>{props.contextOpen && <div className="summary-content"><ul>{contextBullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul><p>NSosyal yapay zekâ özeti <span>·</span> Hata içerebilir.</p></div>}</section>}{props.replyingTo ? <Composer text={props.composerText} setText={props.setComposerText} image={props.composerImage} onImageSelect={props.onImageSelect} clearImage={props.clearImage} poll={props.composerPoll} setPoll={props.setComposerPoll} togglePoll={props.toggleComposerPoll} replyingTo={props.replyingTo} clearReply={props.clearReply} onSubmit={props.onSubmit} inputId="thread-reply-input" /> : <div className="thread-reply"><Avatar initials="DN" tone="ink" /><button onClick={() => props.onReply(props.post)}>Yanıtını yaz</button></div>}{replyTree.length ? <ThreadReplies {...props} posts={props.allPosts} nodes={replyTree} totalReplies={displayPost.replies} /> : <EmptyState title="Konuşma burada sakin" copy="İlk düşünceni paylaşarak bu gönderiyi büyütebilirsin." />}</div>;
+  return <div className="thread-view"><PostCard {...props} posts={props.allPosts} post={displayPost} showCommentPreviews={false} />{props.post.context && <section className="context-summary" aria-label="Bağlam özeti"><button className="context-toggle" onClick={() => props.setContextOpen(!props.contextOpen)} aria-expanded={props.contextOpen}><span><i aria-hidden="true"><UiIcon name="spark" /></i><b>Bağlam Özeti</b><small>Bu konuşmada öne çıkanlar</small></span><span aria-hidden="true"><UiIcon name={props.contextOpen ? "arrow-left" : "arrow-right"} /></span></button>{props.contextOpen && <div className="summary-content"><ul>{contextBullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul><p>NSosyal yapay zekâ özeti <span>·</span> Hata içerebilir.</p></div>}</section>}{props.replyingTo ? <Composer text={props.composerText} setText={props.setComposerText} image={props.composerImage} onImageSelect={props.onImageSelect} clearImage={props.clearImage} poll={props.composerPoll} setPoll={props.setComposerPoll} togglePoll={props.toggleComposerPoll} replyingTo={props.replyingTo} clearReply={props.clearReply} onSubmit={props.onSubmit} inputId="thread-reply-input" /> : <div className="thread-reply"><Avatar initials="DN" tone="ink" /><button onClick={() => props.onReply(props.post)}>Yanıtını yaz</button></div>}{replyTree.length ? <ThreadReplies {...props} posts={merged} allPosts={merged} nodes={replyTree} totalReplies={displayPost.replies} /> : <EmptyState title="Konuşma burada sakin" copy="İlk düşünceni paylaşarak bu gönderiyi büyütebilirsin." />}</div>;
 }
 const trendPostTokens: Record<string, string[]> = { "#serinrota": ["gölge", "durak", "çeşme", "serin"], "#acikveri": ["veri", "harita", "güncel"], "#sessizsinema": ["film", "sinema", "gösterim"], "#gecekutuphanesi": ["gece", "kütüphane", "güvenli"], "#kaldirimhakki": ["kaldırım", "erişilebilir", "yaya", "rampa", "puset"], "#sokaksesleri": ["ses", "sokak", "vapur", "iskele"], "#vapurhatti": ["vapur", "iskele", "turnike", "hat"], "#mahallepanosu": ["mahalle", "pano", "komşu", "ilan"] };
 function postsForTrend(posts: Post[], query: string) { const normalized = query.toLocaleLowerCase("tr"); const tokens = trendPostTokens[normalized]; if (!tokens) return posts.filter((post) => (post.name + " " + post.body).toLocaleLowerCase("tr").includes(normalized)); const matches = posts.filter((post) => tokens.some((token) => (post.name + " " + post.body).toLocaleLowerCase("tr").includes(token))); const extras = posts.filter((post) => !matches.includes(post)).slice(0, Math.max(0, 3 - matches.length)); return [...matches, ...extras]; }
