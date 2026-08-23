@@ -2482,6 +2482,12 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   .compact-menu .compact-nav-item:nth-child(5) { display: none; }
 }
 
+.mobile-follow-suggestions { display: none; }
+@media (max-width: 680px) {
+  .mobile-follow-suggestions { display: block; margin: 0 16px 18px; }
+  .mobile-follow-suggestions .who-panel { margin: 0; }
+}
+
 /* Preview replies inherit a single quiet thread rail from the post above. */
 .post.has-comment-previews {
   --preview-rail-x: 43px;
