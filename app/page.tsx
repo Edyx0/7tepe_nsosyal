@@ -365,6 +365,7 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>(seedMessages);
   const [readNotifications, setReadNotifications] = useState<string[]>([]);
   useEffect(() => { if (view !== "notifications") return; const frame = window.requestAnimationFrame(() => setReadNotifications(notificationIds)); return () => window.cancelAnimationFrame(frame); }, [view]);
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "auto" }); }, [view]);
   const [composerText, setComposerText] = useState("");
   const [composerImage, setComposerImage] = useState<ComposerImage | null>(null);
   const [composerPoll, setComposerPoll] = useState<Poll | null>(null);
