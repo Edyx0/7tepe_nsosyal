@@ -2476,3 +2476,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 
 /* The right rail joins the page's main scroll instead of opening a second one. */
 .right-rail { height: auto; overflow: visible; }
+
+@media (min-width: 681px) {
+  .sidebar .nav-item:nth-child(5),
+  .compact-menu .compact-nav-item:nth-child(5) { display: none; }
+}
