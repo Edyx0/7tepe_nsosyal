@@ -288,6 +288,17 @@ function organicRepliesFor(post: Post): Post[] {
     return [commentPost, ...childReplies];
   });
 }
+function organicCommentPreviewScore(comment: Post) {
+  return comment.likes + comment.reposts * 6 + comment.replies * 8;
+}
+function organicPreviewCommentsFor(post: Post) {
+  const comments = organicRepliesFor(post).filter((comment) => comment.replyToId === post.id);
+  if (comments.length <= 2) return comments;
+  const ranked = [...comments].sort((first, second) => organicCommentPreviewScore(second) - organicCommentPreviewScore(first));
+  const standout = ranked.filter((comment) => organicCommentPreviewScore(comment) >= organicCommentPreviewScore(ranked[0]) * .56);
+  const limit = standout.length >= 3 && organicCommentPreviewScore(standout[2]) >= organicCommentPreviewScore(standout[0]) * .76 ? 3 : 2;
+  return standout.slice(0, limit);
+}
 const seedMessages: Message[] = [{ id: "welcome", conversationId: "team", from: "them", body: "Bağlam özetini istersen konuşmanın başında aç. Kaynağa bakmak için iyi bir başlangıç oluyor." }];
 const contextBullets = [
   "Konu, sıcak dalgalarında kamusal alanların erişilebilir kalması etrafında şekilleniyor.",
@@ -656,10 +667,10 @@ function ThreadReplyBranch({ node, depth, allPosts, feedProps }: { node: ThreadR
 function ThreadReplies({ nodes, allPosts, totalReplies, ...rest }: FeedProps & { nodes: ThreadReplyNode[]; totalReplies: number }) { const feedProps = { ...rest, allPosts } as FeedProps; const visibleTotal = countThreadReplies(nodes) || totalReplies; return <section className="thread-replies" aria-labelledby="thread-replies-title"><h2 id="thread-replies-title">Yorumlar <span>{formatNumber(visibleTotal)}</span></h2><div className="thread-reply-tree">{nodes.map((node) => <ThreadReplyBranch key={node.post.id} node={node} depth={0} allPosts={allPosts} feedProps={feedProps} />)}</div></section>; }
 function PostPoll({ poll }: { poll: Poll }) { const [selected, setSelected] = useState<number | null>(null); const [votes, setVotes] = useState(() => poll.options.map((_, index) => 8 + index * 5)); const total = votes.reduce((sum, vote) => sum + vote, 0) || 1; const choose = (next: number) => { if (next === selected) return; setVotes((current) => current.map((vote, index) => vote + (index === next ? 1 : index === selected ? -1 : 0))); setSelected(next); }; return <section className="post-poll" aria-label={"Anket: " + poll.question} onClick={(event) => event.stopPropagation()}><p>{poll.question}</p><div>{poll.options.map((option, index) => <button key={option + index} type="button" className={selected === index ? "selected" : ""} aria-pressed={selected === index} onClick={() => choose(index)}><span>{option}</span><small>{Math.round((votes[index] / total) * 100)}%</small></button>)}</div><footer>{selected === null ? "Oyunu seçerek sonucu gör" : "Oyun kaydedildi"} <span>· {formatNumber(total)} oy</span></footer></section>; }
 function OrganicComments({ post, onDetail }: { post: Post; onDetail: (post: Post) => void }) {
-  const comments = organicCommentsFor(post, post.replies, post.reposts, post.likes).slice(0, 3);
+  const comments = organicPreviewCommentsFor(post);
   if (!comments.length) return <section className="organic-comments is-empty" aria-label="Gönderi yorumları"><button type="button" onClick={(event) => { event.stopPropagation(); onDetail(post); }}>İlk yorumu sen yaz</button></section>;
   return <section className="organic-comments" aria-label={post.name + " gönderisine öne çıkan yorumlar"}>
-    <div className="organic-comment-list">{comments.map((comment) => <div className="organic-comment" key={comment.handle + comment.time}><Avatar initials={comment.initials} tone={comment.tone} /><p><span><b>{comment.name}</b><small>{comment.handle} · {comment.time}</small></span>{comment.body}</p></div>)}<footer><button type="button" onClick={(event) => { event.stopPropagation(); onDetail(post); }}>Tümünü gör</button></footer></div>
+    <div className="organic-comment-list">{comments.map((comment) => <div className="organic-comment" key={comment.id}><Avatar initials={comment.initials} tone={comment.tone} /><div className="organic-comment-copy"><p><span><b>{comment.name}</b><small>{comment.handle} · {comment.time}</small></span>{comment.body}</p><div className="organic-comment-metrics" aria-label={comment.name + " yorumunun etkileşimleri"}><span><ActionIcon name="reply" /> {formatNumber(comment.replies)}</span><span><ActionIcon name="repost" /> {formatNumber(comment.reposts)}</span><span><ActionIcon name="like" /> {formatNumber(comment.likes)}</span></div></div></div>)}<footer><button type="button" onClick={(event) => { event.stopPropagation(); onDetail(post); }}>Tümünü gör</button></footer></div>
   </section>;
 }
 function PostCard({ post, allPosts, actions, pinned, following, points, onAction, onReply, onDetail, onProfile, onShare, onMore, onMedia, onFollow, threaded = false, hasChildReplies = false, showCommentPreviews = true }: FeedProps & { post: Post; threaded?: boolean; hasChildReplies?: boolean }) {

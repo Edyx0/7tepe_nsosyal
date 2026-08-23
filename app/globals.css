@@ -2563,7 +2563,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 
 /* Highlighted replies end with their one clear next step, directly above the rail elbow. */
 .organic-comment-list > .organic-comment:first-child { padding-top: 0; border-top: 0; }
-.organic-comment-list > footer { display: flex; justify-content: flex-start; min-height: 30px; padding-top: 5px; padding-left: 27%; }
+.organic-comment-list > footer { display: flex; justify-content: flex-start; min-height: 30px; padding-top: 5px; padding-left: 0; }
 .organic-comment-list > footer button {
   padding: 3px 0;
   border: 0;
@@ -2627,3 +2627,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   .thread-children::before { bottom: 49px; }
   .thread-children::after { right: 14px; bottom: 31px; height: 18px; border-bottom-left-radius: 14px; }
 }
+
+.organic-comment-copy { display: grid; gap: 4px; min-width: 0; }
+.organic-comment-metrics { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.organic-comment-metrics span { display: inline-flex; align-items: center; gap: 3px; }
+.organic-comment-metrics svg { width: 14px; height: 14px; stroke-width: 2.1; }
