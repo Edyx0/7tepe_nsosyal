@@ -2563,7 +2563,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
 
 /* Highlighted replies end with their one clear next step, directly above the rail elbow. */
 .organic-comment-list > .organic-comment:first-child { padding-top: 0; border-top: 0; }
-.organic-comment-list > footer { display: flex; justify-content: flex-end; min-height: 30px; padding-top: 5px; }
+.organic-comment-list > footer { display: flex; justify-content: flex-start; min-height: 30px; padding-top: 5px; padding-left: 27%; }
 .organic-comment-list > footer button {
   padding: 3px 0;
   border: 0;
