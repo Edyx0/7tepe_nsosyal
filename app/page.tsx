@@ -655,7 +655,8 @@ function PostCard({ post, allPosts, actions, pinned, following, points, onAction
   const authorBadge = getPointsBadge(authorPoints);
   const showThreadRail = threaded && hasChildReplies;
   const showCommentPreviewsForPost = showCommentPreviews && !threaded && shouldShowCommentPreview(post);
-  return <article className={"post " + (showThreadRail ? "has-thread " : "") + (showCommentPreviewsForPost ? "has-comment-previews" : "")}>
+  const showFeedRail = !threaded && !showCommentPreviewsForPost;
+  return <article className={"post " + (showThreadRail ? "has-thread " : "") + (showCommentPreviewsForPost ? "has-comment-previews " : "") + (showFeedRail ? "has-feed-rail" : "")}>
     {pinned === post.id && <p className="pin-status"><UiIcon name="pin" /> Profilde sabitlendi</p>}
     <button className="avatar-button" onClick={(event) => runExclusive(event, () => onProfile(post))} aria-label={post.initials + ", " + post.name + " profilini aç"}><Avatar initials={post.initials} tone={post.tone} handle={post.handle} /></button>
     <div className="post-content">

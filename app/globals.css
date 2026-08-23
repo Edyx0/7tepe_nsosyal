@@ -2513,7 +2513,19 @@ button:focus-visible, input:focus-visible, textarea:focus-visible {
   content: "";
   pointer-events: none;
 }
+.post.has-feed-rail::before {
+  position: absolute;
+  z-index: 0;
+  top: 58px;
+  bottom: -1px;
+  left: 43px;
+  width: 1.5px;
+  background: color-mix(in oklch, var(--line) 84%, transparent);
+  content: "";
+  pointer-events: none;
+}
 @media (max-width: 680px) {
   .post.has-comment-previews { --preview-rail-x: 33px; --preview-elbow-bottom: 7px; }
   .post.has-comment-previews::after { right: 14px; }
+  .post.has-feed-rail::before { top: 54px; left: 33px; }
 }
