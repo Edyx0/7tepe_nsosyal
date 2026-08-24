@@ -38,3 +38,29 @@ yarn-error.log*
 /.wrangler/
 /outputs/
 /work/
+
+# reports and report images
+/raporlar/
+/rapor-fotograflari/
+*rapor*.py
+
+# generated report materials
+/report-assets/
+/report-render*/
+/report-format-contract.md
+/NSosyal_Inovasyon_2026_Teknik_Rapor.docx
+/NSosyal_UX-Core_Innovation_Project_Report_2026.docx
+/TEKNOFEST_2026_NSOSYAL_TEKNIK_RAPOR.md
+/TEKNOFEST_2026_NSOSYAL_TEKNIK_RAPOR_MASTER_PROMPT_V2.md
+
+# report-generation helpers
+/scripts/__pycache__/
+/scripts/build-pages.mjs
+/scripts/deploy-pages.mjs
+/scripts/build_nsocial_report.py
+/scripts/expand_nsocial_report.py
+/scripts/fill_nsocial_template.py
+/scripts/format_nsocial_report.py
+/scripts/make_drive_contacts.py
+/scripts/make_render_contacts.py
+/scripts/materialize_nsocial_template.py

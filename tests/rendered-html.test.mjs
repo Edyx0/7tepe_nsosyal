@@ -56,7 +56,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   ]);
 
   assert.match(page, /Bağlam Özeti/);
-  assert.match(page, /NSosyal yapay zekâ özeti.*Hata içerebilir/);
+  assert.match(page, /NSosyal bağlam özeti.*Örnek içerik/);
   assert.match(page, /nsosyal-actions/);
   assert.match(page, /nsosyal-gamification/);
   assert.match(page, /dailyTasks/);
@@ -121,8 +121,8 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(page, /gönderi ayrıntılarını aç/);
   assert.equal(page.includes(`Gönder${"inın"}`), false);
   assert.equal(page.includes(`Takip Ettikler${"insin"}`), false);
-  assert.match(page, /nsosyal-source-era-logo-dark\.svg/);
-  assert.match(page, /nsosyal-source-era-logo-light\.svg/);
+  assert.match(page, /nsosyal-logo-dark\.svg/);
+  assert.match(page, /nsosyal-logo-light\.svg/);
   assert.match(page, /nsosyal-favicon\.svg/);
   assert.match(page, /headerCompact/);
   assert.match(page, /lastScrollY/);
@@ -245,7 +245,7 @@ test("keeps the context-summary and device-local demo behavior in product source
   assert.match(css, /--apple-radius-modal: 24px/);
   assert.match(css, /flex-grow: 1\.28/);
   assert.match(css, /--apple-status: #ff375f/);
-  assert.match(css, /@media \(min-width: 681px\) and \(max-width: 1000px\)/);
+  assert.match(css, /@media \(min-width: 681px\) and \(max-width: 1175px\)/);
   assert.match(css, /\.bottom-nav \{ display: none !important; \}/);
   assert.match(css, /\.sidebar \{[\s\S]*backdrop-filter: blur\(24px\) saturate\(1\.35\)/);
   assert.match(css, /@media \(min-width: 1001px\), \(min-width: 631px\) and \(max-width: 680px\)/);
